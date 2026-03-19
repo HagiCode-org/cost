@@ -1,0 +1,147 @@
+{
+  "site": {
+    "name": "Will AI Replace Me?",
+    "tagline": "A calm, launch-ready homepage for the future AI role assessment journey."
+  },
+  "header": {
+    "badge": "Simple launch edition",
+    "themeToggle": "Toggle theme",
+    "navigationLabel": "Homepage navigation"
+  },
+  "nav": {
+    "story": "Why this site",
+    "methodology": "Methodology",
+    "blueprint": "Form blueprint",
+    "roadmap": "Roadmap"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content"
+  },
+  "hero": {
+    "eyebrow": "AI application site",
+    "title": "Will AI Replace Me?",
+    "description": "This first release focuses on a trustworthy narrative, a clear methodology frame, and stable UI foundations before real assessment logic arrives.",
+    "primaryCta": "See the launch structure",
+    "secondaryCta": "Read the methodology",
+    "stats": [
+      {
+        "title": "Static landing first",
+        "description": "The launch version delivers the homepage architecture, hero, explainer blocks, and future entry points without pretending unfinished interactions are ready."
+      },
+      {
+        "title": "Full UI baseline",
+        "description": "The site already carries builder-style shadcn primitives, Tailwind tokens, and responsive layout conventions."
+      },
+      {
+        "title": "Ready for complex forms",
+        "description": "Future questionnaires, steps, and result cards can plug into the same control system, spacing rhythm, and interaction language."
+      }
+    ]
+  },
+  "story": {
+    "sectionEyebrow": "Editorial framing",
+    "sectionTitle": "Translate “Will AI replace me?” into a clearer personal audit",
+    "sectionDescription": "The launch version does not pretend to answer everything. It turns the question into a structure people can understand and future releases can extend.",
+    "cards": [
+      {
+        "eyebrow": "Problem framing",
+        "title": "Start with the question people already ask",
+        "description": "The homepage leads with the simplest question so new visitors immediately understand the purpose and scope of the site."
+      },
+      {
+        "eyebrow": "System baseline",
+        "title": "Build the reliable shell before business logic",
+        "description": "The first release prioritizes build tooling, language, SEO, theming, and components so later iterations can move faster."
+      },
+      {
+        "eyebrow": "Future modules",
+        "title": "Say clearly what is not implemented yet",
+        "description": "The site makes future slots explicit instead of pretending that unfinished assessment features already exist."
+      }
+    ]
+  },
+  "methodology": {
+    "badge": "Methodology placeholder",
+    "noteEyebrow": "Next release note",
+    "title": "Methodology first: the future result should be more than yes or no",
+    "description": "The real assessment will eventually connect task breakdowns, automation signals, human strengths, and next-step recommendations. For now, the structure and tone are in place.",
+    "pillars": [
+      {
+        "title": "Task-level analysis",
+        "description": "The future flow should analyze work tasks rather than job titles alone to produce more credible explanations."
+      },
+      {
+        "title": "Industry context",
+        "description": "The same role behaves differently across industries and organizations, so context needs a place in the future form flow."
+      },
+      {
+        "title": "Human advantage",
+        "description": "The result should explain not only what can be automated, but also the human strengths that remain valuable."
+      }
+    ],
+    "note": "For now, this section is intentionally a summary placeholder so the next change can expand it without rebuilding the shell.",
+    "nextItems": [
+      "• Real assessment question flow",
+      "• Risk explanation and action guidance",
+      "• A shared visual baseline for future shadcn form journeys"
+    ]
+  },
+  "formBlueprint": {
+    "badge": "Form system slot",
+    "title": "A static blueprint for the future complex form experience",
+    "description": "This is where role inputs, task mapping, progressive steps, and result generation will connect later. For now it validates layout density, disabled states, accessibility, and component styling.",
+    "labels": {
+      "role": "Role or craft",
+      "industry": "Industry / context",
+      "context": "What work do you most want to examine?"
+    },
+    "placeholders": {
+      "role": "For example: product marketer, solutions engineer, backend developer",
+      "industry": "For example: education, manufacturing, consumer brand",
+      "context": "For example: I handle customer conversations, workflow coordination, and editorial packaging. Which parts are easier to automate?"
+    },
+    "helper": "These fields will connect to real validation and multi-step assessment flows in a future change. Today they exist as structure and styling slots.",
+    "contractTitle": "Future module contract",
+    "contractDescription": "This slot is reserved for the real multi-step form flow, field validation, result summaries, and recommendation actions.",
+    "contractNote": "The current release calibrates layout density, form styling, disabled states, focus rings, and content containers so the next change can plug real logic straight in.",
+    "button": "See the launch structure",
+    "foundationStatus": {
+      "baseline-ready": "UI baseline ready"
+    }
+  },
+  "futureFeatures": {
+    "sectionEyebrow": "Roadmap preview",
+    "sectionTitle": "Future capabilities should not pretend to be live in v1",
+    "sectionDescription": "The homepage exposes clear entry points, structural placeholders, and honest status labels. The real question bank, scoring, and result explanations will grow from these cards later.",
+    "cta": "Coming soon",
+    "status": {
+      "planned": "Planned",
+      "research": "Research",
+      "readyForUi": "Ready for UI"
+    },
+    "items": {
+      "jobProfile": {
+        "title": "Role profile intake",
+        "description": "Collect the role, industry, target tasks, and surrounding context before scoring begins."
+      },
+      "taskBreakdown": {
+        "title": "Task breakdown prompts",
+        "description": "Add realistic questions that capture the difference between a job title and the actual work inside it."
+      },
+      "resultBrief": {
+        "title": "Risk result brief",
+        "description": "Summarize replacement risk, automatable work, human advantage, and clear interpretation instead of a raw score only."
+      },
+      "actionPath": {
+        "title": "Action recommendation cards",
+        "description": "Translate the future risk profile into concrete next steps for skills, tooling, or role redesign."
+      }
+    }
+  },
+  "footer": {
+    "disclaimerTitle": "Disclaimer",
+    "disclaimer": "This page is currently a demonstration of information architecture and interaction foundations. It is not career, legal, or financial advice, and future results should remain decision support rather than absolute truth.",
+    "extensionNote": "Static assets, SEO metadata, theme tokens, and shadcn control foundations are already wired in so future product work can stay focused on real behavior.",
+    "copyright": "HAGICODE AI APPLICATION SITE · 2026"
+  }
+}

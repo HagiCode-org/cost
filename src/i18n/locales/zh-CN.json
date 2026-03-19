@@ -1,0 +1,147 @@
+{
+  "site": {
+    "name": "我会被AI替代吗",
+    "tagline": "用一个克制、可信的首页，开启未来的 AI 职业评估体验。"
+  },
+  "header": {
+    "badge": "首版静态站点",
+    "themeToggle": "切换主题",
+    "navigationLabel": "首页导航"
+  },
+  "nav": {
+    "story": "为什么做",
+    "methodology": "方法论",
+    "blueprint": "表单蓝图",
+    "roadmap": "后续模块"
+  },
+  "accessibility": {
+    "skipToContent": "跳到主要内容"
+  },
+  "hero": {
+    "eyebrow": "AI 应用站点首发",
+    "title": "我会被AI替代吗",
+    "description": "先把工程基线、内容骨架和方法论说明搭好，再让真实的评估表单、风险解释与行动建议在下一阶段自然长出来。",
+    "primaryCta": "查看首版结构",
+    "secondaryCta": "理解方法论",
+    "stats": [
+      {
+        "title": "静态首页先行",
+        "description": "这一版先交付信息架构、Hero、说明区与后续功能入口，避免半成品式的假交互。"
+      },
+      {
+        "title": "完整 UI 基线",
+        "description": "已迁入 builder 风格的 shadcn primitives、Tailwind 变量与响应式布局约定。"
+      },
+      {
+        "title": "为复杂表单预热",
+        "description": "后续真实问卷、步骤流与结果卡片将沿用当前的控件、状态与视觉密度。"
+      }
+    ]
+  },
+  "story": {
+    "sectionEyebrow": "问题 framing",
+    "sectionTitle": "把“会不会被替代”翻译成一场更清晰的自我盘点",
+    "sectionDescription": "首版不直接下判断，而是先把问题拆解成你能理解、未来也能继续扩展的区块结构。",
+    "cards": [
+      {
+        "eyebrow": "Problem framing",
+        "title": "先回答用户最关心的问题",
+        "description": "首页聚焦“我会不会被替代”这句最直接的提问，让陌生用户一眼理解站点的主题与边界。"
+      },
+      {
+        "eyebrow": "System baseline",
+        "title": "先做稳的框架，再接业务逻辑",
+        "description": "首版优先铺好构建、语言、SEO、主题和组件体系，让后续迭代直接接入，不必返工。"
+      },
+      {
+        "eyebrow": "Future modules",
+        "title": "把未实现状态说清楚",
+        "description": "我们明确哪些内容是后续实现位，避免在首页制造已经可用的错觉。"
+      }
+    ]
+  },
+  "methodology": {
+    "badge": "方法论占位",
+    "noteEyebrow": "下一版方向",
+    "title": "方法论先占位：结果不是一句“会”或“不会”",
+    "description": "未来的评估不会只给出结论，而会拆解岗位任务、自动化趋势、人类优势与下一步建议。首版先把这些章节和语气确定下来。",
+    "pillars": [
+      {
+        "title": "任务颗粒度",
+        "description": "按工作内容而不是岗位名称来拆解，这会影响后续题目与结果解释的可信度。"
+      },
+      {
+        "title": "行业上下文",
+        "description": "同一个角色在不同组织与行业中的自动化风险差异很大，需要在后续流程中采集上下文。"
+      },
+      {
+        "title": "人类优势",
+        "description": "评估不仅讨论被替代的部分，也要保留协作、判断、创意和信任建立等难以被替代的维度。"
+      }
+    ],
+    "note": "这一块目前只展示摘要与后续方向，方便下一次变更直接扩展成完整说明。",
+    "nextItems": [
+      "• 真实评估问题流",
+      "• 风险解释与行动建议",
+      "• 与后续 shadcn 表单流程共享同一套视觉与交互骨架"
+    ]
+  },
+  "formBlueprint": {
+    "badge": "表单系统插槽",
+    "title": "未来复杂表单的起点，先用静态蓝图验证体验",
+    "description": "这里预留给岗位输入、任务梳理、步骤切换与结果计算的真实入口。本次先校准布局、禁用态、可访问性与控件风格。",
+    "labels": {
+      "role": "岗位或角色",
+      "industry": "所在行业 / 场景",
+      "context": "你最想确认的工作内容"
+    },
+    "placeholders": {
+      "role": "例如：内容运营、售前顾问、后端工程师",
+      "industry": "例如：教育、制造、消费品牌",
+      "context": "例如：我负责客户沟通、流程协作和文案整理，想知道哪些环节更容易被自动化。"
+    },
+    "helper": "这些字段会在后续版本接入真实校验与多步骤问题流；当前只作为结构与样式插槽。",
+    "contractTitle": "未来模块契约",
+    "contractDescription": "这个区块预留给真实表单步骤流、字段校验、结果摘要与推荐动作。",
+    "contractNote": "当前版本只校准布局密度、表单外观、禁用态、焦点环和内容容器，以便下一次变更直接接入真实逻辑。",
+    "button": "查看首版结构",
+    "foundationStatus": {
+      "baseline-ready": "UI 基线已就绪"
+    }
+  },
+  "futureFeatures": {
+    "sectionEyebrow": "后续模块",
+    "sectionTitle": "后续复杂能力，不在这一版假装已经上线",
+    "sectionDescription": "首页只提供清晰入口、结构占位和状态说明。真正的题库、评分与结果解释将沿着这些卡片继续生长。",
+    "cta": "敬请期待",
+    "status": {
+      "planned": "规划中",
+      "research": "研究中",
+      "readyForUi": "可接 UI"
+    },
+    "items": {
+      "jobProfile": {
+        "title": "岗位画像输入",
+        "description": "聚合岗位、行业、目标任务与组织上下文，作为后续评估的第一层输入。"
+      },
+      "taskBreakdown": {
+        "title": "任务拆解问答",
+        "description": "通过一组更贴近现实工作的题目，补足“岗位名”无法解释的差异。"
+      },
+      "resultBrief": {
+        "title": "风险结果摘要",
+        "description": "输出被替代风险、自动化倾向、人类优势与解释说明，而不是简单打分。"
+      },
+      "actionPath": {
+        "title": "行动建议卡片",
+        "description": "结合风险画像给出下一步动作，例如强化协作、升级工具链或改变任务配比。"
+      }
+    }
+  },
+  "footer": {
+    "disclaimerTitle": "免责声明",
+    "disclaimer": "当前页面仅作为方法论与交互框架演示，不构成职业、法律或财务建议。未来评估结果也将被定义为辅助判断，而非绝对结论。",
+    "extensionNote": "静态资源、SEO、主题和 shadcn 控件基线已经接入，后续可以在保持首页结构稳定的前提下扩展真实业务功能。",
+    "copyright": "HAGICODE AI APPLICATION SITE · 2026"
+  }
+}

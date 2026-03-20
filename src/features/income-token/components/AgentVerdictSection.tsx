@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ChevronDown, Flame, Share2, TrendingUp } from "lucide-react"
+import { ChevronDown, Share2, TrendingUp } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 

@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from "@testing-library/react"
+import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { HomePage } from "./HomePage"
@@ -68,6 +68,65 @@ describe("HomePage", () => {
     expect(params.get("dailyTokens")).toBe("180")
   })
 
+  it("uses the zero-token path to show a toast for craftsman-spirit without rendering normal result sections", async () => {
+    renderWithProviders(<HomePage />)
+
+    fireEvent.change(screen.getByLabelText(/这个模型你每天大概需要多少 M Token/), {
+      target: { value: "0" },
+    })
+
+    expect(await screen.findByText("获得新称号")).toBeInTheDocument()
+    expect(screen.getByText("已解锁：匠人精神")).toBeInTheDocument()
+    expect(screen.getByText(/匠人精神/)).toBeInTheDocument()
+    expect(screen.queryByText("模型成本与 Token 预算")).not.toBeInTheDocument()
+  })
+
+  it("shows newly earned titles in a toast for a valid non-zero configuration", async () => {
+    renderWithProviders(<HomePage />)
+
+    fireEvent.change(screen.getByLabelText(/你用的最多的模型是什么/), {
+      target: { value: "deepseek-v3" },
+    })
+    fireEvent.change(screen.getByLabelText(/用了这个模型，你的效率是以前的几倍/), {
+      target: { value: "6" },
+    })
+    fireEvent.change(screen.getByLabelText(/这个模型你每天大概需要多少 M Token/), {
+      target: { value: "20" },
+    })
+
+    expect(await screen.findByText("获得新称号")).toBeInTheDocument()
+    expect(screen.getByText(/提示词炼金师/)).toBeInTheDocument()
+    expect(screen.getByText(/成本驯兽师/)).toBeInTheDocument()
+    expect(screen.getByText(/危险先知/)).toBeInTheDocument()
+    expect(screen.getByText(/预算统筹官/)).toBeInTheDocument()
+    expect(screen.getByText("模型成本与 Token 预算")).toBeInTheDocument()
+  })
+
+  it("keeps previously earned titles as earned after a refresh", async () => {
+    renderWithProviders(<HomePage />)
+
+    fireEvent.change(screen.getByLabelText(/这个模型你每天大概需要多少 M Token/), {
+      target: { value: "0" },
+    })
+
+    expect(await screen.findByText("获得新称号")).toBeInTheDocument()
+    await waitFor(() =>
+      expect(localStorage.getItem("cost-special-titles")).toContain("craftsman-spirit")
+    )
+
+    cleanup()
+    window.history.replaceState(
+      {},
+      "",
+      "/?incomePreset=26&income=26&city=tier1&model=gpt-5&multiplier=5&dailyTokens=0"
+    )
+
+    renderWithProviders(<HomePage />)
+
+    expect(screen.queryByText("获得新称号")).not.toBeInTheDocument()
+    expect(screen.queryByText("匠人精神")).not.toBeInTheDocument()
+  })
+
   it("copies the current page link from the header share button", async () => {
     renderWithProviders(<HomePage />)
 
@@ -85,7 +144,7 @@ describe("HomePage", () => {
   it("renders share buttons for the agent report and Hagicode boost panels", () => {
     renderWithProviders(<HomePage />)
 
-    expect(screen.getAllByRole("button", { name: "复制当前页面链接，并包含语言与主题设置" })).toHaveLength(2)
+    expect(screen.getAllByRole("button", { name: "复制当前页面链接，并包含语言与主题设置" })).toHaveLength(3)
   })
 
   it("shows filing links sourced for the footer registration area", () => {

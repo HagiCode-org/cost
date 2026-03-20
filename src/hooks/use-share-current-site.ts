@@ -28,7 +28,7 @@ export function useShareCurrentSite() {
     }
   }, [shareState])
 
-  const shareCurrentSite = useCallback(async () => {
+  const shareCurrentSite = useCallback(async (extraText?: string) => {
     try {
       const shareUrl = buildShareUrl({
         href: window.location.href,
@@ -36,7 +36,11 @@ export function useShareCurrentSite() {
         theme,
       })
 
-      await copyTextToClipboard(shareUrl)
+      const content = extraText
+        ? `${extraText}\n${shareUrl}`
+        : shareUrl
+
+      await copyTextToClipboard(content)
       setShareState("copied")
     } catch {
       setShareState("error")

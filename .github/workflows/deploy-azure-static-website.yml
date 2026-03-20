@@ -1,4 +1,4 @@
-name: Deploy Cost Azure Static Website
+name: Deploy Cost Site
 
 on:
   release:
@@ -13,119 +13,84 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 concurrency:
-  group: cost-azure-static-website-${{ github.event.release.tag_name || inputs.tag }}
+  group: cost-release-deploy-${{ github.event.release.tag_name || inputs.tag }}
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build_and_deploy_job:
     runs-on: ubuntu-latest
+    name: Build and Deploy Cost Site
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: repos/cost
     env:
+      NODE_VERSION: "20"
       RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
-      STORAGE_ACCOUNT: ${{ vars.AZURE_STORAGE_ACCOUNT }}
-      STORAGE_CONTAINER: ${{ vars.AZURE_STORAGE_CONTAINER || '$web' }}
-      CDN_RESOURCE_GROUP: ${{ vars.AZURE_CDN_RESOURCE_GROUP }}
-      CDN_PROFILE: ${{ vars.AZURE_CDN_PROFILE }}
-      CDN_ENDPOINT: ${{ vars.AZURE_CDN_ENDPOINT }}
-      CDN_CONTENT_PATHS: ${{ vars.AZURE_CDN_CONTENT_PATHS || '/*' }}
-      RELEASE_ASSET_DIR: ${{ runner.temp }}/cost-release-download
+      COST_SITE_BASE_PATH: ${{ vars.COST_SITE_BASE_PATH || '/' }}
+      COST_SITE_URL: ${{ vars.COST_SITE_URL || 'https://cost.hagicode.com/' }}
     steps:
-      - name: Check out repository
+      - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ env.RELEASE_TAG }}
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: 20
-          cache: npm
+          node-version: "20"
+          cache: "npm"
           cache-dependency-path: repos/cost/package-lock.json
+
+      - name: Resolve release version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${RELEASE_TAG#v}"
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?([+][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid release tag: $RELEASE_TAG" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Align package version for release build
+        run: npm version "${{ steps.version.outputs.version }}" --no-git-tag-version
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate deployment configuration
+      - name: Build site
+        run: NODE_ENV=production npm run build
         env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        run: |
-          set -euo pipefail
-          missing=()
-          [ -n "$RELEASE_TAG" ] || missing+=("release tag")
-          [ -n "$STORAGE_ACCOUNT" ] || missing+=("AZURE_STORAGE_ACCOUNT")
-          [ -n "$AZURE_CLIENT_ID" ] || missing+=("AZURE_CLIENT_ID")
-          [ -n "$AZURE_TENANT_ID" ] || missing+=("AZURE_TENANT_ID")
-          [ -n "$AZURE_SUBSCRIPTION_ID" ] || missing+=("AZURE_SUBSCRIPTION_ID")
-          if [ ${#missing[@]} -gt 0 ]; then
-            printf 'Missing deployment configuration: %s\n' "${missing[*]}" >&2
-            exit 1
-          fi
+          VITE_APP_VERSION: ${{ steps.version.outputs.version }}
+          VITE_BASE_PATH: ${{ env.COST_SITE_BASE_PATH }}
+          VITE_SITE_URL: ${{ env.COST_SITE_URL }}
 
-      - name: Download frozen release assets
-        id: download_frozen_release_assets
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          rm -rf "$RELEASE_ASSET_DIR"
-          mkdir -p "$RELEASE_ASSET_DIR"
-          gh release download "$RELEASE_TAG" \
-            --repo "$GITHUB_REPOSITORY" \
-            --dir "$RELEASE_ASSET_DIR" \
-            --pattern "cost-site-*.tar.gz" \
-            --pattern "release-manifest.json"
-          archive_path=$(find "$RELEASE_ASSET_DIR" -maxdepth 1 -type f -name 'cost-site-*.tar.gz' | head -n 1)
-          manifest_path="$RELEASE_ASSET_DIR/release-manifest.json"
-          [ -n "$archive_path" ] || { echo "Frozen site archive not found for $RELEASE_TAG" >&2; exit 1; }
-          [ -f "$manifest_path" ] || { echo "release-manifest.json not found for $RELEASE_TAG" >&2; exit 1; }
-          echo "archive_path=$archive_path" >> "$GITHUB_OUTPUT"
-          echo "manifest_path=$manifest_path" >> "$GITHUB_OUTPUT"
-
-      - name: Validate frozen release metadata
-        run: |
-          node ./scripts/deploy/upload-static-website.mjs validate \
-            --archive "${{ steps.download_frozen_release_assets.outputs.archive_path }}" \
-            --manifest "${{ steps.download_frozen_release_assets.outputs.manifest_path }}" \
-            --expectedTag "$RELEASE_TAG" \
-            --storageAccount "$STORAGE_ACCOUNT" \
-            --container "$STORAGE_CONTAINER"
-        id: validate_frozen_release_metadata
-
-      - name: Azure login
-        uses: azure/login@v2
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Deploy frozen release to Azure Static Website
-        run: |
-          node ./scripts/deploy/upload-static-website.mjs deploy \
-            --archive "${{ steps.download_frozen_release_assets.outputs.archive_path }}" \
-            --manifest "${{ steps.download_frozen_release_assets.outputs.manifest_path }}" \
-            --expectedTag "$RELEASE_TAG" \
-            --storageAccount "$STORAGE_ACCOUNT" \
-            --container "$STORAGE_CONTAINER" \
-            --cdnResourceGroup "$CDN_RESOURCE_GROUP" \
-            --cdnProfile "$CDN_PROFILE" \
-            --cdnEndpoint "$CDN_ENDPOINT" \
-            --cdnContentPaths "$CDN_CONTENT_PATHS"
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_COST }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "repos/cost/dist"
+          api_location: ""
+          skip_app_build: true
 
       - name: Summarize deployment
+        shell: bash
         run: |
           {
-            echo "## Cost Azure Static Website deployment"
-            echo ""
+            echo "## Cost deployment finished"
+            echo
             echo "- Release tag: $RELEASE_TAG"
-            echo "- Storage account: $STORAGE_ACCOUNT"
-            echo "- Container: $STORAGE_CONTAINER"
-            if [ -n "$CDN_RESOURCE_GROUP" ] && [ -n "$CDN_PROFILE" ] && [ -n "$CDN_ENDPOINT" ]; then
-              echo "- CDN purge: executed for $CDN_PROFILE/$CDN_ENDPOINT"
-            else
-              echo "- CDN purge: skipped (configuration not provided)"
-            fi
+            echo "- Build source: repository checkout at $RELEASE_TAG"
+            echo "- Base path: $COST_SITE_BASE_PATH"
+            echo "- Site URL: $COST_SITE_URL"
+            echo "- Deploy action: Azure/static-web-apps-deploy@v1"
           } >> "$GITHUB_STEP_SUMMARY"

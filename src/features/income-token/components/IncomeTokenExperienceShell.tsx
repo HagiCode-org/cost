@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { AssessmentLanding } from "@/features/income-token/components/AssessmentLanding"
-import { FloatingAgentStatusBar } from "@/features/income-token/components/FloatingAgentStatusBar"
 import { CostFeatureShowcase } from "@/features/home/components/CostFeatureShowcase"
-import { HomeHeader } from "@/features/home/components/HomeHeader"
 import { HomeFooter } from "@/features/home/components/HomeFooter"
 import { getHomePageContent } from "@/features/home/content/home-content"
 import { useHomeSEO } from "@/features/home/hooks/use-home-seo"
@@ -14,40 +12,11 @@ import { cn } from "@/lib/utils"
 export function IncomeTokenExperienceShell() {
   const { t } = useTranslation()
   const [result, setResult] = useState<ResultViewModel | null>(null)
-  const [headerHeight, setHeaderHeight] = useState(0)
-  const headerRef = useRef<HTMLElement | null>(null)
 
   useHomeSEO()
 
   const tone = result?.summarySection.verdictTone ?? "neutral"
   const pageContent = getHomePageContent(t)
-
-  useEffect(() => {
-    function updateHeaderHeight() {
-      if (!headerRef.current) {
-        setHeaderHeight(0)
-        return
-      }
-      setHeaderHeight(headerRef.current.getBoundingClientRect().height)
-    }
-
-    updateHeaderHeight()
-    window.addEventListener("resize", updateHeaderHeight)
-
-    const observer =
-      typeof ResizeObserver !== "undefined"
-        ? new ResizeObserver(() => updateHeaderHeight())
-        : null
-
-    if (observer && headerRef.current) {
-      observer.observe(headerRef.current)
-    }
-
-    return () => {
-      window.removeEventListener("resize", updateHeaderHeight)
-      observer?.disconnect()
-    }
-  }, [])
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -70,10 +39,6 @@ export function IncomeTokenExperienceShell() {
       >
         {t("accessibility.skipToContent")}
       </a>
-      <HomeHeader ref={headerRef} />
-        {result ? (
-          <FloatingAgentStatusBar data={result.summarySection} topOffset={headerHeight} />
-        ) : null}
       <main id="main-content">
         <AssessmentLanding onResultChange={setResult} />
       </main>

@@ -1,7 +1,9 @@
-import { AlertTriangle, Flame, TrendingUp } from "lucide-react"
+import { AlertTriangle, Flame, Share2, TrendingUp } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
+import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { useShareCurrentSite } from "@/hooks/use-share-current-site"
 import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 
 interface AgentVerdictSectionProps {
@@ -63,25 +65,46 @@ function MetricValue({ label, value, formula, explanation, className }: MetricVa
 
 export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
   const { t } = useTranslation()
+  const { shareState, shareCurrentSite } = useShareCurrentSite()
+
+  const shareLabel =
+    shareState === "copied"
+      ? t("share.copied")
+      : shareState === "error"
+        ? t("share.failed")
+        : t("share.currentSite")
 
   return (
     <section
       className="glass-panel surface-outline mx-auto max-w-5xl rounded-[2rem] p-6 sm:p-8"
       aria-labelledby="agent-verdict-heading"
     >
-      <div className="mb-6 flex items-start gap-4">
-        <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
-          <Flame className="size-6" aria-hidden="true" />
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div className="flex min-w-0 items-start gap-4">
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary">
+            <Flame className="size-6" aria-hidden="true" />
+          </div>
+          <div className="min-w-0 space-y-2">
+            <h2 id="agent-verdict-heading" className="display-type text-2xl font-black tracking-tight sm:text-4xl">
+              {t("results.summary.heading", {
+                model: data.selectedModelName,
+                equivalent: data.effectivePeopleEquivalentFormatted,
+              })}
+            </h2>
+            <p className="max-w-3xl text-sm text-muted-foreground">{data.selectedModelDescription}</p>
+          </div>
         </div>
-        <div className="space-y-2">
-          <h2 id="agent-verdict-heading" className="display-type text-2xl font-black tracking-tight sm:text-4xl">
-            {t("results.summary.heading", {
-              model: data.selectedModelName,
-              equivalent: data.effectivePeopleEquivalentFormatted,
-            })}
-          </h2>
-          <p className="max-w-3xl text-sm text-muted-foreground">{data.selectedModelDescription}</p>
-        </div>
+        <Button
+          type="button"
+          size="sm"
+          variant={shareState === "error" ? "destructive" : "outline"}
+          className="mt-3 shrink-0 rounded-full border-border/60 bg-background/80"
+          onClick={() => void shareCurrentSite()}
+          aria-label={t("share.currentSiteAria")}
+        >
+          <Share2 className="size-3.5" aria-hidden="true" />
+          {shareLabel}
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">

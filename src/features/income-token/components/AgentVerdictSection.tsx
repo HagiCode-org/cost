@@ -1,4 +1,4 @@
-import { AlertTriangle, Flame, Share2, TrendingUp } from "lucide-react"
+import { Flame, Share2, TrendingUp } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
@@ -9,12 +9,6 @@ import type { ResultViewModel } from "@/features/income-token/lib/build-result-v
 interface AgentVerdictSectionProps {
   data: ResultViewModel["summarySection"]
 }
-
-const toneStyles = {
-  danger: "border-destructive/30 bg-destructive/8 text-destructive",
-  warning: "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
-  safe: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-} as const
 
 interface DetailTooltipProps {
   label: string
@@ -215,18 +209,6 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
             formula={data.effectivePeopleEquivalentFormula}
             explanation={data.effectivePeopleEquivalentExplanation}
           />
-        </div>
-      </div>
-
-      <div className={`mt-6 rounded-2xl border p-5 ${toneStyles[data.verdictTone]}`}>
-        <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
-          <div className="space-y-2">
-            <p className="text-lg font-bold">{data.verdictHeadline}</p>
-            <p className="text-sm leading-relaxed text-foreground/90 dark:text-foreground/85">
-              {data.verdictBody}
-            </p>
-          </div>
         </div>
       </div>
     </section>

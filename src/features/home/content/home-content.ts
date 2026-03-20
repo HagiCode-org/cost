@@ -1,5 +1,5 @@
 import type { TFunction } from "i18next"
-import { hagicodeCompliance } from "../../../../../site/src/config/compliance"
+import { hagicodeCompliance } from "@/config/compliance"
 
 export function getHomePageContent(t: TFunction) {
   return {

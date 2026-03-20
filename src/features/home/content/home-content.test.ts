@@ -1,7 +1,7 @@
 import type { TFunction } from "i18next"
 import { describe, expect, it } from "vitest"
 
-import { hagicodeCompliance } from "../../../../../site/src/config/compliance"
+import { hagicodeCompliance } from "@/config/compliance"
 import { getHomePageContent } from "./home-content"
 
 const t = ((key: string) => key) as unknown as TFunction

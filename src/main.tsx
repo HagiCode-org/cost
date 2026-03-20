@@ -6,6 +6,7 @@ import App from "./App"
 import { ThemeProvider } from "./contexts/theme-context"
 import "./i18n/config"
 import "./index.css"
+import { bootstrapAnalytics } from "./lib/analytics/bootstrap"
 import { injectAllSchemas } from "./lib/seo/schema-generator"
 import { initializeDefaultSEO } from "./lib/seo/utils"
 import { store } from "./lib/store"
@@ -22,3 +23,7 @@ createRoot(document.getElementById("root")!).render(
     </Provider>
   </StrictMode>,
 )
+
+void bootstrapAnalytics().catch((error) => {
+  console.warn("[51LA Analytics] Bootstrap failed", error)
+})

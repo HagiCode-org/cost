@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-type Theme = "light" | "dark";
+export type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
@@ -17,6 +17,13 @@ export function ThemeProvider({
   defaultTheme?: Theme;
 }) {
   const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== "undefined") {
+      const searchTheme = new URLSearchParams(window.location.search).get("theme")
+      if (searchTheme === "light" || searchTheme === "dark") {
+        return searchTheme
+      }
+    }
+
     const savedTheme = localStorage.getItem("theme") as Theme | null;
     if (savedTheme === "light" || savedTheme === "dark") {
       return savedTheme;

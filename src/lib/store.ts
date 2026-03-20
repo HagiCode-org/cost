@@ -10,10 +10,13 @@ interface FutureFeature {
   status: "planned" | "research" | "ready-for-ui"
 }
 
+export type ExperiencePhase = "landing" | "loading" | "results"
+
 interface SiteState {
   locale: SupportedLanguage
   foundationStatus: "baseline-ready"
   futureFeatures: FutureFeature[]
+  experiencePhase: ExperiencePhase
 }
 
 const initialState: SiteState = {
@@ -25,6 +28,7 @@ const initialState: SiteState = {
     { id: "result-brief", status: "planned" },
     { id: "action-path", status: "planned" },
   ],
+  experiencePhase: "landing",
 }
 
 const siteSlice = createSlice({
@@ -34,10 +38,16 @@ const siteSlice = createSlice({
     setLocale(state, action: PayloadAction<SupportedLanguage>) {
       state.locale = action.payload
     },
+    setExperiencePhase(state, action: PayloadAction<ExperiencePhase>) {
+      state.experiencePhase = action.payload
+    },
+    resetExperience(state) {
+      state.experiencePhase = "landing"
+    },
   },
 })
 
-export const { setLocale } = siteSlice.actions
+export const { setLocale, setExperiencePhase, resetExperience } = siteSlice.actions
 
 export const store = configureStore({
   reducer: {

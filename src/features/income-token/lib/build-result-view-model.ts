@@ -290,8 +290,12 @@ function buildCostEffectivenessExplanation(language: SupportedLanguage): string 
     : `AI cost effectiveness = productivity gain divided by AI cost share. If this value is below 1, the extra percentage of AI cost is larger than the percentage of productivity gained, which usually means token usage is too heavy or the chosen model is too expensive.`
 }
 
+export function isHighRiskDangerBand(result: Pick<CalculationResult, "effectivePeopleEquivalent">): boolean {
+  return result.effectivePeopleEquivalent >= 2
+}
+
 function getDangerScaleLabel(result: CalculationResult, language: SupportedLanguage): string {
-  if (result.effectivePeopleEquivalent >= 2) {
+  if (isHighRiskDangerBand(result)) {
     return language === "zh-CN" ? "高危区" : "High risk"
   }
   if (result.effectivePeopleEquivalent >= 1.5) {
@@ -301,7 +305,7 @@ function getDangerScaleLabel(result: CalculationResult, language: SupportedLangu
 }
 
 function getDangerScaleSummary(result: CalculationResult, language: SupportedLanguage): string {
-  if (result.effectivePeopleEquivalent >= 2) {
+  if (isHighRiskDangerBand(result)) {
     return language === "zh-CN"
       ? `同事一旦把自己稳定放大到 ${result.effectivePeopleEquivalent.toFixed(2)} 人产能，你就已经处在高危位置。`
       : `Once a coworker consistently scales to ${result.effectivePeopleEquivalent.toFixed(2)} workers of output, your position becomes high risk.`

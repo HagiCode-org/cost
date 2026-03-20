@@ -8,9 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "release:align-version": "node ./scripts/release/align-release-version.mjs",
+    "release:manifest": "node ./scripts/release/create-release-manifest.mjs",
+    "release:package": "node ./scripts/release/package-release.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "deploy:validate-release": "node ./scripts/deploy/upload-static-website.mjs validate",
+    "deploy:upload-static-website": "node ./scripts/deploy/upload-static-website.mjs deploy"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",

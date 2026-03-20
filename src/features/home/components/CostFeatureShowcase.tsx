@@ -27,6 +27,7 @@ import {
   getCostFeatureShowcaseContent,
   type CostFeaturePanelId,
 } from "@/features/home/content/cost-feature-showcase-content"
+import { LinkHagicode } from "@/components/link-hagicode"
 import styles from "./CostFeatureShowcase.module.css"
 
 const workflowIcons: Record<string, LucideIcon> = {
@@ -86,11 +87,10 @@ export function CostFeatureShowcase() {
     >
       <div className={styles.inner}>
         <div className={styles.header}>
-          <span className={styles.eyebrow}>{content.section.eyebrow}</span>
+          <span className={styles.eyebrow}><LinkHagicode>{content.section.eyebrow}</LinkHagicode></span>
           <h2 id="cost-feature-showcase-title" className={styles.title}>
-            {content.section.title}
+            <LinkHagicode>{content.section.title}</LinkHagicode>
           </h2>
-          <p className={styles.subtitle}>{content.section.subtitle}</p>
         </div>
 
         <div className={styles.panelStack}>
@@ -105,7 +105,7 @@ export function CostFeatureShowcase() {
                 {content.panels.smart.title}
               </h3>
               <p className={styles.panelSubtitle}>{content.panels.smart.subtitle}</p>
-              <p className={styles.panelDescription}>{content.panels.smart.description}</p>
+              <p className={styles.panelDescription}><LinkHagicode>{content.panels.smart.description}</LinkHagicode></p>
 
               <div className={styles.smartMetricCard}>
                 <div>
@@ -120,7 +120,7 @@ export function CostFeatureShowcase() {
                     </div>
                   </div>
                   <div className={styles.comparisonBarRow}>
-                    <span>{content.panels.smart.comparison.hagicode}</span>
+                    <span><LinkHagicode>{content.panels.smart.comparison.hagicode}</LinkHagicode></span>
                     <div className={styles.comparisonBarTrack}>
                       <div className={styles.comparisonBarFillAccent} style={{ width: "100%" }} />
                     </div>

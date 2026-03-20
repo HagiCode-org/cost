@@ -1,6 +1,7 @@
 import { forwardRef } from "react"
 
 import { Separator } from "@/components/ui/separator"
+import { LinkHagicode } from "@/components/link-hagicode"
 
 interface HomeFooterProps {
   disclaimerTitle: string
@@ -67,7 +68,7 @@ export const HomeFooter = forwardRef<HTMLElement, HomeFooterProps>(function Home
           </div>
         </div>
         <Separator className="my-5" />
-        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{props.copyright}</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground"><LinkHagicode>{props.copyright}</LinkHagicode></p>
       </div>
     </footer>
   )

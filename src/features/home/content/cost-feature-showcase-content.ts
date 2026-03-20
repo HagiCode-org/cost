@@ -102,7 +102,6 @@ export function getCostFeatureShowcaseContent(t: TFunction) {
     section: {
       eyebrow: t("featureShowcase.section.eyebrow"),
       title: t("featureShowcase.section.title"),
-      subtitle: t("featureShowcase.section.subtitle"),
     },
     panels: {
       smart: {

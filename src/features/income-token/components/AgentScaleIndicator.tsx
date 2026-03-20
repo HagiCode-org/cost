@@ -7,6 +7,8 @@ interface AgentScaleIndicatorProps {
   direction: "danger" | "value"
   ticks: string[]
   compact?: boolean
+  beforePosition?: number
+  beforeValue?: string
 }
 
 export function AgentScaleIndicator({
@@ -18,6 +20,8 @@ export function AgentScaleIndicator({
   direction,
   ticks,
   compact = false,
+  beforePosition,
+  beforeValue,
 }: AgentScaleIndicatorProps) {
   const segments =
     direction === "danger"
@@ -45,7 +49,7 @@ export function AgentScaleIndicator({
       </div>
 
       <div>
-        <div className="relative" role="img" aria-label={`${title}: ${value}, ${badge}. ${summary}`}>
+        <div className="relative" role="img" aria-label={`${title}: ${value}, ${badge}. ${summary}${beforeValue ? `. Before: ${beforeValue}` : ""}`}>
           <div className="grid grid-cols-3 gap-1">
             {segments.map((segmentClass, index) => (
               <div
@@ -55,6 +59,19 @@ export function AgentScaleIndicator({
               />
             ))}
           </div>
+
+          {beforePosition != null ? (
+            <div
+              className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{ left: `${beforePosition}%` }}
+              aria-hidden="true"
+            >
+              <div className="flex flex-col items-center">
+                <div className={`${compact ? "size-3" : "size-3.5"} rounded-full border-2 border-background bg-muted-foreground/40 shadow-sm`} />
+                <div className={`${compact ? "h-2" : "h-3"} mt-1 w-px bg-muted-foreground/30`} />
+              </div>
+            </div>
+          ) : null}
 
           <div
             className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"

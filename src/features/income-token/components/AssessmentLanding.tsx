@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { AlertTriangle } from "lucide-react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,6 +11,9 @@ import { cn } from "@/lib/utils"
 import { evaluate, type EvaluationInput } from "@/features/income-token/lib/calculate-ai-risk"
 import { buildResultViewModel, type ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 import { cityOptions, incomeOptions, modelOptions } from "@/features/income-token/content/form-options"
+import { evaluateSpecialTitles } from "@/features/income-token/lib/evaluate-special-titles"
+import { mergeEarnedTitleIds, readEarnedTitleIds, writeEarnedTitleIds } from "@/features/income-token/lib/title-storage"
+import type { SpecialTitleId } from "@/features/income-token/lib/title-types"
 import { ResultSections } from "./ResultSections"
 import type { CityTier } from "@/features/income-token/content/benchmark-data"
 
@@ -29,7 +33,7 @@ function getSearchParams() {
   return new URLSearchParams(window.location.search)
 }
 
-function parsePositiveNumber(value: string | null, min: number) {
+function parseNumberString(value: string | null, min: number) {
   if (!value) return null
   const parsed = Number.parseFloat(value)
   if (!Number.isFinite(parsed) || parsed < min) return null
@@ -54,7 +58,7 @@ function getInitialIncomePreset() {
 
 function getInitialIncomeAmount(incomePreset: string) {
   const params = getSearchParams()
-  const income = parsePositiveNumber(params.get("income"), 0.000001)
+  const income = parseNumberString(params.get("income"), 0.000001)
 
   if (incomePreset === CUSTOM_INCOME_VALUE) {
     return income ?? ""
@@ -86,11 +90,11 @@ function getInitialModelId() {
 }
 
 function getInitialMultiplier() {
-  return parsePositiveNumber(getSearchParams().get("multiplier"), 1) ?? "5"
+  return parseNumberString(getSearchParams().get("multiplier"), 1) ?? "5"
 }
 
 function getInitialDailyTokens() {
-  return parsePositiveNumber(getSearchParams().get("dailyTokens"), 0.000001) ?? "100"
+  return parseNumberString(getSearchParams().get("dailyTokens"), 0) ?? "100"
 }
 
 interface AssessmentLandingProps {
@@ -105,19 +109,22 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
   const [modelId, setModelId] = useState(getInitialModelId)
   const [performanceMultiplier, setPerformanceMultiplier] = useState(getInitialMultiplier)
   const [dailyTokenUsage, setDailyTokenUsage] = useState(getInitialDailyTokens)
+  const [earnedTitleIds, setEarnedTitleIds] = useState<SpecialTitleId[]>(() => readEarnedTitleIds())
+  const [hasInteracted, setHasInteracted] = useState(false)
+  const previousMatchedTitleSignatureRef = useRef("")
 
   const incomeValue = Number.parseFloat(incomeAmount)
   const multiplierValue = Number.parseFloat(performanceMultiplier)
   const tokenValue = Number.parseFloat(dailyTokenUsage)
   const language = (i18n.resolvedLanguage || "zh-CN") as "zh-CN" | "en-US"
 
-  const isValid =
-    incomeAmount !== "" &&
-    performanceMultiplier !== "" &&
-    dailyTokenUsage !== "" &&
-    incomeValue > 0 &&
-    multiplierValue >= 1 &&
-    tokenValue > 0
+  const hasValidIncome = incomeAmount !== "" && Number.isFinite(incomeValue) && incomeValue > 0
+  const hasValidMultiplier =
+    performanceMultiplier !== "" && Number.isFinite(multiplierValue) && multiplierValue >= 1
+  const hasValidDailyTokens =
+    dailyTokenUsage !== "" && Number.isFinite(tokenValue) && tokenValue >= 0
+  const isZeroTokenSpecialPath = hasValidIncome && hasValidMultiplier && hasValidDailyTokens && tokenValue === 0
+  const isValid = hasValidIncome && hasValidMultiplier && hasValidDailyTokens && tokenValue > 0
 
   const evaluationInput: EvaluationInput | null = useMemo(() => {
     if (!isValid) return null
@@ -131,15 +138,90 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
     }
   }, [cityTier, incomeValue, isValid, modelId, multiplierValue, tokenValue])
 
-  const result: ResultViewModel | null = useMemo(() => {
+  const calculationResult = useMemo(() => {
     if (!evaluationInput) return null
 
-    return buildResultViewModel(evaluate(evaluationInput), language)
-  }, [evaluationInput, language])
+    return evaluate(evaluationInput)
+  }, [evaluationInput])
+
+  const result: ResultViewModel | null = useMemo(() => {
+    if (!calculationResult) return null
+
+    return buildResultViewModel(calculationResult, language)
+  }, [calculationResult, language])
+
+  const rawTitleEvaluation = useMemo(() => {
+    if (!isZeroTokenSpecialPath && !calculationResult) return null
+
+    return evaluateSpecialTitles({
+      rawInput: {
+        annualIncomeCny: hasValidIncome ? incomeValue * 10000 : null,
+        cityTier,
+        modelId,
+        performanceMultiplier: hasValidMultiplier ? multiplierValue : null,
+        dailyTokenUsageM: hasValidDailyTokens ? tokenValue : null,
+      },
+      calculationResult,
+      earnedTitleIds,
+    })
+  }, [
+    calculationResult,
+    cityTier,
+    earnedTitleIds,
+    hasValidDailyTokens,
+    hasValidIncome,
+    hasValidMultiplier,
+    incomeValue,
+    isZeroTokenSpecialPath,
+    modelId,
+    multiplierValue,
+    tokenValue,
+  ])
 
   useEffect(() => {
     onResultChange?.(result)
   }, [onResultChange, result])
+
+  useEffect(() => {
+    if (!hasInteracted) {
+      previousMatchedTitleSignatureRef.current = ""
+      return
+    }
+
+    if (!rawTitleEvaluation) {
+      previousMatchedTitleSignatureRef.current = ""
+      return
+    }
+
+    const matchedTitleSignature = rawTitleEvaluation.matchedTitleIds.join(",")
+    if (matchedTitleSignature !== previousMatchedTitleSignatureRef.current) {
+      previousMatchedTitleSignatureRef.current = matchedTitleSignature
+      if (rawTitleEvaluation.newlyEarnedTitles.length > 0) {
+        const titleNames = rawTitleEvaluation.newlyEarnedTitles
+          .map((title) => t(`assessment.titles.catalog.${title.translationKey}.name`))
+          .join(" / ")
+
+        toast.success(t("assessment.titles.toast.title"), {
+          description: t("assessment.titles.toast.description", { titles: titleNames }),
+        })
+      }
+    } else if (rawTitleEvaluation.newlyEarnedTitleIds.length === 0) {
+      return
+    }
+
+    const mergedTitleIds = mergeEarnedTitleIds(earnedTitleIds, rawTitleEvaluation.matchedTitleIds)
+    if (
+      mergedTitleIds.length === earnedTitleIds.length &&
+      mergedTitleIds.every((titleId, index) => titleId === earnedTitleIds[index])
+    ) {
+      return
+    }
+
+    // Persist newly earned title ids after the toast has been triggered once.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setEarnedTitleIds(mergedTitleIds)
+    writeEarnedTitleIds(mergedTitleIds)
+  }, [earnedTitleIds, hasInteracted, rawTitleEvaluation, t])
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -168,6 +250,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
   }, [cityTier, dailyTokenUsage, incomeAmount, incomePreset, modelId, performanceMultiplier])
 
   function handleIncomePresetSelect(value: string) {
+    setHasInteracted(true)
     setIncomePreset(value)
 
     if (value === CUSTOM_INCOME_VALUE) {
@@ -257,7 +340,10 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
                   step="any"
                   placeholder={t("assessment.form.incomePlaceholder")}
                   value={incomeAmount}
-                  onChange={(e) => setIncomeAmount(e.target.value)}
+                  onChange={(e) => {
+                    setHasInteracted(true)
+                    setIncomeAmount(e.target.value)
+                  }}
                   className="h-14 rounded-2xl border-2 px-4 text-lg font-semibold"
                 />
                 <p className="text-sm text-muted-foreground">{t("assessment.form.incomeCustomHint")}</p>
@@ -274,7 +360,10 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
               id="city-tier"
               size="lg"
               value={cityTier}
-              onChange={(e) => setCityTier(e.target.value as CityTier)}
+              onChange={(e) => {
+                setHasInteracted(true)
+                setCityTier(e.target.value as CityTier)
+              }}
               className="mt-4 w-full"
             >
               {cityOptions.map((option) => (
@@ -294,7 +383,10 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
               id="model-id"
               size="lg"
               value={modelId}
-              onChange={(e) => setModelId(e.target.value)}
+              onChange={(e) => {
+                setHasInteracted(true)
+                setModelId(e.target.value)
+              }}
               className="mt-4 w-full"
             >
               {modelOptions.map((option) => (
@@ -317,7 +409,10 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
               step="0.1"
               placeholder={t("assessment.form.performanceMultiplierPlaceholder")}
               value={performanceMultiplier}
-              onChange={(e) => setPerformanceMultiplier(e.target.value)}
+              onChange={(e) => {
+                setHasInteracted(true)
+                setPerformanceMultiplier(e.target.value)
+              }}
               className="mt-4 h-14 rounded-2xl border-2 px-4 text-lg font-semibold"
             />
           </div>
@@ -330,11 +425,14 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
             <Input
               id="daily-token-usage"
               type="number"
-              min="0.1"
+              min="0"
               step="0.1"
               placeholder={t("assessment.form.dailyTokenUsagePlaceholder")}
               value={dailyTokenUsage}
-              onChange={(e) => setDailyTokenUsage(e.target.value)}
+              onChange={(e) => {
+                setHasInteracted(true)
+                setDailyTokenUsage(e.target.value)
+              }}
               className="mt-4 h-14 rounded-2xl border-2 px-4 text-lg font-semibold"
             />
           </div>

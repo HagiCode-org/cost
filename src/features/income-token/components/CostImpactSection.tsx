@@ -1,7 +1,10 @@
-import { Calculator, Coins } from "lucide-react"
+import { Calculator, ChevronDown, Coins } from "lucide-react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
+import { cn } from "@/lib/utils"
 
 interface CostImpactSectionProps {
   data: ResultViewModel["costSection"]
@@ -9,24 +12,34 @@ interface CostImpactSectionProps {
 
 export function CostImpactSection({ data }: CostImpactSectionProps) {
   const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
 
   return (
     <section
-      className="glass-panel surface-outline mx-auto max-w-5xl rounded-[2rem] p-6 sm:p-8"
+      className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-5xl rounded-none p-4 sm:rounded-[2rem] sm:p-8"
       aria-labelledby="cost-heading"
     >
-      <div className="mb-6 flex items-center gap-3">
+      <div className="mb-6 flex items-start gap-3">
         <div className="flex size-10 items-center justify-center rounded-xl bg-primary/12 text-primary">
           <Calculator className="size-5" aria-hidden="true" />
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
           <h2 id="cost-heading" className="display-type text-xl font-bold sm:text-2xl">
             {t("results.cost.title")}
           </h2>
-          <p className="text-sm text-muted-foreground">{t("results.cost.subtitle")}</p>
+          <p className="text-sm leading-relaxed text-muted-foreground">{t("results.cost.subtitle")}</p>
         </div>
       </div>
 
+      <Collapsible open={open} onOpenChange={setOpen}>
+        <CollapsibleTrigger
+          className="mb-6 flex w-full items-center justify-between rounded-xl border bg-muted/20 px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/30"
+          aria-label={t("results.cost.collapseAria")}
+        >
+          <span>{t("results.cost.collapseLabel")}</span>
+          <ChevronDown className={cn("size-4 shrink-0 transition-transform", open && "rotate-180")} aria-hidden="true" />
+        </CollapsibleTrigger>
+        <CollapsibleContent>
       <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="rounded-2xl border bg-background/70 p-5">
           <div className="mb-4 rounded-xl bg-muted/30 p-4">
@@ -63,7 +76,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
             <div className="rounded-xl bg-muted/40 p-4">
               <p className="text-xs text-muted-foreground">{t("results.cost.mixedPrice")}</p>
               <p className="mt-1 font-mono text-lg font-semibold">{data.mixedPriceFormatted}</p>
-              <p className="mt-2 break-all font-mono text-[11px] text-muted-foreground">
+              <p className="mt-2 break-all font-mono text-xs max-md:text-xs md:text-[11px] text-muted-foreground">
                 {data.mixedPriceFormula}
               </p>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
@@ -80,7 +93,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
                 <p className="font-medium">{t("results.cost.dailyAiCost")}</p>
-                <p className="mt-1 break-all font-mono text-[11px] text-muted-foreground">
+                <p className="mt-1 break-all font-mono text-xs max-md:text-xs md:text-[11px] text-muted-foreground">
                   {data.dailyAiCostFormula}
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
@@ -92,7 +105,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
             <div className="flex items-start justify-between gap-4 border-t pt-3">
               <div className="flex-1">
                 <p className="font-medium">{t("results.cost.annualAiCost")}</p>
-                <p className="mt-1 break-all font-mono text-[11px] text-muted-foreground">
+                <p className="mt-1 break-all font-mono text-xs max-md:text-xs md:text-[11px] text-muted-foreground">
                   {data.annualAiCostFormula}
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
@@ -118,7 +131,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
           <div className="rounded-xl bg-muted/40 p-4">
             <p className="text-xs text-muted-foreground">{t("results.cost.workdayTokenAverage")}</p>
             <p className="mt-1 display-type text-2xl font-bold">{data.fullBudgetWorkdayTokensFormatted}</p>
-            <p className="mt-2 break-all font-mono text-[11px] text-muted-foreground">
+            <p className="mt-2 break-all font-mono text-xs max-md:text-xs md:text-[11px] text-muted-foreground">
               {data.workdayAverageFormula}
             </p>
           </div>
@@ -142,6 +155,8 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
           </div>
         </div>
       </div>
+        </CollapsibleContent>
+      </Collapsible>
     </section>
   )
 }

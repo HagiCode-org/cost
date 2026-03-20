@@ -10,7 +10,7 @@ export function ComplianceFooterSection({ data }: ComplianceFooterSectionProps) 
   const { t } = useTranslation()
 
   return (
-    <section className="mx-auto max-w-5xl px-4 py-6" aria-labelledby="compliance-heading">
+    <section className="mx-auto max-w-5xl py-6 sm:px-6" aria-labelledby="compliance-heading">
       <div className="flex items-center gap-2 mb-3">
         <ShieldCheck className="size-4 text-muted-foreground" aria-hidden="true" />
         <h2 id="compliance-heading" className="text-sm font-semibold text-muted-foreground">

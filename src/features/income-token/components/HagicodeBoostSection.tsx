@@ -1,14 +1,18 @@
 import { useMemo, useState } from "react"
-import { ArrowRight, Share2, Sparkles } from "lucide-react"
+import { ArrowRight, ChevronDown, Share2, Sparkles } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Slider } from "@/components/ui/slider"
 import { useShareCurrentSite } from "@/hooks/use-share-current-site"
+import { LinkHagicode } from "@/components/link-hagicode"
 import { AgentScaleIndicator } from "./AgentScaleIndicator"
 import { buildResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 import { evaluate, type EvaluationInput } from "@/features/income-token/lib/calculate-ai-risk"
 import type { SupportedLanguage } from "@/i18n/config"
+import { cn } from "@/lib/utils"
 
 interface HagicodeBoostSectionProps {
   baseInput: EvaluationInput
@@ -89,10 +93,10 @@ function ComparisonMetricCard({
   boostedLabel,
 }: ComparisonMetricCardProps) {
   return (
-    <div className="rounded-[1.5rem] border bg-background/74 p-4">
+    <div className="min-w-0 rounded-[1.5rem] border bg-background/74 p-4">
       <div className="flex items-start justify-between gap-3">
-        <p className="text-xs font-medium text-muted-foreground">{label}</p>
-        <span className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${getDeltaTone(deltaValue, deltaMode)}`}>
+        <p className="min-w-0 text-xs font-medium text-muted-foreground">{label}</p>
+        <span className={`shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${getDeltaTone(deltaValue, deltaMode)}`}>
           {delta}
         </span>
       </div>
@@ -100,16 +104,38 @@ function ComparisonMetricCard({
         <div className="mt-3 flex items-center gap-3">
         <div className="min-w-0 flex-1">
           <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{currentLabel}</p>
-          <p className="mt-1 display-type text-xl font-bold">{before}</p>
+          <p className="mt-1 truncate display-type text-xl font-bold">{before}</p>
         </div>
         <ArrowRight className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         <div className="min-w-0 flex-1 text-right">
-          <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{boostedLabel}</p>
-          <p className="mt-1 display-type text-xl font-bold text-primary">{after}</p>
+          <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground"><LinkHagicode>{boostedLabel}</LinkHagicode></p>
+          <p className="mt-1 truncate display-type text-xl font-bold text-primary">{after}</p>
         </div>
       </div>
 
-      <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{formula}</p>
+      <p className="mt-3 break-words text-xs leading-relaxed text-muted-foreground">{formula}</p>
+    </div>
+  )
+}
+
+interface BoostVerdictCardProps {
+  label: string
+  headline: string
+  body: string
+  toneClass: string
+  compact?: boolean
+}
+
+function BoostVerdictCard({ label, headline, body, toneClass, compact = false }: BoostVerdictCardProps) {
+  return (
+    <div className={`rounded-[1.5rem] border p-5 ${toneClass}`}>
+      <div className={compact ? "space-y-2" : "space-y-2"}>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-current/85">
+          <LinkHagicode>{label}</LinkHagicode>
+        </p>
+        <p className={compact ? "text-base font-bold" : "text-lg font-bold"}>{headline}</p>
+        <p className={compact ? "text-sm leading-6 text-current/90" : "text-sm leading-7 text-current/90"}>{body}</p>
+      </div>
     </div>
   )
 }
@@ -118,6 +144,7 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
   const { t, i18n } = useTranslation()
   const [hagicodeBoost, setHagicodeBoost] = useState([DEFAULT_BOOST])
   const [tokenEfficiencyBoost, setTokenEfficiencyBoost] = useState([DEFAULT_TOKEN_EFFICIENCY])
+  const [detailOpen, setDetailOpen] = useState(false)
   const language = (i18n.resolvedLanguage || "zh-CN") as SupportedLanguage
   const { shareState, shareCurrentSite } = useShareCurrentSite()
 
@@ -167,38 +194,41 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
         : t("share.currentSite")
 
   return (
-    <section className="glass-panel surface-outline mx-auto max-w-5xl rounded-[2rem] p-6 sm:p-8" aria-labelledby="hagicode-boost-heading">
+    <section className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-5xl rounded-none p-4 sm:rounded-[2rem] sm:p-8" aria-labelledby="hagicode-boost-heading">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-2xl space-y-3">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-semibold text-primary">
             <Sparkles className="size-3.5" aria-hidden="true" />
-            Hagicode
+            <LinkHagicode>Hagicode</LinkHagicode>
           </div>
           <div className="space-y-2">
             <h2 id="hagicode-boost-heading" className="display-type text-2xl font-black tracking-tight sm:text-3xl">
-              {t("results.hagicode.heading")}
+              <LinkHagicode>{t("results.hagicode.heading")}</LinkHagicode>
             </h2>
             <p className="text-sm leading-7 text-muted-foreground sm:text-base">
-              {t("results.hagicode.subtitle")}
+              <LinkHagicode>{t("results.hagicode.subtitle")}</LinkHagicode>
             </p>
           </div>
         </div>
 
-        <div className="min-w-[12rem] space-y-3 rounded-[1.5rem] border bg-background/72 px-4 py-4 text-right">
+        <div className="min-w-0 space-y-3 rounded-[1.5rem] border bg-background/72 px-4 py-4 text-left sm:min-w-[12rem] sm:text-right">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{t("results.hagicode.multiplierLabel")}</p>
-            <p className="mt-2 display-type text-3xl font-bold text-primary">{formatMultiplier(boostFactor)}</p>
+            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground"><LinkHagicode>{t("results.hagicode.multiplierLabel")}</LinkHagicode></p>
+            <p className="mt-2 display-type text-3xl font-bold text-primary">{boostFactor}</p>
             <p className="mt-2 text-xs text-muted-foreground">
               {t("results.hagicode.utilizationCompact", { value: formatMultiplier(tokenEfficiencyFactor) })}
             </p>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-start sm:justify-end">
             <Button
               type="button"
               size="sm"
               variant={shareState === "error" ? "destructive" : "outline"}
-              className="rounded-full"
-              onClick={() => void shareCurrentSite()}
+              className="w-full rounded-full sm:w-auto"
+              onClick={() => {
+                const text = [boostedSummary.verdictHeadline, boostedSummary.verdictBody].join("\n")
+                void shareCurrentSite(text).then(() => toast.success(t("share.copied")))
+              }}
               aria-label={t("share.currentSiteAria")}
             >
               <Share2 className="size-3.5" aria-hidden="true" />
@@ -208,13 +238,13 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
         </div>
       </div>
 
-      <div className="mt-6 rounded-[1.75rem] border bg-background/72 p-5">
+      <div className="mt-6 min-w-0 overflow-hidden rounded-[1.75rem] border bg-background/72 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-foreground">{t("results.hagicode.sliderLabel")}</p>
+            <p className="text-sm font-semibold text-foreground"><LinkHagicode>{t("results.hagicode.sliderLabel")}</LinkHagicode></p>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t("results.hagicode.sliderHint")}</p>
           </div>
-          <p className="font-mono text-sm font-semibold text-primary">{formatMultiplier(boostFactor)}</p>
+          <p className="font-mono text-sm font-semibold text-primary">{boostFactor}</p>
         </div>
 
         <div className="mt-5 px-1">
@@ -230,11 +260,11 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
         </div>
 
         <div className="mt-3 flex items-center justify-between text-[11px] font-medium text-muted-foreground">
-          <span>1.5x</span>
-          <span>3x</span>
-          <span>5x</span>
-          <span>7.5x</span>
-          <span>10x</span>
+          <span>1.5</span>
+          <span>3</span>
+          <span>5</span>
+          <span>7.5</span>
+          <span>10</span>
         </div>
 
         <div className="mt-7 flex flex-wrap items-center justify-between gap-3">
@@ -267,14 +297,23 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
           <span>2.0x</span>
         </div>
 
-        <div className="mt-5 grid gap-3 md:grid-cols-2">
+        <Collapsible open={detailOpen} onOpenChange={setDetailOpen}>
+          <CollapsibleTrigger
+            className="mt-5 flex w-full items-center justify-between rounded-xl border bg-muted/20 px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/30"
+            aria-label={t("results.hagicode.detailCollapseAria")}
+          >
+            <span>{t("results.hagicode.detailCollapseLabel")}</span>
+            <ChevronDown className={cn("size-4 shrink-0 transition-transform", detailOpen && "rotate-180")} aria-hidden="true" />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
           <ComparisonMetricCard
             label={t("results.hagicode.scaledEfficiency")}
             before={formatMultiplier(baseInput.performanceMultiplier)}
             after={formatMultiplier(boostedPerformance)}
             delta={formatSignedDelta(boostedPerformance - baseInput.performanceMultiplier, "x")}
             deltaValue={boostedPerformance - baseInput.performanceMultiplier}
-            formula={`${formatMultiplier(baseInput.performanceMultiplier)} x ${formatMultiplier(boostFactor)} = ${formatMultiplier(boostedPerformance)}`}
+            formula={`${formatMultiplier(baseInput.performanceMultiplier)} x ${boostFactor} = ${formatMultiplier(boostedPerformance)}`}
             currentLabel={t("results.hagicode.currentLabel")}
             boostedLabel={t("results.hagicode.boostedLabel")}
           />
@@ -285,7 +324,7 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
             delta={formatSignedDelta(boostedTokenUsage - baseInput.dailyTokenUsageM, " M")}
             deltaValue={boostedTokenUsage - baseInput.dailyTokenUsageM}
             deltaMode="negative"
-            formula={`${formatTokenUsage(baseInput.dailyTokenUsageM)} x ${formatMultiplier(boostFactor)} ÷ ${formatMultiplier(tokenEfficiencyFactor)} = ${formatTokenUsage(boostedTokenUsage)} (${formatTokenUsage(rawScaledTokenUsage)} ÷ ${formatMultiplier(tokenEfficiencyFactor)})`}
+            formula={`${formatTokenUsage(baseInput.dailyTokenUsageM)} x ${boostFactor} ÷ ${formatMultiplier(tokenEfficiencyFactor)} = ${formatTokenUsage(boostedTokenUsage)} (${formatTokenUsage(rawScaledTokenUsage)} ÷ ${formatMultiplier(tokenEfficiencyFactor)})`}
             currentLabel={t("results.hagicode.currentLabel")}
             boostedLabel={t("results.hagicode.boostedLabel")}
           />
@@ -296,7 +335,7 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
             delta={formatSignedCurrency(annualAiCostDelta)}
             deltaValue={annualAiCostDelta}
             deltaMode="negative"
-            formula={`${formatCny(baseResult.annualAiCostCny)} x ${formatMultiplier(boostFactor)} = ${formatCny(boostedAnnualAiCost)}`}
+            formula={t("results.hagicode.scaledAnnualAiCostFormula", { tokenUsage: formatTokenUsage(boostedTokenUsage), cost: formatCny(boostedAnnualAiCost) })}
             currentLabel={t("results.hagicode.currentLabel")}
             boostedLabel={t("results.hagicode.boostedLabel")}
           />
@@ -321,22 +360,25 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
         <div className="mt-5 rounded-[1.5rem] border border-primary/15 bg-primary/6 p-4">
           <p className="text-sm font-semibold text-foreground">{t("results.hagicode.modelLabel")}</p>
           <p className="mt-2 text-xs leading-7 text-muted-foreground">
-            {t("results.hagicode.modelFormula", {
+            <LinkHagicode>{t("results.hagicode.modelFormula", {
               base: formatTokenUsage(baseInput.dailyTokenUsageM),
-              boost: formatMultiplier(boostFactor),
+              boost: String(boostFactor),
               utilization: formatMultiplier(tokenEfficiencyFactor),
               raw: formatTokenUsage(rawScaledTokenUsage),
               final: formatTokenUsage(boostedTokenUsage),
-            })}
+            })}</LinkHagicode>
           </p>
         </div>
+          </CollapsibleContent>
+        </Collapsible>
+
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <div className="rounded-[1.5rem] border bg-background/75 p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs text-muted-foreground">{t("results.hagicode.beforeAfterLabel")}</p>
+              <p className="text-xs text-muted-foreground"><LinkHagicode>{t("results.hagicode.beforeAfterLabel")}</LinkHagicode></p>
               <p className="mt-1 text-sm font-semibold text-foreground">
                 {baseSummary.effectivePeopleEquivalentFormatted}
                 {" -> "}
@@ -355,12 +397,14 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
             position={boostedSummary.dangerScalePosition}
             direction="danger"
             ticks={["1.0x", "1.5x", "2.0x", "3.0x"]}
+            beforePosition={baseSummary.dangerScalePosition}
+            beforeValue={baseSummary.effectivePeopleEquivalentFormatted}
           />
         </div>
         <div className="rounded-[1.5rem] border bg-background/75 p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs text-muted-foreground">{t("results.hagicode.beforeAfterLabel")}</p>
+              <p className="text-xs text-muted-foreground"><LinkHagicode>{t("results.hagicode.beforeAfterLabel")}</LinkHagicode></p>
               <p className="mt-1 text-sm font-semibold text-foreground">
                 {baseSummary.costEffectivenessFormatted}
                 {" -> "}
@@ -381,18 +425,19 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
             position={boostedSummary.costEffectivenessScalePosition}
             direction="value"
             ticks={["0x", "1x", "2x", "3x+"]}
+            beforePosition={baseSummary.costEffectivenessScalePosition}
+            beforeValue={baseSummary.costEffectivenessFormatted}
           />
         </div>
       </div>
 
-      <div className={`mt-6 rounded-[1.5rem] border p-5 ${verdictToneClass}`}>
-        <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-current/85">
-            {t("results.hagicode.afterBoostLabel")}
-          </p>
-          <p className="text-lg font-bold">{boostedSummary.verdictHeadline}</p>
-          <p className="text-sm leading-7 text-current/90">{boostedSummary.verdictBody}</p>
-        </div>
+      <div className="mt-6">
+        <BoostVerdictCard
+          label={t("results.hagicode.afterBoostLabel")}
+          headline={boostedSummary.verdictHeadline}
+          body={boostedSummary.verdictBody}
+          toneClass={verdictToneClass}
+        />
       </div>
     </section>
   )

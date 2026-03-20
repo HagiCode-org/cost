@@ -1,12 +1,8 @@
-# AI Application Site (`repos/cost`)
+# AI 应用成本评估
 
-`repos/cost` 是“我会被AI替代吗”站点的首版前端工程。当前变更聚焦三个目标：
+站点地址：[cost.hagicode.com](https://cost.hagicode.com)
 
-1. 迁移 `repos/docker-compose-builder-web` 的 Vite + React + TypeScript + Tailwind + shadcn 工程基线
-2. 落地一个可部署、可本地运行的静态首页
-3. 为后续复杂表单、评估结果和行动建议模块预留稳定的 UI 与目录结构
-
-## 本地开发
+## 本地启动
 
 ```bash
 cd repos/cost
@@ -14,123 +10,6 @@ npm install
 npm run dev
 ```
 
-默认使用 `/` 作为 `base`。如果需要部署到子路径，可设置：
+---
 
-```bash
-VITE_BASE_PATH=/custom-path/ npm run build
-```
-
-如果需要覆盖站点绝对地址（例如 canonical / OG URL），可设置：
-
-```bash
-VITE_SITE_URL=https://cost-preview.hagicode.com npm run build
-```
-
-如果需要覆盖站点展示版本号，可设置：
-
-```bash
-VITE_APP_VERSION=0.2.0 npm run build
-```
-
-版本号优先级如下：
-
-- `VITE_APP_VERSION`
-- npm 自动注入的 `npm_package_version`
-- `package.json` 的 `version`
-
-默认生产域名为 `https://cost.hagicode.com/`；运行时 canonical、alternate、Open Graph、Twitter 和 JSON-LD 都会基于该域名生成。`public/robots.txt` 与 `public/sitemap.xml` 当前也按正式域名提交，便于直接部署静态产物。
-
-## 可用脚本
-
-- `npm run dev`：启动 Vite 开发服务器
-- `npm run build`：执行 TypeScript 构建并输出到 `dist/`
-- `npm run lint`：运行 ESLint
-- `npm run test`：运行 Vitest 测试
-- `npm run test:ui`：打开 Vitest UI
-- `npm run preview`：预览生产构建
-
-## Release Draft 与发布
-
-`repos/cost` 现在采用和 desktop 相近的“GitHub Draft Release + 发布驱动部署”模型：
-
-- `main` 分支只做日常开发校验，不直接触发生产发布
-- `repos/cost/.github/workflows/release-drafter.yml` 使用现成的 `release-drafter/release-drafter@v6` 维护 GitHub Draft Release
-- 不再保留单独的 `release-draft.yml` 构建工作流
-- `repos/cost/.github/workflows/deploy-azure-static-website.yml` 在 release published 或手动指定 tag 时直接 checkout、build、deploy
-- 这里的 “draft” 指 GitHub Draft Release 语义，与桌面端现有 release draft 能力对齐，不是仓库内额外维护的一套自定义阶段
-
-### Draft Release 工作流
-
-`release-drafter.yml` 直接复用 desktop 同类实现：由 `release-drafter/release-drafter@v6` 维护 GitHub Draft Release 的 notes 草稿。
-
-Cost 仓库不再单独维护一个“先打包 assets 再上传 draft”的自定义 workflow。发布草稿主要承担版本说明与审阅职责；真正的生产部署在 release published 后由 deploy workflow 直接完成构建和发布。
-
-### Release 版本临时对齐
-
-生产部署时会直接 checkout 已发布 tag，并在 CI 工作目录中执行：
-
-1. 从 tag 解析版本号
-2. 使用 `npm version <version> --no-git-tag-version` 临时同步 `package.json`
-3. 在构建时注入 `VITE_APP_VERSION`
-
-因为这只发生在 GitHub Actions 的临时工作区，所以不会污染仓库历史，但能确保站点显示版本与发布 tag 一致。
-
-### Azure 发布
-
-`deploy-azure-static-website.yml` 现在直接参考 `repos/site` 的做法，使用现成的 `Azure/static-web-apps-deploy@v1` action：
-
-1. checkout 对应的已发布 release tag
-2. 安装依赖并构建 `dist/`
-3. 使用 `Azure/static-web-apps-deploy@v1` 上传构建结果
-
-这意味着上传逻辑不再由仓库脚本自行实现，而是交给现成 action 处理。
-
-### GitHub / Azure 配置
-
-`release-drafter.yml` 需要：
-
-- `contents: write` 权限
-- `pull-requests: write` 权限
-
-`deploy-azure-static-website.yml` 需要：
-
-- GitHub secret：`AZURE_STATIC_WEB_APPS_API_TOKEN_COST`
-- 可选 GitHub variables：`COST_SITE_BASE_PATH`、`COST_SITE_URL`
-
-### 回滚方式
-
-回滚时选择一个已经 published 的历史 release tag，然后手动触发 `deploy-azure-static-website.yml` 并传入该 tag；workflow 会 checkout 该 tag、重新构建对应版本并重新发布。
-
-## 首页结构
-
-- `src/features/home/pages/HomePage.tsx`：首页总装配
-- `src/features/home/components/HomeHeader.tsx`：品牌、语言和主题切换、锚点导航
-- `src/features/home/components/HeroSection.tsx`：大标题、主副 CTA 与三张信息卡
-- `src/features/home/components/MethodologySection.tsx`：方法论摘要与后续说明占位
-- `src/features/home/components/FormBlueprintSection.tsx`：未来复杂表单的禁用态蓝图
-- `src/features/home/components/FutureFeatureSection.tsx`：后续功能预告卡片
-- `src/features/home/content/home-content.ts`：从翻译和站点状态组装首页内容
-
-## 扩展方式
-
-### 扩展真实评估流程
-
-后续实现真实评估时，优先在以下位置追加：
-
-- `src/features/home/content/`：题目定义、结果文案、方法论扩展内容
-- `src/features/home/components/`：新的步骤流、结果卡片、建议模块
-- `src/lib/store.ts`：扩展为真实流程状态管理
-- `src/components/ui/`：复用已迁入的 shadcn primitives，而不是重新引入组件基线
-
-### 调整 SEO / i18n
-
-- `src/config/seo.ts`：首页标题、描述、关键词、canonical 和 OG 基线
-- `src/i18n/locales/*.json`：中英文首页文案
-- `public/robots.txt`、`public/sitemap.xml`、`public/og-image.svg`：静态资源与分享素材
-- `src/lib/analytics/`：51LA 统计脚本加载与初始化逻辑
-
-## 当前范围与免责声明
-
-- 当前只交付静态首页与方法论/功能占位
-- 未实现真实表单提交流程、评分逻辑、结果页或后端接口
-- 页面中的蓝图区块用于验证后续复杂表单的布局、视觉与可访问性基线
+Powered by [hagicode.com](https://hagicode.com)

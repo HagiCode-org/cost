@@ -45,94 +45,61 @@ VITE_APP_VERSION=0.2.0 npm run build
 - `npm run dev`：启动 Vite 开发服务器
 - `npm run build`：执行 TypeScript 构建并输出到 `dist/`
 - `npm run lint`：运行 ESLint
-- `npm run release:align-version -- apply --version 1.2.3 --stateFile /tmp/cost-release.json`：临时把 release 版本写入 `package.json` 并导出构建所需环境变量
-- `npm run release:manifest -- --archive ./artifacts/cost-site-v1.2.3.tar.gz --version 1.2.3 --commitSha <sha>`：为已打包产物生成 `release-manifest.json`
-- `npm run release:package -- --version 1.2.3 --distDir ./dist --outputDir ./artifacts --commitSha <sha>`：把 `dist/` 打成冻结 release 资产并同步生成 manifest
 - `npm run test`：运行 Vitest 测试
 - `npm run test:ui`：打开 Vitest UI
 - `npm run preview`：预览生产构建
-- `npm run deploy:validate-release -- --archive <archive> --manifest <manifest> --expectedTag v1.2.3 --storageAccount <account>`：在不上传 Azure 的情况下校验冻结产物
-- `npm run deploy:upload-static-website -- --archive <archive> --manifest <manifest> --expectedTag v1.2.3 --storageAccount <account>`：把冻结产物上传到 Azure Storage Static Website `$web` 容器
 
-## Release Draft 与 Azure Static Website
+## Release Draft 与发布
 
-`repos/cost` 现在使用“先准备 GitHub Draft Release，再发布到生产”的发布模型：
+`repos/cost` 现在采用和 desktop 相近的“GitHub Draft Release + 发布驱动部署”模型：
 
 - `main` 分支只做日常开发校验，不直接触发生产发布
-- `repos/cost/.github/workflows/release-draft.yml` 负责准备或更新某个版本的 GitHub Draft Release
-- `repos/cost/.github/workflows/deploy-azure-static-website.yml` 只在 release 从 draft 变为 published，或手动指定已发布 tag 重部署时运行
+- `repos/cost/.github/workflows/release-drafter.yml` 使用现成的 `release-drafter/release-drafter@v6` 维护 GitHub Draft Release
+- 不再保留单独的 `release-draft.yml` 构建工作流
+- `repos/cost/.github/workflows/deploy-azure-static-website.yml` 在 release published 或手动指定 tag 时直接 checkout、build、deploy
 - 这里的 “draft” 指 GitHub Draft Release 语义，与桌面端现有 release draft 能力对齐，不是仓库内额外维护的一套自定义阶段
 
 ### Draft Release 工作流
 
-由于 GitHub 不会为 draft release 的 `created` / `edited` 事件触发 workflow，Cost 仓库把 `release-draft.yml` 实现为手动触发的“创建/更新草稿 release”入口：维护者输入目标版本后，workflow 会安装依赖、运行 `lint` / `test` / `build`，然后生成冻结资产。
+`release-drafter.yml` 直接复用 desktop 同类实现：由 `release-drafter/release-drafter@v6` 维护 GitHub Draft Release 的 notes 草稿。
 
-冻结资产包含：
-
-- 版本化站点归档，例如 `cost-site-v1.2.3.tar.gz`
-- `release-manifest.json`
-
-manifest 至少记录以下元数据：
-
-- release `version` 与标准化 `tag`
-- 构建所用 `commitSha`
-- `artifactName` 与 `artifactSha256`
-- `builtAt`
-- `basePath`
-- `siteUrl`
-
-如果版本解析、依赖安装、测试或构建失败，workflow 会在接触 GitHub Draft Release 之前停止，因此不会产生未校验的草稿资产。
+Cost 仓库不再单独维护一个“先打包 assets 再上传 draft”的自定义 workflow。发布草稿主要承担版本说明与审阅职责；真正的生产部署在 release published 后由 deploy workflow 直接完成构建和发布。
 
 ### Release 版本临时对齐
 
-release 构建时会临时对齐两个版本来源：
+生产部署时会直接 checkout 已发布 tag，并在 CI 工作目录中执行：
 
-1. `VITE_APP_VERSION`
-2. `package.json` 的 `version`
+1. 从 tag 解析版本号
+2. 使用 `npm version <version> --no-git-tag-version` 临时同步 `package.json`
+3. 在构建时注入 `VITE_APP_VERSION`
 
-`scripts/release/align-release-version.mjs` 会先把 release 版本写入 `package.json`，再导出：
+因为这只发生在 GitHub Actions 的临时工作区，所以不会污染仓库历史，但能确保站点显示版本与发布 tag 一致。
 
-- `COST_RELEASE_VERSION`
-- `COST_RELEASE_TAG`
-- `VITE_APP_VERSION`
-- `npm_package_version`
+### Azure 发布
 
-构建结束后，workflow 会恢复原始 `package.json` 版本，避免污染仓库工作树。这样可以确保站点显示版本、release asset 命名和 manifest 元数据一致。
+`deploy-azure-static-website.yml` 现在直接参考 `repos/site` 的做法，使用现成的 `Azure/static-web-apps-deploy@v1` action：
 
-### Azure Static Website 部署
+1. checkout 对应的已发布 release tag
+2. 安装依赖并构建 `dist/`
+3. 使用 `Azure/static-web-apps-deploy@v1` 上传构建结果
 
-正式部署只消费已发布 GitHub Release 上的冻结资产，不重新构建站点：
-
-1. 下载 release 上的站点归档与 `release-manifest.json`
-2. 校验 tag、归档文件名与 SHA-256 是否匹配
-3. 登录 Azure
-4. 上传文件到 Storage Static Website 的 `$web` 容器
-5. 按配置决定是否执行 CDN purge
-
-缓存策略由 `scripts/deploy/upload-static-website.mjs` 显式控制：
-
-- `index.html` 等 HTML：`no-cache, no-store, must-revalidate`
-- `robots.txt`、`sitemap.xml`、`favicon.svg` 等根级元数据文件：`public, max-age=300, must-revalidate`
-- `assets/` 下的 Vite 指纹文件：`public, max-age=31536000, immutable`
+这意味着上传逻辑不再由仓库脚本自行实现，而是交给现成 action 处理。
 
 ### GitHub / Azure 配置
 
-`release-draft.yml` 需要：
+`release-drafter.yml` 需要：
 
-- `contents: write` 权限，用于创建或更新 GitHub Draft Release
-- 可选变量：`COST_SITE_BASE_PATH`、`COST_SITE_URL`
+- `contents: write` 权限
+- `pull-requests: write` 权限
 
 `deploy-azure-static-website.yml` 需要：
 
-- GitHub secrets：`AZURE_CLIENT_ID`、`AZURE_TENANT_ID`、`AZURE_SUBSCRIPTION_ID`
-- GitHub variables：`AZURE_STORAGE_ACCOUNT`
-- 可选 GitHub variables：`AZURE_STORAGE_CONTAINER`（默认 `$web`）、`AZURE_CDN_RESOURCE_GROUP`、`AZURE_CDN_PROFILE`、`AZURE_CDN_ENDPOINT`、`AZURE_CDN_CONTENT_PATHS`
-
-只有当 `AZURE_CDN_RESOURCE_GROUP`、`AZURE_CDN_PROFILE`、`AZURE_CDN_ENDPOINT` 都存在时，部署脚本才会执行 CDN purge；否则会把 purge 标记为 skipped，但不会让部署失败。
+- GitHub secret：`AZURE_STATIC_WEB_APPS_API_TOKEN_COST`
+- 可选 GitHub variables：`COST_SITE_BASE_PATH`、`COST_SITE_URL`
 
 ### 回滚方式
 
-回滚不需要重新构建旧版本。选择一个已经 published 的历史 release tag，然后手动触发 `deploy-azure-static-website.yml` 并传入该 tag，即可复用当时冻结的 release asset 重新部署。
+回滚时选择一个已经 published 的历史 release tag，然后手动触发 `deploy-azure-static-website.yml` 并传入该 tag；workflow 会 checkout 该 tag、重新构建对应版本并重新发布。
 
 ## 首页结构
 

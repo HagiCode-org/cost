@@ -1,15 +1,26 @@
-import { resolveSEOConfig, siteConfig } from "@/config/seo"
+import { resolveAbsoluteAssetUrl, resolveSEOConfig, siteConfig } from "@/config/seo"
+import type { SupportedLanguage } from "@/i18n/config"
 
-export function injectAllSchemas(language: "zh-CN" | "en-US" = "zh-CN") {
+function resolveSchemaId(fragment: string) {
+  return `${siteConfig.origin.replace(/\/+$/, "")}/#${fragment}`
+}
+
+export function injectAllSchemas(language: SupportedLanguage = "zh-CN") {
   const seo = resolveSEOConfig(language)
+  const organizationId = resolveSchemaId("organization")
+  const websiteId = resolveSchemaId("website")
+
   const payloads = [
     {
       id: "organization",
       value: {
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: siteConfig.author,
+        "@id": organizationId,
+        name: siteConfig.organizationName,
         url: siteConfig.origin,
+        description: siteConfig.description,
+        logo: resolveAbsoluteAssetUrl("og-image.svg"),
       },
     },
     {
@@ -17,10 +28,15 @@ export function injectAllSchemas(language: "zh-CN" | "en-US" = "zh-CN") {
       value: {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        name: siteConfig.name,
+        "@id": websiteId,
         url: seo.url,
+        name: seo.siteName,
         description: seo.description,
         inLanguage: language,
+        publisher: {
+          "@id": organizationId,
+        },
+        image: seo.image,
       },
     },
     {
@@ -28,14 +44,18 @@ export function injectAllSchemas(language: "zh-CN" | "en-US" = "zh-CN") {
       value: {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        name: seo.title,
+        "@id": seo.url,
         url: seo.url,
+        name: seo.title,
         description: seo.description,
+        inLanguage: language,
         isPartOf: {
-          "@type": "WebSite",
-          name: siteConfig.name,
-          url: seo.url,
+          "@id": websiteId,
         },
+        about: {
+          "@id": organizationId,
+        },
+        primaryImageOfPage: seo.image,
       },
     },
   ]

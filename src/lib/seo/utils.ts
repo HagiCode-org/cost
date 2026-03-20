@@ -1,5 +1,5 @@
-import type { SupportedLanguage } from "@/i18n/config"
 import { resolveSEOConfig } from "@/config/seo"
+import type { SupportedLanguage } from "@/i18n/config"
 
 function upsertMeta(selector: string, attributes: Record<string, string>) {
   let element = document.head.querySelector(selector) as HTMLMetaElement | null
@@ -25,23 +25,26 @@ function upsertLink(selector: string, attributes: Record<string, string>) {
   })
 }
 
+function replaceGeneratedMeta(property: string, values: string[]) {
+  document.head.querySelectorAll(`meta[data-generated="${property}"]`).forEach((node) => node.remove())
+
+  values.forEach((value) => {
+    const meta = document.createElement("meta")
+    meta.setAttribute("property", property)
+    meta.setAttribute("content", value)
+    meta.dataset.generated = property
+    document.head.appendChild(meta)
+  })
+}
+
 function replaceAlternateLinks(language: SupportedLanguage) {
   document.head.querySelectorAll('link[data-generated="alternate-language"]').forEach((node) => node.remove())
 
-  const activeConfig = resolveSEOConfig(language)
-  const alternates = [
-    { hrefLang: language, href: activeConfig.url },
-    ...activeConfig.alternateLocales.map((item) => ({
-      hrefLang: item.hrefLang,
-      href: resolveSEOConfig(item.locale as SupportedLanguage).url,
-    })),
-  ]
-
-  alternates.forEach((item) => {
+  resolveSEOConfig(language).alternates.forEach((item) => {
     const link = document.createElement("link")
     link.rel = "alternate"
     link.hreflang = item.hrefLang
-    link.href = item.href
+    link.href = item.url
     link.dataset.generated = "alternate-language"
     document.head.appendChild(link)
   })
@@ -64,11 +67,14 @@ export function updateSEO(language: SupportedLanguage) {
   upsertMeta('meta[property="og:image"]', { property: "og:image", content: config.image })
   upsertMeta('meta[property="og:url"]', { property: "og:url", content: config.url })
   upsertMeta('meta[property="og:type"]', { property: "og:type", content: "website" })
+  upsertMeta('meta[property="og:site_name"]', { property: "og:site_name", content: config.siteName })
   upsertMeta('meta[property="og:locale"]', { property: "og:locale", content: config.locale })
+  replaceGeneratedMeta("og:locale:alternate", config.ogLocaleAlternates)
   upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" })
   upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: config.title })
   upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: config.description })
   upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: config.image })
+  upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: config.url })
   upsertLink('link[rel="canonical"]', { rel: "canonical", href: config.url })
   replaceAlternateLinks(language)
 }

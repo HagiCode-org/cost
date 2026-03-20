@@ -1,81 +1,44 @@
 import type { TFunction } from "i18next"
+import { hagicodeCompliance } from "../../../../../site/src/config/compliance"
 
-import type { FutureFeatureId, RootState } from "@/lib/store"
-
-interface FutureFeatureViewModel {
-  id: FutureFeatureId
-  title: string
-  description: string
-  status: string
-}
-
-const futureFeatureKeyMap: Record<FutureFeatureId, string> = {
-  "job-profile": "jobProfile",
-  "task-breakdown": "taskBreakdown",
-  "result-brief": "resultBrief",
-  "action-path": "actionPath",
-}
-
-const statusKeyMap = {
-  planned: "planned",
-  research: "research",
-  "ready-for-ui": "readyForUi",
-} as const
-
-export function getHomePageContent(t: TFunction, siteState: RootState["site"]) {
+export function getHomePageContent(t: TFunction) {
   return {
-    hero: {
-      eyebrow: t("hero.eyebrow"),
-      title: t("hero.title"),
-      description: t("hero.description"),
-      primaryCta: t("hero.primaryCta"),
-      secondaryCta: t("hero.secondaryCta"),
-      statCards: [0, 1, 2].map((index) => ({
-        title: t(`hero.stats.${index}.title`),
-        description: t(`hero.stats.${index}.description`),
-      })),
-    },
-    storyCards: [0, 1, 2].map((index) => ({
-      eyebrow: t(`story.cards.${index}.eyebrow`),
-      title: t(`story.cards.${index}.title`),
-      description: t(`story.cards.${index}.description`),
-    })),
-    methodology: {
-      title: t("methodology.title"),
-      description: t("methodology.description"),
-      pillars: [0, 1, 2].map((index) => ({
-        title: t(`methodology.pillars.${index}.title`),
-        description: t(`methodology.pillars.${index}.description`),
-      })),
-      note: t("methodology.note"),
-    },
-    futureFeatures: siteState.futureFeatures.map<FutureFeatureViewModel>((item) => ({
-      id: item.id,
-      title: t(`futureFeatures.items.${futureFeatureKeyMap[item.id]}.title`),
-      description: t(`futureFeatures.items.${futureFeatureKeyMap[item.id]}.description`),
-      status: t(`futureFeatures.status.${statusKeyMap[item.status]}`),
-    })),
-    formBlueprint: {
-      title: t("formBlueprint.title"),
-      description: t("formBlueprint.description"),
-      labels: {
-        role: t("formBlueprint.labels.role"),
-        industry: t("formBlueprint.labels.industry"),
-        context: t("formBlueprint.labels.context"),
-      },
-      placeholders: {
-        role: t("formBlueprint.placeholders.role"),
-        industry: t("formBlueprint.placeholders.industry"),
-        context: t("formBlueprint.placeholders.context"),
-      },
-      helper: t("formBlueprint.helper"),
-      button: t("formBlueprint.button"),
-      foundationStatus: t(`formBlueprint.foundationStatus.${siteState.foundationStatus}`),
-    },
     footer: {
       disclaimerTitle: t("footer.disclaimerTitle"),
       disclaimer: t("footer.disclaimer"),
       extensionNote: t("footer.extensionNote"),
+      registrationLabel: t("footer.registrationLabel"),
+      registrationItems: [
+        {
+          label: hagicodeCompliance.icp.label,
+          href: hagicodeCompliance.icp.href,
+          ariaLabel: t("footer.registrationAria.icp"),
+        },
+        {
+          label: hagicodeCompliance.publicSecurity.label,
+          href: hagicodeCompliance.publicSecurity.href,
+          ariaLabel: t("footer.registrationAria.publicSecurity"),
+        },
+      ],
+      linksTitle: t("footer.linksTitle"),
+      links: [
+        {
+          label: t("footer.links.website"),
+          href: "https://hagicode.com/",
+        },
+        {
+          label: t("footer.links.docs"),
+          href: "https://docs.hagicode.com/",
+        },
+        {
+          label: t("footer.links.github"),
+          href: "https://github.com/HagiCode-org/site",
+        },
+        {
+          label: t("footer.links.pricing"),
+          href: "https://openai.com/api/pricing/",
+        },
+      ],
       copyright: t("footer.copyright"),
     },
   }

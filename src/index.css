@@ -35,8 +35,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --font-sans: "Noto Sans Variable", "Noto Sans CJK SC", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Noto Sans Variable", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", "Source Code Pro", "Noto Sans Mono CJK SC", monospace;
   --font-display: "Newsreader", Georgia, serif;
 }
 

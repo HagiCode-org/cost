@@ -5,6 +5,7 @@ import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { useShareCurrentSite } from "@/hooks/use-share-current-site"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -27,47 +28,63 @@ interface MetricValueProps extends DetailTooltipProps {
   className?: string
 }
 
+const mobileTooltipTriggerClassName =
+  "inline-flex size-6 items-center justify-center rounded-full border border-primary/20 bg-primary/8 text-xs font-bold text-primary transition-colors hover:bg-primary/12"
+
+const desktopTooltipTriggerClassName =
+  "inline-flex size-5 items-center justify-center rounded-full border border-primary/20 bg-primary/8 text-[11px] font-bold text-primary transition-colors hover:bg-primary/12"
+
 function MobileDetailTooltip({ label, formula, explanation }: DetailTooltipProps) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
+  const detailAriaLabel = t("results.summary.detailAria", { label })
 
   return (
-    <>
-      <button
-        type="button"
-        className="inline-flex size-6 items-center justify-center rounded-full border border-primary/20 bg-primary/8 text-xs font-bold text-primary transition-colors hover:bg-primary/12"
-        aria-label={t("results.summary.detailAria", { label })}
-        onClick={() => setIsOpen(true)}
-      >
-        ?
-      </button>
-      {isOpen ? (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm"
-          onClick={() => setIsOpen(false)}
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <button
+          type="button"
+          className={mobileTooltipTriggerClassName}
+          aria-label={detailAriaLabel}
         >
-          <div
-            className="w-full max-w-lg rounded-t-2xl bg-background px-5 pb-8 pt-6 text-sm leading-relaxed shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-4 flex justify-center">
-              <div className="size-1 rounded-full bg-muted-foreground/30" />
-            </div>
-            <div className="space-y-3">
-              <p className="font-semibold">{label}</p>
-              {formula ? <p className="break-all font-mono text-xs text-muted-foreground">{formula}</p> : null}
-              <p className="text-muted-foreground">{explanation}</p>
+          ?
+        </button>
+      </DialogTrigger>
+      <DialogContent
+        showCloseButton={false}
+        aria-describedby={undefined}
+        className="!inset-2 !grid !h-[calc(100dvh-1rem)] !w-[calc(100vw-1rem)] !max-h-none !max-w-none !translate-x-0 !translate-y-0 !gap-0 !overflow-hidden !rounded-[1.75rem] !border-0 !bg-background !p-0 !ring-0"
+      >
+        <div className="relative flex h-full min-h-0 flex-col">
+          <DialogClose asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="absolute top-[max(env(safe-area-inset-top),1rem)] right-4 z-10 shrink-0 rounded-full px-3"
+            >
+              {t("results.summary.closeDetail")}
+            </Button>
+          </DialogClose>
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-[max(env(safe-area-inset-bottom),1.5rem)] pt-[max(env(safe-area-inset-top),4.5rem)]">
+            <div className="mx-auto flex min-h-full w-full max-w-xl flex-col justify-center">
+              <DialogHeader className="gap-4 py-6">
+                <DialogTitle className="text-base leading-6 font-semibold sm:text-lg">{label}</DialogTitle>
+                {formula ? <p className="break-all font-mono text-xs text-muted-foreground">{formula}</p> : null}
+                <p className="text-sm leading-relaxed text-muted-foreground">{explanation}</p>
+              </DialogHeader>
             </div>
           </div>
         </div>
-      ) : null}
-    </>
+      </DialogContent>
+    </Dialog>
   )
 }
 
 function DetailTooltip({ label, formula, explanation }: DetailTooltipProps) {
   const { t } = useTranslation()
   const isMobile = useIsMobile()
+  const detailAriaLabel = t("results.summary.detailAria", { label })
 
   if (isMobile) {
     return <MobileDetailTooltip label={label} formula={formula} explanation={explanation} />
@@ -78,8 +95,8 @@ function DetailTooltip({ label, formula, explanation }: DetailTooltipProps) {
       <TooltipTrigger asChild>
         <button
           type="button"
-          className="inline-flex size-5 items-center justify-center rounded-full border border-primary/20 bg-primary/8 text-[11px] font-bold text-primary transition-colors hover:bg-primary/12"
-          aria-label={t("results.summary.detailAria", { label })}
+          className={desktopTooltipTriggerClassName}
+          aria-label={detailAriaLabel}
         >
           ?
         </button>

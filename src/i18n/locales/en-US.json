@@ -229,6 +229,7 @@
       "dailyAiCost": "Daily AI cost",
       "peopleEquivalent": "You + AI workforce equivalent",
       "totalEmploymentCost": "Total annual employment cost",
+      "closeDetail": "Close",
       "detailCollapseLabel": "View detailed data (salary, efficiency, tokens, cost)",
       "detailCollapseAria": "Expand to view detailed salary, efficiency multiplier, token usage and cost data"
     },

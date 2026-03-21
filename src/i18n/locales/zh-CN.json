@@ -229,6 +229,7 @@
       "dailyAiCost": "日均 AI 成本",
       "peopleEquivalent": "你 + AI 的等效人力",
       "totalEmploymentCost": "企业年度全用工成本",
+      "closeDetail": "关闭",
       "detailCollapseLabel": "查看详细数据（年薪、效率、Token、成本）",
       "detailCollapseAria": "展开查看年薪、效率倍数、Token 用量和成本等详细数据"
     },

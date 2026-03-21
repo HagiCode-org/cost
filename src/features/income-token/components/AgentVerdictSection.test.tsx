@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react"
+import { fireEvent, screen, waitFor, within } from "@testing-library/react"
 import { beforeAll, beforeEach, describe, expect, it } from "vitest"
 
 import { AgentVerdictSection } from "./AgentVerdictSection"
@@ -39,6 +39,11 @@ const summaryData = {
   effectivePeopleEquivalentExplanation: "people-equivalent-explanation",
 } as ResultViewModel["summarySection"]
 
+async function openSummaryDetails() {
+  const collapseTrigger = await screen.findByRole("button", { name: /展开查看年薪、效率倍数、Token 用量和成本等详细数据/ })
+  fireEvent.click(collapseTrigger)
+}
+
 beforeAll(() => {
   installViewportMock()
 })
@@ -50,28 +55,60 @@ beforeEach(async () => {
 })
 
 describe("AgentVerdictSection", () => {
-  it("uses a tap-to-toggle detail panel on mobile and closes when clicking outside", async () => {
+  it("opens a fullscreen mobile help overlay with the metric heading and detail content", async () => {
     setViewportWidth(375)
     renderWithProviders(<AgentVerdictSection data={summaryData} />)
+    await openSummaryDetails()
 
     const detailButton = await screen.findByRole("button", { name: /企业年度全用工成本/ })
     fireEvent.click(detailButton)
 
-    const formula = await screen.findByText("annual-cost-formula")
-    expect(formula).toHaveClass("text-xs")
-    expect(formula).toHaveClass("md:text-[11px]")
-    expect(screen.getByText("annual-cost-explanation")).toBeInTheDocument()
+    const dialog = await screen.findByRole("dialog", { name: "企业年度全用工成本" })
+    expect(dialog).toHaveClass("!inset-2")
+    expect(dialog).toHaveClass("!h-[calc(100dvh-1rem)]")
+    expect(dialog).not.toHaveClass("rounded-t-2xl")
 
-    fireEvent.click(document.body)
+    const formula = within(dialog).getByText("annual-cost-formula")
+    expect(formula).toHaveClass("text-xs")
+    expect(within(dialog).getByText("annual-cost-explanation")).toBeInTheDocument()
+    expect(within(dialog).getByRole("button", { name: "关闭" })).toBeInTheDocument()
+  })
+
+  it("supports overlay tap close and explicit close actions on mobile", async () => {
+    setViewportWidth(375)
+    renderWithProviders(<AgentVerdictSection data={summaryData} />)
+    await openSummaryDetails()
+
+    const detailButton = await screen.findByRole("button", { name: /企业年度全用工成本/ })
+    fireEvent.click(detailButton)
+    await screen.findByRole("dialog", { name: "企业年度全用工成本" })
+
+    const overlay = document.querySelector("[data-slot='dialog-overlay']")
+    expect(overlay).not.toBeNull()
+    fireEvent.pointerDown(overlay as Element)
+    fireEvent.mouseDown(overlay as Element)
+    fireEvent.click(overlay as Element)
 
     await waitFor(() => {
-      expect(screen.queryByText("annual-cost-formula")).not.toBeInTheDocument()
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+      expect(detailButton).toHaveFocus()
+    })
+
+    fireEvent.click(detailButton)
+
+    const reopenedDialog = await screen.findByRole("dialog", { name: "企业年度全用工成本" })
+    fireEvent.click(within(reopenedDialog).getByRole("button", { name: "关闭" }))
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+      expect(detailButton).toHaveFocus()
     })
   })
 
   it("keeps the desktop tooltip rendering path available outside mobile mode", async () => {
     setViewportWidth(1280)
     renderWithProviders(<AgentVerdictSection data={summaryData} />)
+    await openSummaryDetails()
 
     const detailButton = await screen.findByRole("button", { name: /企业年度全用工成本/ })
     fireEvent.focus(detailButton)

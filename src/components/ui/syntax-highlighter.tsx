@@ -28,7 +28,7 @@ export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({
       className={`rounded-md ${className}`}
       showLineNumbers={showLineNumbers}
       wrapLines={Boolean(highlightPattern)}
-      lineProps={highlightPattern ? (lineNumber) => {
+      lineProps={highlightPattern ? (lineNumber: number) => {
         const lines = children.split('\n');
         const line = lines[lineNumber - 1] || '';
         if (highlightPattern.test(line)) {

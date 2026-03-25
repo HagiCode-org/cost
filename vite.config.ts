@@ -33,6 +33,7 @@ const appVersion = resolveAppVersion()
 
 export default defineConfig({
   server: {
+    host: "0.0.0.0",
     port: 36291,
   },
   plugins: [react(), tailwindcss()],

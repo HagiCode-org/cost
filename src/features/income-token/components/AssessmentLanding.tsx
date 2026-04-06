@@ -8,19 +8,19 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 import {
-  cityOptions,
   defaultIncomePresetByCurrency,
+  getCityOptions,
   getIncomeOptions,
-  modelOptions,
+  getModelOptions,
   salaryCurrencyOptions,
 } from "@/features/income-token/content/form-options"
-import type { CityTier } from "@/features/income-token/content/benchmark-data"
+import { benchmarkData, type CityTier } from "@/features/income-token/content/benchmark-data"
 import { pricingData } from "@/features/income-token/content/pricing-data"
 import { buildResultViewModel, type ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 import {
-  DEFAULT_SALARY_CURRENCY,
   convertAnnualCnyToSalaryInput,
   formatSalaryInputValue,
+  getDefaultSalaryCurrency,
   isSalaryCurrency,
   type SalaryCurrency,
 } from "@/features/income-token/lib/currency"
@@ -28,14 +28,20 @@ import { evaluate, normalizeAnnualIncomeCny, type EvaluationInput } from "@/feat
 import { evaluateSpecialTitles } from "@/features/income-token/lib/evaluate-special-titles"
 import { mergeEarnedTitleIds, readEarnedTitleIds, writeEarnedTitleIds } from "@/features/income-token/lib/title-storage"
 import type { SpecialTitleId } from "@/features/income-token/lib/title-types"
+import { getResolvedExperienceContext, getResolvedLanguage } from "@/i18n/config"
+import {
+  getDefaultCityTierForRegion,
+  syncRegionPreferenceFromUrl,
+  type SiteRegion,
+} from "@/lib/region"
 import { cn } from "@/lib/utils"
 import { ResultSections } from "./ResultSections"
 
-const defaultModelId = modelOptions[0]?.value ?? "gpt-5"
+const defaultModelId = pricingData.models[0]?.id ?? "gpt-5"
 const questionOrder = ["01", "02", "03", "04", "05", "06"] as const
 const CUSTOM_INCOME_VALUE = "custom"
-const validCityValues = new Set(cityOptions.map((option) => option.value))
-const validModelValues = new Set(modelOptions.map((option) => option.value))
+const validCityValues = new Set(benchmarkData.cityCoefficients.map((option) => option.tier))
+const validModelValues = new Set(pricingData.models.map((option) => option.id))
 
 function getSearchParams() {
   if (typeof window === "undefined") return new URLSearchParams()
@@ -49,9 +55,9 @@ function parseNumberString(value: string | null, min: number) {
   return value
 }
 
-function getInitialSelectedCurrency(): SalaryCurrency {
-  const currency = getSearchParams().get("currency")
-  return isSalaryCurrency(currency) ? currency : DEFAULT_SALARY_CURRENCY
+function getInitialSelectedCurrency(params: URLSearchParams, region: SiteRegion): SalaryCurrency {
+  const currency = params.get("currency")
+  return isSalaryCurrency(currency) ? currency : getDefaultSalaryCurrency(region)
 }
 
 function getValidIncomePresetValues(currency: SalaryCurrency) {
@@ -61,8 +67,7 @@ function getValidIncomePresetValues(currency: SalaryCurrency) {
   ])
 }
 
-function getInitialIncomePreset(currency: SalaryCurrency) {
-  const params = getSearchParams()
+function getInitialIncomePreset(params: URLSearchParams, currency: SalaryCurrency) {
   const preset = params.get("incomePreset")
   const income = params.get("income")
 
@@ -77,8 +82,7 @@ function getInitialIncomePreset(currency: SalaryCurrency) {
   return defaultIncomePresetByCurrency[currency]
 }
 
-function getInitialIncomeAmount(currency: SalaryCurrency, incomePreset: string) {
-  const params = getSearchParams()
+function getInitialIncomeAmount(params: URLSearchParams, currency: SalaryCurrency, incomePreset: string) {
   const income = parseNumberString(params.get("income"), 0.000001)
 
   if (incomePreset === CUSTOM_INCOME_VALUE) {
@@ -92,17 +96,17 @@ function getInitialIncomeAmount(currency: SalaryCurrency, incomePreset: string) 
   return defaultIncomePresetByCurrency[currency]
 }
 
-function getInitialCityTier(): CityTier {
-  const city = getSearchParams().get("city")
+function getInitialCityTier(params: URLSearchParams, region: SiteRegion): CityTier {
+  const city = params.get("city")
   if (city && validCityValues.has(city as CityTier)) {
     return city as CityTier
   }
 
-  return "tier1"
+  return getDefaultCityTierForRegion(region)
 }
 
-function getInitialModelId() {
-  const model = getSearchParams().get("model")
+function getInitialModelId(params: URLSearchParams) {
+  const model = params.get("model")
   if (model && validModelValues.has(model)) {
     return model
   }
@@ -118,34 +122,52 @@ function getInitialDailyTokens() {
   return parseNumberString(getSearchParams().get("dailyTokens"), 0) ?? "100"
 }
 
+function getInitialAssessmentState() {
+  syncRegionPreferenceFromUrl()
+
+  const params = getSearchParams()
+  const { region } = getResolvedExperienceContext()
+  const selectedCurrency = getInitialSelectedCurrency(params, region)
+  const incomePreset = getInitialIncomePreset(params, selectedCurrency)
+
+  return {
+    region,
+    selectedCurrency,
+    incomePreset,
+    incomeAmount: getInitialIncomeAmount(params, selectedCurrency, incomePreset),
+    cityTier: getInitialCityTier(params, region),
+    modelId: getInitialModelId(params),
+    performanceMultiplier: getInitialMultiplier(),
+    dailyTokenUsage: getInitialDailyTokens(),
+  }
+}
+
 interface AssessmentLandingProps {
   onResultChange?: (result: ResultViewModel | null) => void
 }
 
 export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
-  const { t, i18n } = useTranslation()
-  const [selectedCurrency, setSelectedCurrency] = useState<SalaryCurrency>(getInitialSelectedCurrency)
-  const [incomePreset, setIncomePreset] = useState(() => {
-    const currency = getInitialSelectedCurrency()
-    return getInitialIncomePreset(currency)
-  })
-  const [incomeAmount, setIncomeAmount] = useState(() => {
-    const currency = getInitialSelectedCurrency()
-    return getInitialIncomeAmount(currency, getInitialIncomePreset(currency))
-  })
-  const [cityTier, setCityTier] = useState<CityTier>(getInitialCityTier)
-  const [modelId, setModelId] = useState(getInitialModelId)
-  const [performanceMultiplier, setPerformanceMultiplier] = useState(getInitialMultiplier)
-  const [dailyTokenUsage, setDailyTokenUsage] = useState(getInitialDailyTokens)
+  const { t } = useTranslation()
+  const initialState = useMemo(() => getInitialAssessmentState(), [])
+  const [region] = useState<SiteRegion>(initialState.region)
+  const [selectedCurrency, setSelectedCurrency] = useState<SalaryCurrency>(initialState.selectedCurrency)
+  const [incomePreset, setIncomePreset] = useState(initialState.incomePreset)
+  const [incomeAmount, setIncomeAmount] = useState(initialState.incomeAmount)
+  const [cityTier, setCityTier] = useState<CityTier>(initialState.cityTier)
+  const [modelId, setModelId] = useState(initialState.modelId)
+  const [performanceMultiplier, setPerformanceMultiplier] = useState(initialState.performanceMultiplier)
+  const [dailyTokenUsage, setDailyTokenUsage] = useState(initialState.dailyTokenUsage)
   const [earnedTitleIds, setEarnedTitleIds] = useState<SpecialTitleId[]>(() => readEarnedTitleIds())
   const [hasInteracted, setHasInteracted] = useState(false)
   const previousMatchedTitleSignatureRef = useRef("")
 
   const incomeOptions = useMemo(() => getIncomeOptions(selectedCurrency), [selectedCurrency])
+  const language = getResolvedLanguage()
+  const cityOptions = useMemo(() => getCityOptions(region, language), [language, region])
+  const modelOptions = useMemo(() => getModelOptions(language), [language])
   const incomeValue = Number.parseFloat(incomeAmount)
   const multiplierValue = Number.parseFloat(performanceMultiplier)
   const tokenValue = Number.parseFloat(dailyTokenUsage)
-  const language = (i18n.resolvedLanguage || "zh-CN") as "zh-CN" | "en-US"
 
   const hasValidIncome = incomeAmount !== "" && Number.isFinite(incomeValue) && incomeValue > 0
   const normalizedAnnualIncomeCny = hasValidIncome
@@ -183,8 +205,8 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
   const result: ResultViewModel | null = useMemo(() => {
     if (!calculationResult) return null
 
-    return buildResultViewModel(calculationResult, language, selectedCurrency)
-  }, [calculationResult, language, selectedCurrency])
+    return buildResultViewModel(calculationResult, language, selectedCurrency, region)
+  }, [calculationResult, language, region, selectedCurrency])
 
   const rawTitleEvaluation = useMemo(() => {
     if (!isZeroTokenSpecialPath && !calculationResult) return null
@@ -261,6 +283,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
 
     const params = new URLSearchParams(window.location.search)
 
+    params.set("region", region)
     params.set("currency", selectedCurrency)
     params.set("incomePreset", incomePreset || defaultIncomePresetByCurrency[selectedCurrency])
     if (incomeAmount) {
@@ -288,6 +311,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
     incomePreset,
     modelId,
     performanceMultiplier,
+    region,
     selectedCurrency,
   ])
 
@@ -381,6 +405,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
               })}
             </div>
             <div className="mt-4 space-y-1 text-sm text-muted-foreground">
+              <p>{t("assessment.form.regionHint", { region: t(`assessment.regions.${region}`) })}</p>
               <p>{t("assessment.form.currencyHint", { unit: t(incomeUnitKey) })}</p>
               <p>{t("assessment.form.exchangeRateHint", { rate: pricingData.exchangeRateUsdToCny })}</p>
             </div>
@@ -481,7 +506,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
             >
               {cityOptions.map((option) => (
                 <NativeSelectOption key={option.value} value={option.value}>
-                  {language === "zh-CN" ? option.label : option.labelEn}
+                  {option.label}
                 </NativeSelectOption>
               ))}
             </NativeSelect>
@@ -505,6 +530,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
               {modelOptions.map((option) => (
                 <NativeSelectOption key={option.value} value={option.value}>
                   {option.providerName} · {option.label} · {option.description}
+                  {option.pricingContext ? ` · ${option.pricingContext}` : ""}
                 </NativeSelectOption>
               ))}
             </NativeSelect>
@@ -553,7 +579,12 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
       </div>
 
       {result && evaluationInput ? (
-        <ResultSections result={result} baseInput={evaluationInput} selectedCurrency={selectedCurrency} />
+        <ResultSections
+          result={result}
+          baseInput={evaluationInput}
+          selectedCurrency={selectedCurrency}
+          region={region}
+        />
       ) : null}
     </div>
   )

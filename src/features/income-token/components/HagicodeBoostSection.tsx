@@ -13,11 +13,13 @@ import { buildResultViewModel } from "@/features/income-token/lib/build-result-v
 import { evaluate, type EvaluationInput } from "@/features/income-token/lib/calculate-ai-risk"
 import { formatCurrencyAmountFromCny, type SalaryCurrency } from "@/features/income-token/lib/currency"
 import type { SupportedLanguage } from "@/i18n/config"
+import type { SiteRegion } from "@/lib/region"
 import { cn } from "@/lib/utils"
 
 interface HagicodeBoostSectionProps {
   baseInput: EvaluationInput
   selectedCurrency: SalaryCurrency
+  region: SiteRegion
 }
 
 const MIN_BOOST = 1.5
@@ -134,7 +136,7 @@ function BoostVerdictCard({ label, headline, body, toneClass, compact = false }:
   )
 }
 
-export function HagicodeBoostSection({ baseInput, selectedCurrency }: HagicodeBoostSectionProps) {
+export function HagicodeBoostSection({ baseInput, selectedCurrency, region }: HagicodeBoostSectionProps) {
   const { t, i18n } = useTranslation()
   const [hagicodeBoost, setHagicodeBoost] = useState([DEFAULT_BOOST])
   const [tokenEfficiencyBoost, setTokenEfficiencyBoost] = useState([DEFAULT_TOKEN_EFFICIENCY])
@@ -147,8 +149,8 @@ export function HagicodeBoostSection({ baseInput, selectedCurrency }: HagicodeBo
 
   const baseResult = useMemo(() => evaluate(baseInput), [baseInput])
   const baseViewModel = useMemo(
-    () => buildResultViewModel(baseResult, language, selectedCurrency),
-    [baseResult, language, selectedCurrency],
+    () => buildResultViewModel(baseResult, language, selectedCurrency, region),
+    [baseResult, language, region, selectedCurrency],
   )
 
   const boostedInput = useMemo(
@@ -161,8 +163,8 @@ export function HagicodeBoostSection({ baseInput, selectedCurrency }: HagicodeBo
   )
 
   const boostedViewModel = useMemo(() => {
-    return buildResultViewModel(evaluate(boostedInput), language, selectedCurrency)
-  }, [boostedInput, language, selectedCurrency])
+    return buildResultViewModel(evaluate(boostedInput), language, selectedCurrency, region)
+  }, [boostedInput, language, region, selectedCurrency])
 
   const boostedResult = useMemo(() => evaluate(boostedInput), [boostedInput])
 

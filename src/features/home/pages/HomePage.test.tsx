@@ -3,10 +3,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { HomePage } from "./HomePage"
 import i18n from "@/i18n/config"
+import * as regionModule from "@/lib/region"
 import { formatAppVersion, getAppVersion } from "@/lib/version"
 import { renderWithProviders } from "@/test/render"
 
 beforeEach(() => {
+  vi.restoreAllMocks()
   localStorage.clear()
   document.head.innerHTML = ""
   window.history.replaceState({}, "", "/")
@@ -15,6 +17,7 @@ beforeEach(() => {
       writeText: vi.fn().mockResolvedValue(undefined),
     },
   })
+  vi.spyOn(regionModule, "detectRegion").mockReturnValue("cn-mainland")
   void i18n.changeLanguage("zh-CN")
 })
 
@@ -36,6 +39,20 @@ describe("HomePage", () => {
     expect(screen.getByRole("heading", { level: 3, name: "Smart" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { level: 3, name: "Efficient" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { level: 3, name: "Interesting" })).toBeInTheDocument()
+  })
+
+  it("keeps China-mainland city labels after switching the UI language", async () => {
+    renderWithProviders(<HomePage />)
+
+    fireEvent.click(screen.getByRole("button", { name: /^EN$/i }))
+
+    expect(await screen.findByText(/Current default region: China mainland/)).toBeInTheDocument()
+    expect(
+      screen.getByRole("option", { name: "Beijing / Shanghai / Shenzhen / Guangzhou" }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole("option", { name: /Global tier 1 metro/ }),
+    ).not.toBeInTheDocument()
   })
 
   it("hydrates the form from query parameters", () => {

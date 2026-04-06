@@ -34,10 +34,18 @@
       "subtitle": "输入你的年薪、熟悉的模型、你的主观效率倍数，以及你每天实际要消耗的 Token。"
     },
     "form": {
-      "incomeAmount": "你的年薪是？（万元）",
-      "incomePlaceholder": "例如：30",
+      "currency": "你的薪资单位是？",
+      "currencyHint": "收入预设与自定义输入会随币种切换。当前输入单位：{{unit}}。",
+      "exchangeRateHint": "若选择 USD，内部统一按 1 USD = {{rate}} CNY 折算。",
+      "incomeAmount": "你的年薪是？（{{unit}}）",
+      "incomePlaceholder": "例如：{{example}}",
       "incomeCustom": "自定义输入",
-      "incomeCustomHint": "请输入你的实际年薪，单位仍然是万元。",
+      "incomeCustomHint": "请输入你的实际年薪，当前单位是 {{unit}}。",
+      "presetHint": "预设按钮与输入框共用同一单位：{{unit}}。",
+      "units": {
+        "cny": "万元",
+        "usd": "千美元"
+      },
       "city": "你的城市更接近哪座典型城市？",
       "job": "所属岗位",
       "selectPlaceholder": "请选择",
@@ -174,8 +182,8 @@
       "dailyTokenUsage": "你填写的日均 Token 用量",
       "dailyAiCost": "日均 AI 成本",
       "annualAiCost": "年均 AI 成本",
-      "budgetTokenTitle": "如果把整份年薪都当作 Token 预算",
-      "budgetTokenDesc": "看看这份年薪，最多能买下多少同模型、同口径的 Token。",
+      "budgetTokenTitle": "如果把整份企业年度全用工成本都当作 Token 预算",
+      "budgetTokenDesc": "看看这份企业预算，最多能买下多少同模型、同口径的 Token。",
       "workdayTokenAverage": "折算到每个工作日",
       "annualTokenUsage": "按当前填写折算的全年 Token 用量",
       "collapseLabel": "查看模型成本与 Token 预算详情",
@@ -220,12 +228,12 @@
       "performanceMultiplier": "你主观估计的效率倍数",
       "dailyTokenUsage": "你的日均 Token 用量",
       "annualAiCost": "按此强度估算的 AI 年成本",
-      "salaryShare": "占你年薪的比例",
+      "salaryShare": "占企业年度全用工成本的比例",
       "dangerScale": "同事威胁刻度",
       "detailAria": "查看{{label}}的计算详情",
       "costEffectiveness": "AI 投入产出比",
       "costEffectivenessScale": "AI 性价比刻度",
-      "affordableWorkflow": "你的年薪能覆盖的 Agent 工作流份数",
+      "affordableWorkflow": "你的预算能覆盖的 Agent 工作流份数",
       "dailyAiCost": "日均 AI 成本",
       "peopleEquivalent": "你 + AI 的等效人力",
       "totalEmploymentCost": "企业年度全用工成本",
@@ -235,7 +243,7 @@
     },
     "tokenList": {
       "title": "完整 Token 购买力列表",
-      "subtitle": "基于企业年度全用工成本 ¥{{annualTotalCost}}，保留原来的完整 Token 计算明细。"
+      "subtitle": "基于企业年度全用工成本 {{annualTotalCost}}，保留原来的完整 Token 计算明细。"
     },
     "hagicode": {
       "heading": "如果你使用了 Hagicode 来改善你的效率呢？",

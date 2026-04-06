@@ -34,10 +34,18 @@
       "subtitle": "Enter your salary, familiar model, perceived productivity multiplier, and your real daily token demand."
     },
     "form": {
-      "incomeAmount": "What is your annual salary? (10k CNY)",
-      "incomePlaceholder": "e.g. 30",
+      "currency": "Which salary currency do you use?",
+      "currencyHint": "Income presets and custom input switch with the selected currency. Current input unit: {{unit}}.",
+      "exchangeRateHint": "If you choose USD, the calculator normalizes with 1 USD = {{rate}} CNY.",
+      "incomeAmount": "What is your annual salary? ({{unit}})",
+      "incomePlaceholder": "e.g. {{example}}",
       "incomeCustom": "Custom amount",
-      "incomeCustomHint": "Enter your real annual salary in units of 10k CNY.",
+      "incomeCustomHint": "Enter your real annual salary in {{unit}}.",
+      "presetHint": "Preset buttons and custom input use the same unit: {{unit}}.",
+      "units": {
+        "cny": "10k CNY",
+        "usd": "k USD"
+      },
       "city": "Which typical city is closest to yours?",
       "job": "Job Role",
       "selectPlaceholder": "Select...",
@@ -174,8 +182,8 @@
       "dailyTokenUsage": "Your stated daily token usage",
       "dailyAiCost": "Daily AI cost",
       "annualAiCost": "Annual AI cost",
-      "budgetTokenTitle": "If your full salary became token budget",
-      "budgetTokenDesc": "How many tokens could that salary buy under the same model and ratio?",
+      "budgetTokenTitle": "If the full annual employment budget became token budget",
+      "budgetTokenDesc": "How many tokens could that full employment budget buy under the same model and ratio?",
       "workdayTokenAverage": "Average per workday",
       "annualTokenUsage": "Annual token usage at your current assumption",
       "collapseLabel": "View model cost & token budget details",
@@ -220,12 +228,12 @@
       "performanceMultiplier": "Your estimated productivity multiplier",
       "dailyTokenUsage": "Your daily token usage",
       "annualAiCost": "Estimated yearly AI cost",
-      "salaryShare": "Share of your salary",
+      "salaryShare": "Share of total annual employment cost",
       "dangerScale": "Coworker threat scale",
       "detailAria": "View calculation details for {{label}}",
       "costEffectiveness": "AI cost effectiveness",
       "costEffectivenessScale": "AI value scale",
-      "affordableWorkflow": "Equivalent Agent workflows your salary can cover",
+      "affordableWorkflow": "Equivalent Agent workflows your budget can cover",
       "dailyAiCost": "Daily AI cost",
       "peopleEquivalent": "You + AI workforce equivalent",
       "totalEmploymentCost": "Total annual employment cost",
@@ -235,7 +243,7 @@
     },
     "tokenList": {
       "title": "Full Token Purchasing Power List",
-      "subtitle": "Based on total annual employment cost of ¥{{annualTotalCost}}, this keeps the original full token breakdown."
+      "subtitle": "Based on total annual employment cost of {{annualTotalCost}}, this keeps the original full token breakdown."
     },
     "hagicode": {
       "heading": "What if Hagicode amplified your efficiency?",

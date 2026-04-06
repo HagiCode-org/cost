@@ -8,7 +8,7 @@ import i18n from "@/i18n/config"
 import { renderWithProviders } from "@/test/render"
 
 const costSectionData = {
-  annualTotalCostFormatted: "420,000",
+  annualTotalCostFormatted: "¥420,000",
   providerName: "Anthropic",
   modelName: "Claude Sonnet",
   modelDescription: "General purpose coding model",
@@ -24,8 +24,8 @@ const costSectionData = {
   mixedPriceExplanation: "mixed-price-explanation",
   dailyTokenUsageFormatted: "12 M",
   annualTokenUsageFormatted: "2.88 B",
-  dailyAiCostFormatted: "120",
-  annualAiCostFormatted: "36,000",
+  dailyAiCostFormatted: "¥120",
+  annualAiCostFormatted: "¥36,000",
   dailyAiCostFormula: "daily-ai-cost-formula",
   dailyAiCostExplanation: "daily-ai-cost-explanation",
   annualAiCostFormula: "annual-ai-cost-formula",
@@ -33,10 +33,11 @@ const costSectionData = {
   fullBudgetTotalTokensFormatted: "8.40 B",
   fullBudgetWorkdayTokensFormatted: "35 M",
   workdayAverageFormula: "workday-average-formula",
+  exchangeRateDisclosure: "exchange-rate-disclosure",
 } as ResultViewModel["costSection"]
 
 const tokenListData = {
-  annualTotalCostFormatted: "420,000",
+  annualTotalCostFormatted: "¥420,000",
   inputOutputRatio: 3,
   workingDaysPerYear: 240,
   pricingProviders: [
@@ -76,6 +77,8 @@ const tokenListData = {
 describe("responsive formula copy", () => {
   it("keeps cost formulas at text-xs on mobile with desktop overrides", () => {
     renderWithProviders(<CostImpactSection data={costSectionData} />)
+
+    fireEvent.click(screen.getByRole("button", { name: /Expand to view model cost and token budget details/i }))
 
     expect(screen.getByText("mixed-price-formula")).toHaveClass("text-xs")
     expect(screen.getByText("mixed-price-formula")).toHaveClass("max-md:text-xs")

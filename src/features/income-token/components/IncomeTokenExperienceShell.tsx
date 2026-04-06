@@ -31,11 +31,7 @@ export function IncomeTokenExperienceShell() {
       void shareCurrentSite()
       return
     }
-    const text = [
-      summary.verdictHeadline,
-      summary.verdictBody,
-    ].join("\n")
-    void shareCurrentSite(text).then(() => {
+    void shareCurrentSite(summary.shareCopy).then(() => {
       toast.success(t("share.copied"))
     })
   }

@@ -44,7 +44,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
         <div className="rounded-2xl border bg-background/70 p-5">
           <div className="mb-4 rounded-xl bg-muted/30 p-4">
             <p className="text-xs text-muted-foreground">{t("results.cost.annualTotalCost")}</p>
-            <p className="mt-1 display-type text-2xl font-bold">¥{data.annualTotalCostFormatted}</p>
+            <p className="mt-1 display-type text-2xl font-bold">{data.annualTotalCostFormatted}</p>
           </div>
 
           <div className="flex items-start justify-between gap-4">
@@ -151,6 +151,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
                 {t("results.cost.priceNote")}: {data.pricingNote}
               </p>
             ) : null}
+            {data.exchangeRateDisclosure ? <p className="mt-2">{data.exchangeRateDisclosure}</p> : null}
             <p className="mt-2">{t("results.cost.annualTokenUsage")}: {data.annualTokenUsageFormatted}</p>
           </div>
         </div>

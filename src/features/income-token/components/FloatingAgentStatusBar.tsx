@@ -42,7 +42,7 @@ export function FloatingAgentStatusBar({ data, topOffset }: FloatingAgentStatusB
             size="sm"
             variant={shareState === "error" ? "destructive" : "outline"}
             className="shrink-0 rounded-full border-current/30 bg-white/20 hover:bg-white/30 dark:bg-black/20 dark:hover:bg-black/30"
-            onClick={() => void shareCurrentSite()}
+            onClick={() => void shareCurrentSite(data.shareCopy)}
             aria-label={t("share.currentSiteAria")}
           >
             <Share2 className="size-3.5" aria-hidden="true" />

@@ -1,32 +1,41 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
 import { AlertTriangle } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
-import { cn } from "@/lib/utils"
-import { evaluate, type EvaluationInput } from "@/features/income-token/lib/calculate-ai-risk"
+import {
+  cityOptions,
+  defaultIncomePresetByCurrency,
+  getIncomeOptions,
+  modelOptions,
+  salaryCurrencyOptions,
+} from "@/features/income-token/content/form-options"
+import type { CityTier } from "@/features/income-token/content/benchmark-data"
+import { pricingData } from "@/features/income-token/content/pricing-data"
 import { buildResultViewModel, type ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
-import { cityOptions, incomeOptions, modelOptions } from "@/features/income-token/content/form-options"
+import {
+  DEFAULT_SALARY_CURRENCY,
+  convertAnnualCnyToSalaryInput,
+  formatSalaryInputValue,
+  isSalaryCurrency,
+  type SalaryCurrency,
+} from "@/features/income-token/lib/currency"
+import { evaluate, normalizeAnnualIncomeCny, type EvaluationInput } from "@/features/income-token/lib/calculate-ai-risk"
 import { evaluateSpecialTitles } from "@/features/income-token/lib/evaluate-special-titles"
 import { mergeEarnedTitleIds, readEarnedTitleIds, writeEarnedTitleIds } from "@/features/income-token/lib/title-storage"
 import type { SpecialTitleId } from "@/features/income-token/lib/title-types"
+import { cn } from "@/lib/utils"
 import { ResultSections } from "./ResultSections"
-import type { CityTier } from "@/features/income-token/content/benchmark-data"
 
 const defaultModelId = modelOptions[0]?.value ?? "gpt-5"
-const questionOrder = ["01", "02", "03", "04", "05"] as const
+const questionOrder = ["01", "02", "03", "04", "05", "06"] as const
 const CUSTOM_INCOME_VALUE = "custom"
-const DEFAULT_INCOME_PRESET = "26"
 const validCityValues = new Set(cityOptions.map((option) => option.value))
 const validModelValues = new Set(modelOptions.map((option) => option.value))
-const validIncomePresetValues = new Set([
-  ...incomeOptions.map((option) => option.value),
-  CUSTOM_INCOME_VALUE,
-])
 
 function getSearchParams() {
   if (typeof window === "undefined") return new URLSearchParams()
@@ -40,23 +49,35 @@ function parseNumberString(value: string | null, min: number) {
   return value
 }
 
-function getInitialIncomePreset() {
+function getInitialSelectedCurrency(): SalaryCurrency {
+  const currency = getSearchParams().get("currency")
+  return isSalaryCurrency(currency) ? currency : DEFAULT_SALARY_CURRENCY
+}
+
+function getValidIncomePresetValues(currency: SalaryCurrency) {
+  return new Set([
+    ...getIncomeOptions(currency).map((option) => option.value),
+    CUSTOM_INCOME_VALUE,
+  ])
+}
+
+function getInitialIncomePreset(currency: SalaryCurrency) {
   const params = getSearchParams()
   const preset = params.get("incomePreset")
   const income = params.get("income")
 
-  if (preset && validIncomePresetValues.has(preset)) {
+  if (preset && getValidIncomePresetValues(currency).has(preset)) {
     return preset
   }
 
-  if (income && incomeOptions.some((option) => option.value === income)) {
+  if (income && getIncomeOptions(currency).some((option) => option.value === income)) {
     return income
   }
 
-  return DEFAULT_INCOME_PRESET
+  return defaultIncomePresetByCurrency[currency]
 }
 
-function getInitialIncomeAmount(incomePreset: string) {
+function getInitialIncomeAmount(currency: SalaryCurrency, incomePreset: string) {
   const params = getSearchParams()
   const income = parseNumberString(params.get("income"), 0.000001)
 
@@ -64,11 +85,11 @@ function getInitialIncomeAmount(incomePreset: string) {
     return income ?? ""
   }
 
-  if (incomePreset && incomeOptions.some((option) => option.value === incomePreset)) {
+  if (incomePreset && getIncomeOptions(currency).some((option) => option.value === incomePreset)) {
     return incomePreset
   }
 
-  return DEFAULT_INCOME_PRESET
+  return defaultIncomePresetByCurrency[currency]
 }
 
 function getInitialCityTier(): CityTier {
@@ -103,8 +124,15 @@ interface AssessmentLandingProps {
 
 export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
   const { t, i18n } = useTranslation()
-  const [incomePreset, setIncomePreset] = useState(getInitialIncomePreset)
-  const [incomeAmount, setIncomeAmount] = useState(() => getInitialIncomeAmount(getInitialIncomePreset()))
+  const [selectedCurrency, setSelectedCurrency] = useState<SalaryCurrency>(getInitialSelectedCurrency)
+  const [incomePreset, setIncomePreset] = useState(() => {
+    const currency = getInitialSelectedCurrency()
+    return getInitialIncomePreset(currency)
+  })
+  const [incomeAmount, setIncomeAmount] = useState(() => {
+    const currency = getInitialSelectedCurrency()
+    return getInitialIncomeAmount(currency, getInitialIncomePreset(currency))
+  })
   const [cityTier, setCityTier] = useState<CityTier>(getInitialCityTier)
   const [modelId, setModelId] = useState(getInitialModelId)
   const [performanceMultiplier, setPerformanceMultiplier] = useState(getInitialMultiplier)
@@ -113,30 +141,38 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
   const [hasInteracted, setHasInteracted] = useState(false)
   const previousMatchedTitleSignatureRef = useRef("")
 
+  const incomeOptions = useMemo(() => getIncomeOptions(selectedCurrency), [selectedCurrency])
   const incomeValue = Number.parseFloat(incomeAmount)
   const multiplierValue = Number.parseFloat(performanceMultiplier)
   const tokenValue = Number.parseFloat(dailyTokenUsage)
   const language = (i18n.resolvedLanguage || "zh-CN") as "zh-CN" | "en-US"
 
   const hasValidIncome = incomeAmount !== "" && Number.isFinite(incomeValue) && incomeValue > 0
+  const normalizedAnnualIncomeCny = hasValidIncome
+    ? normalizeAnnualIncomeCny({
+        annualIncomeInput: incomeValue,
+        salaryCurrency: selectedCurrency,
+      })
+    : null
   const hasValidMultiplier =
     performanceMultiplier !== "" && Number.isFinite(multiplierValue) && multiplierValue >= 1
   const hasValidDailyTokens =
     dailyTokenUsage !== "" && Number.isFinite(tokenValue) && tokenValue >= 0
   const isZeroTokenSpecialPath = hasValidIncome && hasValidMultiplier && hasValidDailyTokens && tokenValue === 0
   const isValid = hasValidIncome && hasValidMultiplier && hasValidDailyTokens && tokenValue > 0
+  const incomeUnitKey = selectedCurrency === "CNY" ? "assessment.form.units.cny" : "assessment.form.units.usd"
 
   const evaluationInput: EvaluationInput | null = useMemo(() => {
-    if (!isValid) return null
+    if (!isValid || normalizedAnnualIncomeCny === null) return null
 
     return {
-      annualIncomeCny: incomeValue * 10000,
+      annualIncomeCny: normalizedAnnualIncomeCny,
       cityTier,
       modelId,
       performanceMultiplier: multiplierValue,
       dailyTokenUsageM: tokenValue,
     }
-  }, [cityTier, incomeValue, isValid, modelId, multiplierValue, tokenValue])
+  }, [cityTier, isValid, modelId, multiplierValue, normalizedAnnualIncomeCny, tokenValue])
 
   const calculationResult = useMemo(() => {
     if (!evaluationInput) return null
@@ -147,15 +183,15 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
   const result: ResultViewModel | null = useMemo(() => {
     if (!calculationResult) return null
 
-    return buildResultViewModel(calculationResult, language)
-  }, [calculationResult, language])
+    return buildResultViewModel(calculationResult, language, selectedCurrency)
+  }, [calculationResult, language, selectedCurrency])
 
   const rawTitleEvaluation = useMemo(() => {
     if (!isZeroTokenSpecialPath && !calculationResult) return null
 
     return evaluateSpecialTitles({
       rawInput: {
-        annualIncomeCny: hasValidIncome ? incomeValue * 10000 : null,
+        annualIncomeCny: normalizedAnnualIncomeCny,
         cityTier,
         modelId,
         performanceMultiplier: hasValidMultiplier ? multiplierValue : null,
@@ -169,12 +205,11 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
     cityTier,
     earnedTitleIds,
     hasValidDailyTokens,
-    hasValidIncome,
     hasValidMultiplier,
-    incomeValue,
     isZeroTokenSpecialPath,
     modelId,
     multiplierValue,
+    normalizedAnnualIncomeCny,
     tokenValue,
   ])
 
@@ -217,8 +252,6 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
       return
     }
 
-    // Persist newly earned title ids after the toast has been triggered once.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEarnedTitleIds(mergedTitleIds)
     writeEarnedTitleIds(mergedTitleIds)
   }, [earnedTitleIds, hasInteracted, rawTitleEvaluation, t])
@@ -228,7 +261,8 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
 
     const params = new URLSearchParams(window.location.search)
 
-    params.set("incomePreset", incomePreset || DEFAULT_INCOME_PRESET)
+    params.set("currency", selectedCurrency)
+    params.set("incomePreset", incomePreset || defaultIncomePresetByCurrency[selectedCurrency])
     if (incomeAmount) {
       params.set("income", incomeAmount)
     } else {
@@ -247,7 +281,40 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
       const nextUrl = `${window.location.pathname}?${nextSearch}${window.location.hash}`
       window.history.replaceState({}, "", nextUrl)
     }
-  }, [cityTier, dailyTokenUsage, incomeAmount, incomePreset, modelId, performanceMultiplier])
+  }, [
+    cityTier,
+    dailyTokenUsage,
+    incomeAmount,
+    incomePreset,
+    modelId,
+    performanceMultiplier,
+    selectedCurrency,
+  ])
+
+  function handleCurrencySelect(nextCurrency: SalaryCurrency) {
+    if (nextCurrency === selectedCurrency) return
+
+    setHasInteracted(true)
+
+    if (incomePreset === CUSTOM_INCOME_VALUE) {
+      if (normalizedAnnualIncomeCny !== null) {
+        setIncomeAmount(
+          formatSalaryInputValue(convertAnnualCnyToSalaryInput(normalizedAnnualIncomeCny, nextCurrency)),
+        )
+      }
+    } else {
+      const currentPreset = getIncomeOptions(selectedCurrency).find((option) => option.value === incomePreset)
+      const nextPreset =
+        (currentPreset
+          ? getIncomeOptions(nextCurrency).find((option) => option.id === currentPreset.id)?.value
+          : undefined) ?? defaultIncomePresetByCurrency[nextCurrency]
+
+      setIncomePreset(nextPreset)
+      setIncomeAmount(nextPreset)
+    }
+
+    setSelectedCurrency(nextCurrency)
+  }
 
   function handleIncomePresetSelect(value: string) {
     setHasInteracted(true)
@@ -281,8 +348,48 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
         <div className="space-y-4">
           <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
             <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[0]}</p>
+            <Label id="currency-label" className="block text-xl font-bold leading-tight sm:text-2xl">
+              {t("assessment.form.currency")}
+            </Label>
+            <div
+              className="mt-4 grid gap-3 sm:grid-cols-2"
+              role="radiogroup"
+              aria-labelledby="currency-label"
+            >
+              {salaryCurrencyOptions.map((option) => {
+                const isActive = selectedCurrency === option.value
+
+                return (
+                  <Button
+                    key={option.value}
+                    type="button"
+                    variant={isActive ? "default" : "outline"}
+                    size="lg"
+                    onClick={() => handleCurrencySelect(option.value)}
+                    role="radio"
+                    aria-checked={isActive}
+                    className={cn(
+                      "h-16 rounded-2xl border-2 px-4 text-base font-bold sm:text-lg",
+                      isActive
+                        ? "border-primary shadow-lg shadow-primary/15"
+                        : "bg-background/60 hover:border-primary/40 hover:bg-primary/5",
+                    )}
+                  >
+                    {language === "zh-CN" ? option.label : option.labelEn}
+                  </Button>
+                )
+              })}
+            </div>
+            <div className="mt-4 space-y-1 text-sm text-muted-foreground">
+              <p>{t("assessment.form.currencyHint", { unit: t(incomeUnitKey) })}</p>
+              <p>{t("assessment.form.exchangeRateHint", { rate: pricingData.exchangeRateUsdToCny })}</p>
+            </div>
+          </div>
+
+          <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
+            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[1]}</p>
             <Label id="income-amount-label" className="block text-xl font-bold leading-tight sm:text-2xl">
-              {t("assessment.form.incomeAmount")}
+              {t("assessment.form.incomeAmount", { unit: t(incomeUnitKey) })}
             </Label>
             <div
               className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3"
@@ -294,7 +401,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
 
                 return (
                   <Button
-                    key={option.value}
+                    key={option.id}
                     type="button"
                     variant={isActive ? "default" : "outline"}
                     size="lg"
@@ -305,7 +412,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
                       "h-16 rounded-2xl border-2 px-4 text-base font-bold sm:text-lg",
                       isActive
                         ? "border-primary shadow-lg shadow-primary/15"
-                        : "bg-background/60 hover:border-primary/40 hover:bg-primary/5"
+                        : "bg-background/60 hover:border-primary/40 hover:bg-primary/5",
                     )}
                   >
                     {language === "zh-CN" ? option.label : option.labelEn}
@@ -324,12 +431,16 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
                   "h-16 rounded-2xl border-2 px-4 text-base font-bold sm:text-lg",
                   incomePreset === CUSTOM_INCOME_VALUE
                     ? "border-primary shadow-lg shadow-primary/15"
-                    : "bg-background/60 hover:border-primary/40 hover:bg-primary/5"
+                    : "bg-background/60 hover:border-primary/40 hover:bg-primary/5",
                 )}
               >
                 {t("assessment.form.incomeCustom")}
               </Button>
             </div>
+
+            <p className="mt-4 text-sm text-muted-foreground">
+              {t("assessment.form.presetHint", { unit: t(incomeUnitKey) })}
+            </p>
 
             {incomePreset === CUSTOM_INCOME_VALUE ? (
               <div className="mt-4 space-y-2">
@@ -338,7 +449,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
                   type="number"
                   min="1"
                   step="any"
-                  placeholder={t("assessment.form.incomePlaceholder")}
+                  placeholder={t("assessment.form.incomePlaceholder", { example: selectedCurrency === "USD" ? "45" : "30" })}
                   value={incomeAmount}
                   onChange={(e) => {
                     setHasInteracted(true)
@@ -346,13 +457,15 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
                   }}
                   className="h-14 rounded-2xl border-2 px-4 text-lg font-semibold"
                 />
-                <p className="text-sm text-muted-foreground">{t("assessment.form.incomeCustomHint")}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("assessment.form.incomeCustomHint", { unit: t(incomeUnitKey) })}
+                </p>
               </div>
             ) : null}
           </div>
 
           <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[1]}</p>
+            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[2]}</p>
             <Label htmlFor="city-tier" className="block text-xl font-bold leading-tight sm:text-2xl">
               {t("assessment.form.city")}
             </Label>
@@ -375,7 +488,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
           </div>
 
           <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[2]}</p>
+            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[3]}</p>
             <Label htmlFor="model-id" className="block text-xl font-bold leading-tight sm:text-2xl">
               {t("assessment.form.model")}
             </Label>
@@ -398,7 +511,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
           </div>
 
           <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[3]}</p>
+            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[4]}</p>
             <Label htmlFor="performance-multiplier" className="block text-xl font-bold leading-tight sm:text-2xl">
               {t("assessment.form.performanceMultiplier")}
             </Label>
@@ -418,7 +531,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
           </div>
 
           <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[4]}</p>
+            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[5]}</p>
             <Label htmlFor="daily-token-usage" className="block text-xl font-bold leading-tight sm:text-2xl">
               {t("assessment.form.dailyTokenUsage")}
             </Label>
@@ -439,7 +552,9 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
         </div>
       </div>
 
-      {result && evaluationInput ? <ResultSections result={result} baseInput={evaluationInput} /> : null}
+      {result && evaluationInput ? (
+        <ResultSections result={result} baseInput={evaluationInput} selectedCurrency={selectedCurrency} />
+      ) : null}
     </div>
   )
 }

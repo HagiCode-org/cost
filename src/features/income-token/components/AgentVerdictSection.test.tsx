@@ -1,29 +1,29 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/react"
 import { beforeAll, beforeEach, describe, expect, it } from "vitest"
 
-import { AgentVerdictSection } from "./AgentVerdictSection"
-import i18n from "@/i18n/config"
 import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
+import i18n from "@/i18n/config"
 import { renderWithProviders } from "@/test/render"
 import { installViewportMock, setViewportWidth } from "@/test/viewport"
+import { AgentVerdictSection } from "./AgentVerdictSection"
 
 const summaryData = {
   selectedModelName: "Claude Sonnet",
-  effectivePeopleEquivalentFormatted: "2.40x",
+  effectivePeopleEquivalentFormatted: "2.40 人",
   selectedModelDescription: "A strong coding model for daily workflows.",
-  annualIncomeFormatted: "300,000",
+  annualIncomeFormatted: "¥300,000",
   cityLabel: "Shanghai",
-  annualTotalCostFormatted: "420,000",
+  annualTotalCostFormatted: "¥420,000",
   annualTotalCostFormula: "annual-cost-formula",
   annualTotalCostExplanation: "annual-cost-explanation",
   performanceMultiplierFormatted: "2.50x",
   performanceMultiplierExplanation: "performance-multiplier-explanation",
   dailyTokenUsageFormatted: "12 M",
   dailyTokenUsageExplanation: "daily-token-usage-explanation",
-  annualAiCostFormatted: "36,000",
+  annualAiCostFormatted: "¥36,000",
   annualAiCostFormula: "annual-ai-cost-formula",
   annualAiCostExplanation: "annual-ai-cost-explanation",
-  dailyAiCostFormatted: "120",
+  dailyAiCostFormatted: "¥120",
   dailyAiCostFormula: "daily-ai-cost-formula",
   dailyAiCostExplanation: "daily-ai-cost-explanation",
   aiCostShareFormatted: "12%",
@@ -32,11 +32,21 @@ const summaryData = {
   costEffectivenessFormatted: "3.8x",
   costEffectivenessFormula: "cost-effectiveness-formula",
   costEffectivenessExplanation: "cost-effectiveness-explanation",
-  affordableWorkflowCountFormatted: "14",
+  affordableWorkflowCountFormatted: "14.00 份",
   affordableWorkflowFormula: "affordable-workflow-formula",
   affordableWorkflowExplanation: "affordable-workflow-explanation",
   effectivePeopleEquivalentFormula: "people-equivalent-formula",
   effectivePeopleEquivalentExplanation: "people-equivalent-explanation",
+  dangerScalePosition: 80,
+  dangerScaleLabel: "高危区",
+  dangerScaleSummary: "danger-summary",
+  costEffectivenessScalePosition: 72,
+  costEffectivenessScaleLabel: "很划算",
+  costEffectivenessScaleSummary: "roi-summary",
+  verdictHeadline: "verdict-headline",
+  verdictBody: "verdict-body",
+  verdictTone: "danger",
+  shareCopy: "share-copy",
 } as ResultViewModel["summarySection"]
 
 async function openSummaryDetails() {
@@ -60,7 +70,7 @@ describe("AgentVerdictSection", () => {
     renderWithProviders(<AgentVerdictSection data={summaryData} />)
     await openSummaryDetails()
 
-    const detailButton = await screen.findByRole("button", { name: /企业年度全用工成本/ })
+    const detailButton = await screen.findByRole("button", { name: "查看企业年度全用工成本的计算详情" })
     fireEvent.click(detailButton)
 
     const dialog = await screen.findByRole("dialog", { name: "企业年度全用工成本" })
@@ -79,7 +89,7 @@ describe("AgentVerdictSection", () => {
     renderWithProviders(<AgentVerdictSection data={summaryData} />)
     await openSummaryDetails()
 
-    const detailButton = await screen.findByRole("button", { name: /企业年度全用工成本/ })
+    const detailButton = await screen.findByRole("button", { name: "查看企业年度全用工成本的计算详情" })
     fireEvent.click(detailButton)
     await screen.findByRole("dialog", { name: "企业年度全用工成本" })
 
@@ -110,7 +120,7 @@ describe("AgentVerdictSection", () => {
     renderWithProviders(<AgentVerdictSection data={summaryData} />)
     await openSummaryDetails()
 
-    const detailButton = await screen.findByRole("button", { name: /企业年度全用工成本/ })
+    const detailButton = await screen.findByRole("button", { name: "查看企业年度全用工成本的计算详情" })
     fireEvent.focus(detailButton)
 
     const desktopTooltipFormulas = await screen.findAllByText("annual-cost-formula")
@@ -121,5 +131,30 @@ describe("AgentVerdictSection", () => {
     await waitFor(() => {
       expect(screen.queryAllByText("annual-cost-formula")).toHaveLength(0)
     })
+  })
+
+  it("renders currency-formatted summary amounts without hardcoded CNY prefixes", async () => {
+    setViewportWidth(1280)
+    renderWithProviders(
+      <AgentVerdictSection
+        data={{
+          ...summaryData,
+          annualIncomeFormatted: "$41,379",
+          annualTotalCostFormatted: "$58,276",
+          annualAiCostFormatted: "$4,831",
+          dailyAiCostFormatted: "$18.30",
+          affordableWorkflowCountFormatted: "12.00 workflows",
+          effectivePeopleEquivalentFormatted: "2.40 workers",
+        }}
+      />,
+    )
+    await openSummaryDetails()
+
+    expect(screen.getByText("$41,379")).toBeInTheDocument()
+    expect(screen.getByText("$58,276")).toBeInTheDocument()
+    expect(screen.getByText("$4,831")).toBeInTheDocument()
+    expect(screen.getByText("$18.30")).toBeInTheDocument()
+    expect(screen.getByText("12.00 workflows")).toBeInTheDocument()
+    expect(screen.getAllByText("2.40 workers").length).toBeGreaterThan(0)
   })
 })

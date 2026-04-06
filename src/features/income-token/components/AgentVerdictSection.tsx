@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 import { useShareCurrentSite } from "@/hooks/use-share-current-site"
 import { useIsMobile } from "@/hooks/use-mobile"
-import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
-import { AgentScaleIndicator } from "./AgentScaleIndicator"
 import { cn } from "@/lib/utils"
+import { AgentScaleIndicator } from "./AgentScaleIndicator"
 
 interface AgentVerdictSectionProps {
   data: ResultViewModel["summarySection"]
@@ -158,8 +158,7 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
           variant={shareState === "error" ? "destructive" : "outline"}
           className="w-full justify-center rounded-full border-border/60 bg-background/80 md:mt-3 md:w-auto md:shrink-0"
           onClick={() => {
-            const text = [data.verdictHeadline, data.verdictBody].join("\n")
-            void shareCurrentSite(text).then(() => toast.success(t("share.copied")))
+            void shareCurrentSite(data.shareCopy).then(() => toast.success(t("share.copied")))
           }}
           aria-label={t("share.currentSiteAria")}
         >
@@ -174,176 +173,172 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
           aria-label={t("results.summary.detailCollapseAria")}
         >
           <span>{t("results.summary.detailCollapseLabel")}</span>
-          <ChevronDown className={cn("size-4 shrink-0 transition-transform", detailOpen && "rotate-180")} aria-hidden="true" />
+          <ChevronDown
+            className={cn("size-4 shrink-0 transition-transform", detailOpen && "rotate-180")}
+            aria-hidden="true"
+          />
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border bg-background/75 p-4">
-          <p className="text-xs text-muted-foreground">{t("results.summary.annualIncome")}</p>
-          <p className="mt-1 display-type text-2xl font-bold">¥{data.annualIncomeFormatted}</p>
-          <p className="mt-2 text-xs text-muted-foreground">
-            {data.cityLabel} · {t("results.summary.totalEmploymentCost")}: ¥{data.annualTotalCostFormatted}
-          </p>
-          <div className="mt-3">
-            <MetricValue
-              label={t("results.summary.totalEmploymentCost")}
-              value={`¥${data.annualTotalCostFormatted}`}
-              formula={data.annualTotalCostFormula}
-              explanation={data.annualTotalCostExplanation}
-            />
-          </div>
-        </div>
+            <div className="rounded-2xl border bg-background/75 p-4">
+              <p className="text-xs text-muted-foreground">{t("results.summary.annualIncome")}</p>
+              <p className="mt-1 display-type text-2xl font-bold">{data.annualIncomeFormatted}</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {data.cityLabel} · {t("results.summary.totalEmploymentCost")}: {data.annualTotalCostFormatted}
+              </p>
+              <div className="mt-3">
+                <MetricValue
+                  label={t("results.summary.totalEmploymentCost")}
+                  value={data.annualTotalCostFormatted}
+                  formula={data.annualTotalCostFormula}
+                  explanation={data.annualTotalCostExplanation}
+                />
+              </div>
+            </div>
 
-        <div className="rounded-2xl border bg-background/75 p-4">
-          <p className="text-xs text-muted-foreground">{t("results.summary.performanceMultiplier")}</p>
-          <MetricValue
-            className="mt-1"
-            label={t("results.summary.performanceMultiplier")}
-            value={data.performanceMultiplierFormatted}
-            explanation={data.performanceMultiplierExplanation}
-          />
-          <div className="mt-4">
-            <p className="text-xs text-muted-foreground">{t("results.summary.dailyTokenUsage")}</p>
-            <MetricValue
-              className="mt-1"
-              label={t("results.summary.dailyTokenUsage")}
-              value={data.dailyTokenUsageFormatted}
-              explanation={data.dailyTokenUsageExplanation}
-            />
-          </div>
-        </div>
-
-        <div className="rounded-2xl border bg-background/75 p-4">
-          <p className="text-xs text-muted-foreground">{t("results.summary.annualAiCost")}</p>
-          <MetricValue
-            className="mt-1"
-            label={t("results.summary.annualAiCost")}
-            value={`¥${data.annualAiCostFormatted}`}
-            formula={data.annualAiCostFormula}
-            explanation={data.annualAiCostExplanation}
-          />
-          <div className="mt-4 space-y-3">
-            <div>
-              <p className="text-xs text-muted-foreground">{t("results.summary.salaryShare")}</p>
+            <div className="rounded-2xl border bg-background/75 p-4">
+              <p className="text-xs text-muted-foreground">{t("results.summary.performanceMultiplier")}</p>
               <MetricValue
                 className="mt-1"
-                label={t("results.summary.salaryShare")}
-                value={data.aiCostShareFormatted}
-                formula={data.aiCostShareFormula}
-                explanation={data.aiCostShareExplanation}
+                label={t("results.summary.performanceMultiplier")}
+                value={data.performanceMultiplierFormatted}
+                explanation={data.performanceMultiplierExplanation}
               />
+              <div className="mt-4">
+                <p className="text-xs text-muted-foreground">{t("results.summary.dailyTokenUsage")}</p>
+                <MetricValue
+                  className="mt-1"
+                  label={t("results.summary.dailyTokenUsage")}
+                  value={data.dailyTokenUsageFormatted}
+                  explanation={data.dailyTokenUsageExplanation}
+                />
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground">{t("results.summary.affordableWorkflow")}</p>
+
+            <div className="rounded-2xl border bg-background/75 p-4">
+              <p className="text-xs text-muted-foreground">{t("results.summary.annualAiCost")}</p>
               <MetricValue
                 className="mt-1"
-                label={t("results.summary.affordableWorkflow")}
-                value={data.affordableWorkflowCountFormatted}
-                formula={data.affordableWorkflowFormula}
-                explanation={data.affordableWorkflowExplanation}
+                label={t("results.summary.annualAiCost")}
+                value={data.annualAiCostFormatted}
+                formula={data.annualAiCostFormula}
+                explanation={data.annualAiCostExplanation}
+              />
+              <div className="mt-4 space-y-3">
+                <div>
+                  <p className="text-xs text-muted-foreground">{t("results.summary.salaryShare")}</p>
+                  <MetricValue
+                    className="mt-1"
+                    label={t("results.summary.salaryShare")}
+                    value={data.aiCostShareFormatted}
+                    formula={data.aiCostShareFormula}
+                    explanation={data.aiCostShareExplanation}
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">{t("results.summary.affordableWorkflow")}</p>
+                  <MetricValue
+                    className="mt-1"
+                    label={t("results.summary.affordableWorkflow")}
+                    value={data.affordableWorkflowCountFormatted}
+                    formula={data.affordableWorkflowFormula}
+                    explanation={data.affordableWorkflowExplanation}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border bg-muted/20 p-4">
+              <div className="mb-2 flex items-center gap-2">
+                <TrendingUp className="size-4 text-primary" aria-hidden="true" />
+                <p className="font-medium">{t("results.summary.dailyAiCost")}</p>
+              </div>
+              <MetricValue
+                label={t("results.summary.dailyAiCost")}
+                value={data.dailyAiCostFormatted}
+                formula={data.dailyAiCostFormula}
+                explanation={data.dailyAiCostExplanation}
+              />
+            </div>
+
+            <div className="rounded-2xl border bg-muted/20 p-4">
+              <div className="mb-2 flex items-center gap-2">
+                <TrendingUp className="size-4 text-primary" aria-hidden="true" />
+                <p className="font-medium">{t("results.summary.costEffectiveness")}</p>
+              </div>
+              <MetricValue
+                label={t("results.summary.costEffectiveness")}
+                value={data.costEffectivenessFormatted}
+                formula={data.costEffectivenessFormula}
+                explanation={data.costEffectivenessExplanation}
+              />
+            </div>
+
+            <div className="rounded-2xl border bg-muted/20 p-4">
+              <div className="mb-2 flex items-center gap-2">
+                <TrendingUp className="size-4 text-primary" aria-hidden="true" />
+                <p className="font-medium">{t("results.summary.peopleEquivalent")}</p>
+              </div>
+              <MetricValue
+                label={t("results.summary.peopleEquivalent")}
+                value={data.effectivePeopleEquivalentFormatted}
+                formula={data.effectivePeopleEquivalentFormula}
+                explanation={data.effectivePeopleEquivalentExplanation}
               />
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border bg-muted/20 p-4">
-          <div className="mb-2 flex items-center gap-2">
-            <TrendingUp className="size-4 text-primary" aria-hidden="true" />
-            <p className="font-medium">{t("results.summary.dailyAiCost")}</p>
-          </div>
-          <MetricValue
-            label={t("results.summary.dailyAiCost")}
-            value={`¥${data.dailyAiCostFormatted}`}
-            formula={data.dailyAiCostFormula}
-            explanation={data.dailyAiCostExplanation}
-          />
-        </div>
-
-        <div className="rounded-2xl border bg-muted/20 p-4">
-          <div className="mb-2 flex items-center gap-2">
-            <TrendingUp className="size-4 text-primary" aria-hidden="true" />
-            <p className="font-medium">{t("results.summary.costEffectiveness")}</p>
-          </div>
-          <MetricValue
-            label={t("results.summary.costEffectiveness")}
-            value={data.costEffectivenessFormatted}
-            formula={data.costEffectivenessFormula}
-            explanation={data.costEffectivenessExplanation}
-          />
-        </div>
-
-        <div className="rounded-2xl border bg-muted/20 p-4">
-          <div className="mb-2 flex items-center gap-2">
-            <TrendingUp className="size-4 text-primary" aria-hidden="true" />
-            <p className="font-medium">{t("results.summary.peopleEquivalent")}</p>
-          </div>
-          <MetricValue
-            label={t("results.summary.peopleEquivalent")}
-            value={data.effectivePeopleEquivalentFormatted}
-            formula={data.effectivePeopleEquivalentFormula}
-            explanation={data.effectivePeopleEquivalentExplanation}
-          />
-        </div>
-      </div>
         </CollapsibleContent>
       </Collapsible>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[1.5rem] border bg-background/75 p-4">
-              <div className="mb-4">
-                <p className="text-xs text-muted-foreground">{t("results.hagicode.currentLabel")}</p>
-                <p className="mt-1 text-sm font-semibold text-foreground">
-                  {data.effectivePeopleEquivalentFormatted}
-                </p>
-              </div>
-              <AgentScaleIndicator
-                title={t("results.summary.dangerScale")}
-                value={data.effectivePeopleEquivalentFormatted}
-                badge={data.dangerScaleLabel}
-                summary={data.dangerScaleSummary}
-                position={data.dangerScalePosition}
-                direction="danger"
-                ticks={["1.0x", "1.5x", "2.0x", "3.0x"]}
-              />
-            </div>
-            <div className="rounded-[1.5rem] border bg-background/75 p-4">
-              <div className="mb-4">
-                <p className="text-xs text-muted-foreground">{t("results.hagicode.currentLabel")}</p>
-                <p className="mt-1 text-sm font-semibold text-foreground">
-                  {data.costEffectivenessFormatted}
-                </p>
-              </div>
-              <AgentScaleIndicator
-                title={t("results.summary.costEffectivenessScale")}
-                value={data.costEffectivenessFormatted}
-                badge={data.costEffectivenessScaleLabel}
-                summary={data.costEffectivenessScaleSummary}
-                position={data.costEffectivenessScalePosition}
-                direction="value"
-                ticks={["0x", "1x", "2x", "3x+"]}
-              />
-            </div>
+        <div className="rounded-[1.5rem] border bg-background/75 p-4">
+          <div className="mb-4">
+            <p className="text-xs text-muted-foreground">{t("results.hagicode.currentLabel")}</p>
+            <p className="mt-1 text-sm font-semibold text-foreground">
+              {data.effectivePeopleEquivalentFormatted}
+            </p>
           </div>
+          <AgentScaleIndicator
+            title={t("results.summary.dangerScale")}
+            value={data.effectivePeopleEquivalentFormatted}
+            badge={data.dangerScaleLabel}
+            summary={data.dangerScaleSummary}
+            position={data.dangerScalePosition}
+            direction="danger"
+            ticks={["1.0x", "1.5x", "2.0x", "3.0x"]}
+          />
+        </div>
+        <div className="rounded-[1.5rem] border bg-background/75 p-4">
+          <div className="mb-4">
+            <p className="text-xs text-muted-foreground">{t("results.hagicode.currentLabel")}</p>
+            <p className="mt-1 text-sm font-semibold text-foreground">
+              {data.costEffectivenessFormatted}
+            </p>
+          </div>
+          <AgentScaleIndicator
+            title={t("results.summary.costEffectivenessScale")}
+            value={data.costEffectivenessFormatted}
+            badge={data.costEffectivenessScaleLabel}
+            summary={data.costEffectivenessScaleSummary}
+            position={data.costEffectivenessScalePosition}
+            direction="value"
+            ticks={["0x", "1x", "2x", "3x+"]}
+          />
+        </div>
+      </div>
 
-          <div className="mt-6">
-            <div className={`rounded-[1.5rem] border p-5 ${
-              data.verdictTone === "danger"
-                ? "border-destructive/30 bg-destructive/8 text-destructive"
-                : data.verdictTone === "warning"
-                  ? "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300"
-                  : "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-            }`}>
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-current/85">
-                  {t("results.hagicode.currentLabel")}
-                </p>
-                <p className="text-lg font-bold">{data.verdictHeadline}</p>
-                <p className="text-sm leading-7 text-current/90">{data.verdictBody}</p>
-              </div>
-            </div>
-          </div>
+      <div className="mt-6 rounded-[1.5rem] border bg-background/75 p-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          {t("results.summary.heading", {
+            model: data.selectedModelName,
+            equivalent: data.effectivePeopleEquivalentFormatted,
+          })}
+        </p>
+        <p className="mt-3 text-lg font-bold">{data.verdictHeadline}</p>
+        <p className="mt-2 text-sm leading-7 text-muted-foreground">{data.verdictBody}</p>
+      </div>
     </section>
   )
 }

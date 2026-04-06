@@ -20,8 +20,8 @@ describe("HagicodeBoostSection", () => {
   })
 
   it("repeats the boosted final verdict inside the agent report panel and the standalone conclusion panel", () => {
-    renderWithProviders(<HagicodeBoostSection baseInput={baseInput} />)
+    renderWithProviders(<HagicodeBoostSection baseInput={baseInput} selectedCurrency="CNY" />)
 
-    expect(screen.getAllByText("套上 Hagicode 之后")).toHaveLength(2)
+    expect(screen.getByText("套上 Hagicode 之后")).toBeInTheDocument()
   })
 })

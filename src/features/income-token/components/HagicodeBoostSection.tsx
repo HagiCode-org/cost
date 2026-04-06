@@ -11,11 +11,13 @@ import { LinkHagicode } from "@/components/link-hagicode"
 import { AgentScaleIndicator } from "./AgentScaleIndicator"
 import { buildResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 import { evaluate, type EvaluationInput } from "@/features/income-token/lib/calculate-ai-risk"
+import { formatCurrencyAmountFromCny, type SalaryCurrency } from "@/features/income-token/lib/currency"
 import type { SupportedLanguage } from "@/i18n/config"
 import { cn } from "@/lib/utils"
 
 interface HagicodeBoostSectionProps {
   baseInput: EvaluationInput
+  selectedCurrency: SalaryCurrency
 }
 
 const MIN_BOOST = 1.5
@@ -35,23 +37,15 @@ function formatTokenUsage(value: number) {
   return `${value.toFixed(1)} M`
 }
 
-function formatCny(value: number) {
-  return `¥${value.toLocaleString("zh-CN", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  })}`
-}
-
 function formatSignedDelta(value: number, suffix: string) {
   const sign = value >= 0 ? "+" : "-"
   return `${sign}${Math.abs(value).toFixed(2)}${suffix}`
 }
 
-function formatSignedCurrency(value: number) {
+function formatSignedCurrency(value: number, currency: SalaryCurrency) {
   const sign = value >= 0 ? "+" : "-"
-  return `${sign}¥${Math.abs(value).toLocaleString("zh-CN", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+  return `${sign}${formatCurrencyAmountFromCny(Math.abs(value), currency, {
+    maximumFractionDigits: currency === "USD" ? 2 : 0,
   })}`
 }
 
@@ -140,7 +134,7 @@ function BoostVerdictCard({ label, headline, body, toneClass, compact = false }:
   )
 }
 
-export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
+export function HagicodeBoostSection({ baseInput, selectedCurrency }: HagicodeBoostSectionProps) {
   const { t, i18n } = useTranslation()
   const [hagicodeBoost, setHagicodeBoost] = useState([DEFAULT_BOOST])
   const [tokenEfficiencyBoost, setTokenEfficiencyBoost] = useState([DEFAULT_TOKEN_EFFICIENCY])
@@ -152,7 +146,10 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
   const tokenEfficiencyFactor = tokenEfficiencyBoost[0] ?? DEFAULT_TOKEN_EFFICIENCY
 
   const baseResult = useMemo(() => evaluate(baseInput), [baseInput])
-  const baseViewModel = useMemo(() => buildResultViewModel(baseResult, language), [baseResult, language])
+  const baseViewModel = useMemo(
+    () => buildResultViewModel(baseResult, language, selectedCurrency),
+    [baseResult, language, selectedCurrency],
+  )
 
   const boostedInput = useMemo(
     () => ({
@@ -164,8 +161,8 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
   )
 
   const boostedViewModel = useMemo(() => {
-    return buildResultViewModel(evaluate(boostedInput), language)
-  }, [boostedInput, language])
+    return buildResultViewModel(evaluate(boostedInput), language, selectedCurrency)
+  }, [boostedInput, language, selectedCurrency])
 
   const boostedResult = useMemo(() => evaluate(boostedInput), [boostedInput])
 
@@ -226,8 +223,7 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
               variant={shareState === "error" ? "destructive" : "outline"}
               className="w-full rounded-full sm:w-auto"
               onClick={() => {
-                const text = [boostedSummary.verdictHeadline, boostedSummary.verdictBody].join("\n")
-                void shareCurrentSite(text).then(() => toast.success(t("share.copied")))
+                void shareCurrentSite(boostedSummary.shareCopy).then(() => toast.success(t("share.copied")))
               }}
               aria-label={t("share.currentSiteAria")}
             >
@@ -330,12 +326,21 @@ export function HagicodeBoostSection({ baseInput }: HagicodeBoostSectionProps) {
           />
           <ComparisonMetricCard
             label={t("results.hagicode.scaledAnnualAiCost")}
-            before={formatCny(baseResult.annualAiCostCny)}
-            after={formatCny(boostedAnnualAiCost)}
-            delta={formatSignedCurrency(annualAiCostDelta)}
+            before={formatCurrencyAmountFromCny(baseResult.annualAiCostCny, selectedCurrency, {
+              maximumFractionDigits: selectedCurrency === "USD" ? 0 : 0,
+            })}
+            after={formatCurrencyAmountFromCny(boostedAnnualAiCost, selectedCurrency, {
+              maximumFractionDigits: selectedCurrency === "USD" ? 0 : 0,
+            })}
+            delta={formatSignedCurrency(annualAiCostDelta, selectedCurrency)}
             deltaValue={annualAiCostDelta}
             deltaMode="negative"
-            formula={t("results.hagicode.scaledAnnualAiCostFormula", { tokenUsage: formatTokenUsage(boostedTokenUsage), cost: formatCny(boostedAnnualAiCost) })}
+            formula={t("results.hagicode.scaledAnnualAiCostFormula", {
+              tokenUsage: formatTokenUsage(boostedTokenUsage),
+              cost: formatCurrencyAmountFromCny(boostedAnnualAiCost, selectedCurrency, {
+                maximumFractionDigits: selectedCurrency === "USD" ? 0 : 0,
+              }),
+            })}
             currentLabel={t("results.hagicode.currentLabel")}
             boostedLabel={t("results.hagicode.boostedLabel")}
           />

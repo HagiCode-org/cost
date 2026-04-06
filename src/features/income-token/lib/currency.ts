@@ -1,10 +1,10 @@
 import type { SupportedLanguage } from "@/i18n/config"
+import type { SiteRegion } from "@/lib/region"
+import { getDefaultCurrencyForRegion } from "@/lib/region"
 
 import { pricingData, type PricingCurrency } from "../content/pricing-data"
 
 export type SalaryCurrency = PricingCurrency
-
-export const DEFAULT_SALARY_CURRENCY: SalaryCurrency = "CNY"
 
 const salaryInputUnitMap: Record<SalaryCurrency, number> = {
   CNY: 10_000,
@@ -23,6 +23,10 @@ const currencySymbolMap: Record<SalaryCurrency, string> = {
 
 export function isSalaryCurrency(value: string | null | undefined): value is SalaryCurrency {
   return value === "CNY" || value === "USD"
+}
+
+export function getDefaultSalaryCurrency(region: SiteRegion): SalaryCurrency {
+  return getDefaultCurrencyForRegion(region)
 }
 
 export function getCurrencySymbol(currency: SalaryCurrency) {

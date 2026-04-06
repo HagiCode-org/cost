@@ -13,6 +13,9 @@ export type JobFamily =
 export interface CityCoefficient {
   tier: CityTier
   label: string
+  labelEn: string
+  internationalLabel: string
+  internationalLabelEn: string
   coefficient: number
 }
 
@@ -48,10 +51,38 @@ export interface BenchmarkData {
 
 export const benchmarkData: BenchmarkData = {
   cityCoefficients: [
-    { tier: "tier1", label: "北京 / 上海 / 深圳 / 广州", coefficient: 0.4 },
-    { tier: "new-tier1", label: "杭州 / 成都 / 苏州 / 南京", coefficient: 0.3 },
-    { tier: "tier2", label: "武汉 / 西安 / 天津 / 郑州", coefficient: 0.2 },
-    { tier: "other", label: "宜昌 / 洛阳 / 南充 / 上饶", coefficient: 0.1 },
+    {
+      tier: "tier1",
+      label: "北京 / 上海 / 深圳 / 广州",
+      labelEn: "Beijing / Shanghai / Shenzhen / Guangzhou",
+      internationalLabel: "国际一线都市（纽约 / 伦敦 / 新加坡）",
+      internationalLabelEn: "Global tier 1 metro (New York / London / Singapore)",
+      coefficient: 0.4,
+    },
+    {
+      tier: "new-tier1",
+      label: "杭州 / 成都 / 苏州 / 南京",
+      labelEn: "Hangzhou / Chengdu / Suzhou / Nanjing",
+      internationalLabel: "区域枢纽城市（柏林 / 多伦多 / 悉尼）",
+      internationalLabelEn: "Regional hub (Berlin / Toronto / Sydney)",
+      coefficient: 0.3,
+    },
+    {
+      tier: "tier2",
+      label: "武汉 / 西安 / 天津 / 郑州",
+      labelEn: "Wuhan / Xi'an / Tianjin / Zhengzhou",
+      internationalLabel: "成熟型城市（里斯本 / 布拉格 / 吉隆坡）",
+      internationalLabelEn: "Established city (Lisbon / Prague / Kuala Lumpur)",
+      coefficient: 0.2,
+    },
+    {
+      tier: "other",
+      label: "宜昌 / 洛阳 / 南充 / 上饶",
+      labelEn: "Yichang / Luoyang / Nanchong / Shangrao",
+      internationalLabel: "其他城市 / 远程地区",
+      internationalLabelEn: "Other city / remote area",
+      coefficient: 0.1,
+    },
   ],
   jobBenchmarks: [
     {
@@ -137,4 +168,22 @@ export const benchmarkData: BenchmarkData = {
   minCountdownDays: 30,
   updatedAt: "2026-03-01",
   source: "综合行业报告与公开统计数据（2026 Q1）",
+}
+
+export function getCityTierLabel(
+  cityTier: CityTier,
+  region: "cn-mainland" | "international",
+  language: "zh-CN" | "en-US",
+) {
+  const city = benchmarkData.cityCoefficients.find((item) => item.tier === cityTier)
+
+  if (!city) {
+    return cityTier
+  }
+
+  if (region === "cn-mainland") {
+    return language === "zh-CN" ? city.label : city.labelEn
+  }
+
+  return language === "zh-CN" ? city.internationalLabel : city.internationalLabelEn
 }

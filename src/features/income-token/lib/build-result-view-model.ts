@@ -1,8 +1,17 @@
-import type { CalculationResult, TokenCeiling } from "./calculate-ai-risk"
-import { WORKING_DAYS_PER_YEAR } from "./calculate-ai-risk"
-import { pricingData } from "../content/pricing-data"
 import type { SupportedLanguage } from "@/i18n/config"
+
 import { benchmarkData } from "../content/benchmark-data"
+import { pricingData } from "../content/pricing-data"
+import { buildShareCopy } from "../content/share-copy"
+import { WORKING_DAYS_PER_YEAR, type CalculationResult, type TokenCeiling } from "./calculate-ai-risk"
+import {
+  convertCnyAmountToCurrency,
+  formatCurrencyAmount,
+  formatCurrencyAmountFromCny,
+  getCurrencyLabel,
+  getExchangeRateText,
+  type SalaryCurrency,
+} from "./currency"
 
 export interface AgentSummaryViewModel {
   annualIncomeFormatted: string
@@ -43,6 +52,7 @@ export interface AgentSummaryViewModel {
   verdictHeadline: string
   verdictBody: string
   verdictTone: "danger" | "warning" | "safe"
+  shareCopy: string
 }
 
 export interface ModelCostViewModel {
@@ -71,6 +81,7 @@ export interface ModelCostViewModel {
   fullBudgetTotalTokensFormatted: string
   fullBudgetWorkdayTokensFormatted: string
   workdayAverageFormula: string
+  exchangeRateDisclosure?: string
 }
 
 export interface TokenCeilingDisplay {
@@ -128,10 +139,6 @@ export interface ResultViewModel {
   }
 }
 
-function formatCny(value: number): string {
-  return value.toLocaleString("zh-CN", { maximumFractionDigits: 0 })
-}
-
 function formatPercent(value: number): string {
   return `${(value * 100).toFixed(1)}%`
 }
@@ -170,7 +177,9 @@ function formatCurrencyPrice(currency: "USD" | "CNY", value: number): string {
 }
 
 function formatBudgetByCurrency(currency: "USD" | "CNY", annualCostCny: number): string {
-  const budget = currency === "USD" ? annualCostCny / pricingData.exchangeRateUsdToCny : annualCostCny
+  const budget = currency === "USD"
+    ? annualCostCny / pricingData.exchangeRateUsdToCny
+    : annualCostCny
   return formatCurrencyPrice(currency, budget)
 }
 
@@ -198,7 +207,7 @@ function buildCoworkerLead(result: CalculationResult, language: SupportedLanguag
 
 function buildVerdict(
   result: CalculationResult,
-  language: SupportedLanguage
+  language: SupportedLanguage,
 ): AgentSummaryViewModel["verdictHeadline"] {
   if (result.isCostInefficient) {
     return language === "zh-CN"
@@ -250,44 +259,44 @@ function buildVerdictTone(result: CalculationResult): AgentSummaryViewModel["ver
 
 function buildAnnualTotalCostExplanation(language: SupportedLanguage): string {
   return language === "zh-CN"
-    ? `我们先把你的税前年薪换算成企业真实承担的年度全用工成本。这里会叠加城市档位系数，以及 1 个月左右的附加雇佣成本，所以判断基准不是你的到手收入，而是公司真正为你付出的总预算。`
-    : `We first convert your stated salary into the employer's real annual employment cost. This adds a city-tier coefficient plus roughly one extra month of employment overhead, so the benchmark is not your take-home pay but the company's true yearly budget for you.`
+    ? "我们先把你的税前年薪换算成企业真实承担的年度全用工成本。这里会叠加城市档位系数，以及 1 个月左右的附加雇佣成本，所以判断基准不是你的到手收入，而是公司真正为你付出的总预算。"
+    : "We first convert your stated salary into the employer's real annual employment cost. This adds a city-tier coefficient plus roughly one extra month of employment overhead, so the benchmark is not your take-home pay but the company's true yearly budget for you."
 }
 
 function buildPerformanceExplanation(language: SupportedLanguage): string {
   return language === "zh-CN"
-    ? `这个倍数是你主观判断“用了这个模型后，自己比过去快了多少”。它本身不直接等于淘汰风险，而是用来衡量你把 AI 变成生产力之后，理论上能放大多少产能。`
-    : `This multiplier is your own estimate of how much faster you become with the model. It is not replacement risk by itself; it measures how much output you could theoretically amplify once AI becomes part of your workflow.`
+    ? "这个倍数是你主观判断“用了这个模型后，自己比过去快了多少”。它本身不直接等于淘汰风险，而是用来衡量你把 AI 变成生产力之后，理论上能放大多少产能。"
+    : "This multiplier is your own estimate of how much faster you become with the model. It is not replacement risk by itself; it measures how much output you could theoretically amplify once AI becomes part of your workflow."
 }
 
 function buildDailyTokenUsageExplanation(language: SupportedLanguage): string {
   return language === "zh-CN"
-    ? `这是你在正常工作日里大概要消耗的 Token 规模。它决定了你每天要为这套 Agent 工作流支付多少成本，也决定了这套流程能否被公司持续负担。`
-    : `This is the amount of tokens you expect to consume on a normal workday. It determines the daily cost of your Agent workflow and whether that workflow is economically sustainable for the company.`
+    ? "这是你在正常工作日里大概要消耗的 Token 规模。它决定了你每天要为这套 Agent 工作流支付多少成本，也决定了这套流程能否被公司持续负担。"
+    : "This is the amount of tokens you expect to consume on a normal workday. It determines the daily cost of your Agent workflow and whether that workflow is economically sustainable for the company."
 }
 
 function buildDailyAiCostExplanation(language: SupportedLanguage): string {
   return language === "zh-CN"
-    ? `日均 AI 成本 = 你每天的 Token 需求 × 当前模型的综合单价。它告诉你，想维持这样的 Agent 工作强度，公司每天大概要额外花多少钱。`
-    : `Daily AI cost equals your daily token demand multiplied by the blended unit price of the selected model. It shows how much extra money the company would spend each workday to sustain this Agent-assisted intensity.`
+    ? "日均 AI 成本 = 你每天的 Token 需求 × 当前模型的综合单价。它告诉你，想维持这样的 Agent 工作强度，公司每天大概要额外花多少钱。"
+    : "Daily AI cost equals your daily token demand multiplied by the blended unit price of the selected model. It shows how much extra money the company would spend each workday to sustain this Agent-assisted intensity."
 }
 
 function buildAnnualAiCostExplanation(language: SupportedLanguage): string {
   return language === "zh-CN"
-    ? `年均 AI 成本 = 日均 AI 成本 × 264 个工作日。它表示如果你全年都按这个强度使用 Agent，公司为这套 AI 流程支付的总成本。`
-    : `Annual AI cost equals daily AI cost multiplied by 264 workdays. It estimates how much the company would spend over a full year if you used this Agent workflow at the same intensity throughout the year.`
+    ? "年均 AI 成本 = 日均 AI 成本 × 264 个工作日。它表示如果你全年都按这个强度使用 Agent，公司为这套 AI 流程支付的总成本。"
+    : "Annual AI cost equals daily AI cost multiplied by 264 workdays. It estimates how much the company would spend over a full year if you used this Agent workflow at the same intensity throughout the year."
 }
 
 function buildAiCostShareExplanation(language: SupportedLanguage): string {
   return language === "zh-CN"
-    ? `这个比例表示：维持你的 Agent 工作流，一年大概要吃掉你对应企业用工成本的多少百分比。比例越低，说明“给你配 AI”这件事越容易被公司接受。`
-    : `This percentage shows how much of your total employment cost would be consumed by sustaining your Agent workflow for a year. The lower it is, the easier it is for a company to justify funding AI on top of you.`
+    ? "这个比例表示：维持你的 Agent 工作流，一年大概要吃掉企业年度全用工成本的多少百分比。比例越低，说明“给你配 AI”这件事越容易被公司接受。"
+    : "This percentage shows how much of the employer's annual employment cost would be consumed by sustaining your Agent workflow for a year. The lower it is, the easier it is for a company to justify funding AI on top of you."
 }
 
 function buildCostEffectivenessExplanation(language: SupportedLanguage): string {
   return language === "zh-CN"
-    ? `AI 投入产出比 = 效率增幅 ÷ AI 成本占比。如果这个值小于 1，说明你额外投入的 AI 成本比例，比换回来的效率增幅还大，这通常意味着当前的 Token 消耗强度偏高，或者模型选择过贵。`
-    : `AI cost effectiveness = productivity gain divided by AI cost share. If this value is below 1, the extra percentage of AI cost is larger than the percentage of productivity gained, which usually means token usage is too heavy or the chosen model is too expensive.`
+    ? "AI 投入产出比 = 效率增幅 ÷ AI 成本占比。如果这个值小于 1，说明你额外投入的 AI 成本比例，比换回来的效率增幅还大，这通常意味着当前的 Token 消耗强度偏高，或者模型选择过贵。"
+    : "AI cost effectiveness = productivity gain divided by AI cost share. If this value is below 1, the extra percentage of AI cost is larger than the percentage of productivity gained, which usually means token usage is too heavy or the chosen model is too expensive."
 }
 
 export function isHighRiskDangerBand(result: Pick<CalculationResult, "effectivePeopleEquivalent">): boolean {
@@ -312,12 +321,12 @@ function getDangerScaleSummary(result: CalculationResult, language: SupportedLan
   }
   if (result.effectivePeopleEquivalent >= 1.5) {
     return language === "zh-CN"
-      ? `同事已经开始形成明显效率优势，只是还没到彻底碾压。`
-      : `Your coworker is already building a visible efficiency advantage, just not a total blowout yet.`
+      ? "同事已经开始形成明显效率优势，只是还没到彻底碾压。"
+      : "Your coworker is already building a visible efficiency advantage, just not a total blowout yet."
   }
   return language === "zh-CN"
-    ? `同事暂时还没有把差距完全拉开，但已经开始积累结构性优势。`
-    : `Your coworker has not fully pulled away yet, but is starting to accumulate structural advantage.`
+    ? "同事暂时还没有把差距完全拉开，但已经开始积累结构性优势。"
+    : "Your coworker has not fully pulled away yet, but is starting to accumulate structural advantage."
 }
 
 function getCostEffectivenessScaleLabel(result: CalculationResult, language: SupportedLanguage): string {
@@ -333,34 +342,55 @@ function getCostEffectivenessScaleLabel(result: CalculationResult, language: Sup
 function getCostEffectivenessScaleSummary(result: CalculationResult, language: SupportedLanguage): string {
   if (result.costEffectivenessRatio < 1) {
     return language === "zh-CN"
-      ? `这套 Agent 用法消耗掉的预算，占比已经高于换回来的效率增幅。`
-      : `This Agent workflow consumes a larger share of budget than the productivity gain it returns.`
+      ? "这套 Agent 用法消耗掉的预算，占比已经高于换回来的效率增幅。"
+      : "This Agent workflow consumes a larger share of budget than the productivity gain it returns."
   }
   if (result.costEffectivenessRatio < 2) {
     return language === "zh-CN"
-      ? `这套 Agent 用法已经开始值回票价，但还没有形成特别夸张的收益。`
-      : `This Agent workflow is paying for itself, but the upside is not dramatic yet.`
+      ? "这套 Agent 用法已经开始值回票价，但还没有形成特别夸张的收益。"
+      : "This Agent workflow is paying for itself, but the upside is not dramatic yet."
   }
   return language === "zh-CN"
-    ? `这套 Agent 用法的收益明显跑赢成本，组织更容易接受这样的投入。`
-    : `This Agent workflow is clearly outperforming its cost, making the spend easier to justify.`
+    ? "这套 Agent 用法的收益明显跑赢成本，组织更容易接受这样的投入。"
+    : "This Agent workflow is clearly outperforming its cost, making the spend easier to justify."
 }
 
 function buildAffordableWorkflowExplanation(language: SupportedLanguage): string {
   return language === "zh-CN"
-    ? `可负担工作流份数 = 企业年度全用工成本 ÷ 年均 AI 成本。它表示“公司为你付出的总预算”，理论上可以覆盖多少套同等强度的 Agent 流程。这个值越高，你的效率倍数越容易被真正兑现。`
-    : `Affordable workflow count equals total annual employment cost divided by annual AI cost. It tells you how many equally intense Agent workflows could theoretically be funded by the budget currently spent on you. The higher it is, the easier it is to realize your efficiency multiplier in practice.`
+    ? "可负担工作流份数 = 企业年度全用工成本 ÷ 年均 AI 成本。它表示“公司为你付出的总预算”，理论上可以覆盖多少套同等强度的 Agent 流程。这个值越高，你的效率倍数越容易被真正兑现。"
+    : "Affordable workflow count equals total annual employment cost divided by annual AI cost. It tells you how many equally intense Agent workflows could theoretically be funded by the budget currently spent on you. The higher it is, the easier it is to realize your efficiency multiplier in practice."
 }
 
 function buildPeopleEquivalentExplanation(language: SupportedLanguage): string {
   return language === "zh-CN"
-    ? `等效人力 = 1 + (效率倍数 - 1) × 可负担比例。也就是说，我们不是直接把“效率提升几倍”照单全收，而是先看公司能不能负担这套 AI 流程，再折算成你 + AI 到底相当于过去几个人。`
-    : `People equivalent = 1 + (efficiency multiplier - 1) × affordability ratio. In other words, we do not blindly accept your multiplier at face value; we first ask whether the company can actually afford the AI workflow, then convert that into how many old-style workers you plus AI really equal.`
+    ? "等效人力 = 1 + (效率倍数 - 1) × 可负担比例。也就是说，我们不是直接把“效率提升几倍”照单全收，而是先看公司能不能负担这套 AI 流程，再折算成你 + AI 到底相当于过去几个人。"
+    : "People equivalent = 1 + (efficiency multiplier - 1) × affordability ratio. In other words, we do not blindly accept your multiplier at face value; we first ask whether the company can actually afford the AI workflow, then convert that into how many old-style workers you plus AI really equal."
+}
+
+function formatWorkflowCount(value: number, language: SupportedLanguage) {
+  return language === "zh-CN"
+    ? `${value.toFixed(2)} 份`
+    : `${value.toFixed(2)} workflows`
+}
+
+function formatPeopleEquivalent(value: number, language: SupportedLanguage) {
+  return language === "zh-CN"
+    ? `${value.toFixed(2)} 人`
+    : `${value.toFixed(2)} workers`
+}
+
+function buildExchangeRateDisclosure(language: SupportedLanguage, selectedCurrency: SalaryCurrency) {
+  if (selectedCurrency !== "USD") return undefined
+
+  return language === "zh-CN"
+    ? `用户预算金额按美元显示，内部统一按 ${getExchangeRateText(language)} 折算；模型价格继续保留官方原生币种。`
+    : `Budget amounts are shown in USD while the calculator normalizes with ${getExchangeRateText(language)}. Model pricing stays in each provider's native currency.`
 }
 
 export function buildResultViewModel(
   result: CalculationResult,
-  language: SupportedLanguage
+  language: SupportedLanguage,
+  selectedCurrency: SalaryCurrency,
 ): ResultViewModel {
   const cityCoefficient =
     benchmarkData.cityCoefficients.find((item) => item.tier === result.cityTier)?.coefficient ??
@@ -369,11 +399,22 @@ export function buildResultViewModel(
   const costEffectivenessScalePosition = Number.isFinite(result.costEffectivenessRatio)
     ? clamp((result.costEffectivenessRatio / 3) * 100, 0, 100)
     : 100
+  const annualIncomeDisplay = convertCnyAmountToCurrency(result.annualIncomeCny, selectedCurrency)
+  const annualTotalCostDisplay = convertCnyAmountToCurrency(result.annualTotalCostCny, selectedCurrency)
+  const dailyAiCostDisplay = convertCnyAmountToCurrency(result.dailyAiCostCny, selectedCurrency)
+  const annualAiCostDisplay = convertCnyAmountToCurrency(result.annualAiCostCny, selectedCurrency)
+  const displayMixedCostPer1m = convertCnyAmountToCurrency(result.mixedCostPer1mTokenCny, selectedCurrency)
+  const exchangeRateDisclosure = buildExchangeRateDisclosure(language, selectedCurrency)
+  const selectedModel = result.selectedModel
+  const ratio = pricingData.inputOutputRatio
+  const mixedPriceInModelCurrency =
+    (ratio * selectedModel.inputCostPer1mToken + selectedModel.outputCostPer1mToken) / (ratio + 1)
 
   const summarySection: AgentSummaryViewModel = {
-    annualIncomeFormatted: formatCny(result.annualIncomeCny),
-    annualTotalCostFormatted: formatCny(result.annualTotalCostCny),
-    annualTotalCostFormula: `¥${formatCny(result.annualIncomeCny)} × (1 + ${cityCoefficient.toFixed(1)}) + ¥${formatCny(result.annualIncomeCny / 12)} = ¥${formatCny(result.annualTotalCostCny)}`,
+    annualIncomeFormatted: formatCurrencyAmount(annualIncomeDisplay, selectedCurrency),
+    annualTotalCostFormatted: formatCurrencyAmount(annualTotalCostDisplay, selectedCurrency),
+    annualTotalCostFormula:
+      `${formatCurrencyAmount(annualIncomeDisplay, selectedCurrency)} × (1 + ${cityCoefficient.toFixed(1)}) + ${formatCurrencyAmount(annualIncomeDisplay / 12, selectedCurrency)} = ${formatCurrencyAmount(annualTotalCostDisplay, selectedCurrency)}`,
     annualTotalCostExplanation: buildAnnualTotalCostExplanation(language),
     cityLabel: getCityLabel(result.cityTier, language),
     selectedModelName: result.selectedModel.modelName,
@@ -382,26 +423,32 @@ export function buildResultViewModel(
     performanceMultiplierExplanation: buildPerformanceExplanation(language),
     dailyTokenUsageFormatted: `${result.dailyTokenUsageM.toFixed(2)} M`,
     dailyTokenUsageExplanation: buildDailyTokenUsageExplanation(language),
-    annualAiCostFormatted: formatCny(result.annualAiCostCny),
-    annualAiCostFormula: `¥${formatCny(result.dailyAiCostCny)} × ${WORKING_DAYS_PER_YEAR} = ¥${formatCny(result.annualAiCostCny)}`,
+    annualAiCostFormatted: formatCurrencyAmount(annualAiCostDisplay, selectedCurrency),
+    annualAiCostFormula:
+      `${formatCurrencyAmount(dailyAiCostDisplay, selectedCurrency, { maximumFractionDigits: 2 })} × ${WORKING_DAYS_PER_YEAR} = ${formatCurrencyAmount(annualAiCostDisplay, selectedCurrency)}`,
     annualAiCostExplanation: buildAnnualAiCostExplanation(language),
-    dailyAiCostFormatted: formatCny(result.dailyAiCostCny),
-    dailyAiCostFormula: `${result.dailyTokenUsageM.toFixed(2)} × ¥${formatPriceNumber(result.mixedCostPer1mTokenCny)} = ¥${formatCny(result.dailyAiCostCny)}`,
+    dailyAiCostFormatted: formatCurrencyAmount(dailyAiCostDisplay, selectedCurrency, { maximumFractionDigits: 2 }),
+    dailyAiCostFormula:
+      `${result.dailyTokenUsageM.toFixed(2)} × ${formatCurrencyAmount(displayMixedCostPer1m, selectedCurrency, { maximumFractionDigits: 3 })} = ${formatCurrencyAmount(dailyAiCostDisplay, selectedCurrency, { maximumFractionDigits: 2 })}`,
     dailyAiCostExplanation: buildDailyAiCostExplanation(language),
     aiCostShareFormatted: formatPercent(result.aiCostShareOfSalary),
-    aiCostShareFormula: `¥${formatCny(result.annualAiCostCny)} ÷ ¥${formatCny(result.annualTotalCostCny)} = ${formatPercent(result.aiCostShareOfSalary)}`,
+    aiCostShareFormula:
+      `${formatCurrencyAmount(annualAiCostDisplay, selectedCurrency)} ÷ ${formatCurrencyAmount(annualTotalCostDisplay, selectedCurrency)} = ${formatPercent(result.aiCostShareOfSalary)}`,
     aiCostShareExplanation: buildAiCostShareExplanation(language),
     costEffectivenessFormatted: formatRatio(result.costEffectivenessRatio),
-    costEffectivenessFormula: `${formatPercent(result.efficiencyGainRatio)} ÷ ${formatPercent(result.aiCostShareOfSalary)} = ${formatRatio(result.costEffectivenessRatio)}`,
+    costEffectivenessFormula:
+      `${formatPercent(result.efficiencyGainRatio)} ÷ ${formatPercent(result.aiCostShareOfSalary)} = ${formatRatio(result.costEffectivenessRatio)}`,
     costEffectivenessExplanation: buildCostEffectivenessExplanation(language),
     costEffectivenessScalePosition,
     costEffectivenessScaleLabel: getCostEffectivenessScaleLabel(result, language),
     costEffectivenessScaleSummary: getCostEffectivenessScaleSummary(result, language),
-    affordableWorkflowCountFormatted: `${result.affordableWorkflowCount.toFixed(2)} 份`,
-    affordableWorkflowFormula: `¥${formatCny(result.annualTotalCostCny)} ÷ ¥${formatCny(result.annualAiCostCny)} = ${result.affordableWorkflowCount.toFixed(2)} 份`,
+    affordableWorkflowCountFormatted: formatWorkflowCount(result.affordableWorkflowCount, language),
+    affordableWorkflowFormula:
+      `${formatCurrencyAmount(annualTotalCostDisplay, selectedCurrency)} ÷ ${formatCurrencyAmount(annualAiCostDisplay, selectedCurrency)} = ${formatWorkflowCount(result.affordableWorkflowCount, language)}`,
     affordableWorkflowExplanation: buildAffordableWorkflowExplanation(language),
-    effectivePeopleEquivalentFormatted: `${result.effectivePeopleEquivalent.toFixed(2)} 人`,
-    effectivePeopleEquivalentFormula: `1 + (${result.performanceMultiplier.toFixed(2)} - 1) × min(${result.affordableWorkflowCount.toFixed(2)}, 1) = ${result.effectivePeopleEquivalent.toFixed(2)} 人`,
+    effectivePeopleEquivalentFormatted: formatPeopleEquivalent(result.effectivePeopleEquivalent, language),
+    effectivePeopleEquivalentFormula:
+      `1 + (${result.performanceMultiplier.toFixed(2)} - 1) × min(${result.affordableWorkflowCount.toFixed(2)}, 1) = ${formatPeopleEquivalent(result.effectivePeopleEquivalent, language)}`,
     effectivePeopleEquivalentExplanation: buildPeopleEquivalentExplanation(language),
     dangerScalePosition,
     dangerScaleLabel: getDangerScaleLabel(result, language),
@@ -409,13 +456,23 @@ export function buildResultViewModel(
     verdictHeadline: buildVerdict(result, language),
     verdictBody: buildVerdictBody(result, language),
     verdictTone: buildVerdictTone(result),
+    shareCopy: buildShareCopy(language, {
+      annualIncome: formatCurrencyAmount(annualIncomeDisplay, selectedCurrency),
+      annualTotalCost: formatCurrencyAmount(annualTotalCostDisplay, selectedCurrency),
+      annualAiCost: formatCurrencyAmount(annualAiCostDisplay, selectedCurrency),
+      effectivePeopleEquivalent: formatPeopleEquivalent(result.effectivePeopleEquivalent, language),
+      modelName: result.selectedModel.modelName,
+      verdictHeadline: buildVerdict(result, language),
+      exchangeRateText: selectedCurrency === "USD"
+        ? language === "zh-CN"
+          ? `按 ${getExchangeRateText(language)} 静态汇率估算。`
+          : `Estimated with the static rate ${getExchangeRateText(language)}.`
+        : undefined,
+    }),
   }
 
-  const selectedModel = result.selectedModel
-  const ratio = pricingData.inputOutputRatio
-
   const costSection: ModelCostViewModel = {
-    annualTotalCostFormatted: formatCny(result.annualTotalCostCny),
+    annualTotalCostFormatted: formatCurrencyAmount(annualTotalCostDisplay, selectedCurrency),
     providerName: selectedModel.providerName,
     modelName: selectedModel.modelName,
     modelDescription: selectedModel.modelDescription,
@@ -426,29 +483,29 @@ export function buildResultViewModel(
     sourceNote: selectedModel.sourceNote,
     inputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken),
     outputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken),
-    mixedPriceFormatted: `¥${formatPriceNumber(result.mixedCostPer1mTokenCny)} / 1M`,
+    mixedPriceFormatted: `${formatCurrencyPrice(selectedModel.currency, mixedPriceInModelCurrency)} / 1M`,
     mixedPriceFormula:
-      selectedModel.currency === "USD"
-        ? `((${ratio} × ${formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken)} + ${formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken)}) ÷ ${ratio + 1}) × ${pricingData.exchangeRateUsdToCny} = ¥${formatPriceNumber(result.mixedCostPer1mTokenCny)} / 1M`
-        : `(${ratio} × ${formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken)} + ${formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken)}) ÷ ${ratio + 1} = ¥${formatPriceNumber(result.mixedCostPer1mTokenCny)} / 1M`,
+      `(${ratio} × ${formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken)} + ${formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken)}) ÷ ${ratio + 1} = ${formatCurrencyPrice(selectedModel.currency, mixedPriceInModelCurrency)} / 1M`,
     mixedPriceExplanation:
       language === "zh-CN"
-        ? `综合单价按输入:输出 = ${ratio}:1 来折算，先求出每 1M 总 Token 的平均成本；如果模型是美元定价，再按汇率 ${pricingData.exchangeRateUsdToCny} 折成人民币。`
-        : `The blended price assumes an input:output mix of ${ratio}:1, first averaging the cost per 1M total tokens. If the model is priced in USD, it is then converted to CNY using the ${pricingData.exchangeRateUsdToCny} exchange rate.`,
+        ? `综合单价按输入:输出 = ${ratio}:1 来折算，先保留模型官方原生币种；内部做预算换算时，再按需要统一折成人民币并回显为 ${getCurrencyLabel(selectedCurrency, language)}。`
+        : `The blended price uses an input:output mix of ${ratio}:1 and keeps the model's native pricing currency. Internal budget calculations normalize in CNY when needed, then render back in ${getCurrencyLabel(selectedCurrency, language)}.`
+    ,
     dailyTokenUsageFormatted: `${result.dailyTokenUsageM.toFixed(2)} M / day`,
     annualTokenUsageFormatted: formatTokens(result.annualTokenUsage),
-    dailyAiCostFormatted: `¥${formatCny(result.dailyAiCostCny)}`,
-    annualAiCostFormatted: `¥${formatCny(result.annualAiCostCny)}`,
+    dailyAiCostFormatted: formatCurrencyAmount(dailyAiCostDisplay, selectedCurrency, { maximumFractionDigits: 2 }),
+    annualAiCostFormatted: formatCurrencyAmount(annualAiCostDisplay, selectedCurrency),
     dailyAiCostFormula:
-      selectedModel.currency === "USD"
-        ? `${result.dailyTokenUsageM.toFixed(2)} × (((${ratio} × ${formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken)} + ${formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken)}) ÷ ${ratio + 1}) × ${pricingData.exchangeRateUsdToCny}) = ¥${formatCny(result.dailyAiCostCny)}`
-        : `${result.dailyTokenUsageM.toFixed(2)} × ((${ratio} × ${formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken)} + ${formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken)}) ÷ ${ratio + 1}) = ¥${formatCny(result.dailyAiCostCny)}`,
+      `${result.dailyTokenUsageM.toFixed(2)} × ${formatCurrencyAmount(displayMixedCostPer1m, selectedCurrency, { maximumFractionDigits: 3 })} = ${formatCurrencyAmount(dailyAiCostDisplay, selectedCurrency, { maximumFractionDigits: 2 })}`,
     dailyAiCostExplanation: buildDailyAiCostExplanation(language),
-    annualAiCostFormula: `¥${formatCny(result.dailyAiCostCny)} × ${WORKING_DAYS_PER_YEAR} = ¥${formatCny(result.annualAiCostCny)}`,
+    annualAiCostFormula:
+      `${formatCurrencyAmount(dailyAiCostDisplay, selectedCurrency, { maximumFractionDigits: 2 })} × ${WORKING_DAYS_PER_YEAR} = ${formatCurrencyAmount(annualAiCostDisplay, selectedCurrency)}`,
     annualAiCostExplanation: buildAnnualAiCostExplanation(language),
     fullBudgetTotalTokensFormatted: formatTokens(result.fullBudgetTotalTokens),
     fullBudgetWorkdayTokensFormatted: formatTokens(result.fullBudgetWorkdayTokens),
-    workdayAverageFormula: `¥${formatCny(result.annualTotalCostCny)} ÷ ¥${formatPriceNumber(result.mixedCostPer1mTokenCny)} ÷ ${WORKING_DAYS_PER_YEAR} = ${formatTokens(result.fullBudgetWorkdayTokens)}`,
+    workdayAverageFormula:
+      `${formatCurrencyAmount(annualTotalCostDisplay, selectedCurrency)} ÷ ${formatCurrencyAmount(displayMixedCostPer1m, selectedCurrency, { maximumFractionDigits: 3 })} ÷ ${WORKING_DAYS_PER_YEAR} = ${formatTokens(result.fullBudgetWorkdayTokens)}`,
+    exchangeRateDisclosure,
   }
 
   const tokenCeilings: TokenCeilingDisplay[] = result.tokenCeilings.map((tc: TokenCeiling) => ({
@@ -458,8 +515,10 @@ export function buildResultViewModel(
     modelName: tc.modelName,
     modelDescription: tc.modelDescription,
     averageWorkdayTokensFormatted: formatTokens(tc.totalTokens / WORKING_DAYS_PER_YEAR),
-    mixInputFormula: `${formatBudgetByCurrency(tc.pricingCurrency, result.annualTotalCostCny)} ÷ (${pricingData.inputOutputRatio} × ${formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken)} + ${formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken)}) × ${pricingData.inputOutputRatio} = ${formatTokens(tc.inputTokensInMix)}`,
-    mixOutputFormula: `${formatBudgetByCurrency(tc.pricingCurrency, result.annualTotalCostCny)} ÷ (${pricingData.inputOutputRatio} × ${formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken)} + ${formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken)}) = ${formatTokens(tc.outputTokensInMix)}`,
+    mixInputFormula:
+      `${formatBudgetByCurrency(tc.pricingCurrency, result.annualTotalCostCny)} ÷ (${pricingData.inputOutputRatio} × ${formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken)} + ${formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken)}) × ${pricingData.inputOutputRatio} = ${formatTokens(tc.inputTokensInMix)}`,
+    mixOutputFormula:
+      `${formatBudgetByCurrency(tc.pricingCurrency, result.annualTotalCostCny)} ÷ (${pricingData.inputOutputRatio} × ${formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken)} + ${formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken)}) = ${formatTokens(tc.outputTokensInMix)}`,
     inputPriceFormatted: formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken),
     outputPriceFormatted: formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken),
     cacheReadPriceFormatted:
@@ -496,7 +555,7 @@ export function buildResultViewModel(
     summarySection,
     costSection,
     tokenListSection: {
-      annualTotalCostFormatted: formatCny(result.annualTotalCostCny),
+      annualTotalCostFormatted: formatCurrencyAmountFromCny(result.annualTotalCostCny, selectedCurrency),
       inputOutputRatio: pricingData.inputOutputRatio,
       workingDaysPerYear: WORKING_DAYS_PER_YEAR,
       pricingProviders,

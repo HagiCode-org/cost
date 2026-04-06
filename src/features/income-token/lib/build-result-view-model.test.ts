@@ -1,0 +1,38 @@
+import { describe, expect, it } from "vitest"
+
+import { buildResultViewModel } from "./build-result-view-model"
+import { evaluate } from "./calculate-ai-risk"
+
+const result = evaluate({
+  annualIncomeCny: 300_000,
+  cityTier: "tier1",
+  modelId: "gpt-5",
+  performanceMultiplier: 2.5,
+  dailyTokenUsageM: 10,
+})
+
+describe("buildResultViewModel", () => {
+  it("formats user-budget amounts in USD while preserving model-native pricing", () => {
+    const viewModel = buildResultViewModel(result, "en-US", "USD")
+
+    expect(viewModel.summarySection.annualIncomeFormatted).toMatch(/^\$/)
+    expect(viewModel.summarySection.annualTotalCostFormatted).toMatch(/^\$/)
+    expect(viewModel.costSection.dailyAiCostFormatted).toMatch(/^\$/)
+    expect(viewModel.costSection.inputPriceFormatted).toBe("$2.5")
+    expect(viewModel.costSection.outputPriceFormatted).toBe("$15")
+    expect(viewModel.costSection.mixedPriceFormatted).toMatch(/^\$.*\/ 1M$/)
+    expect(viewModel.costSection.exchangeRateDisclosure).toContain("1 USD = 7.25 CNY")
+    expect(viewModel.summarySection.shareCopy).toContain("$")
+  })
+
+  it("keeps CNY budget formatting for CNY display while retaining USD model pricing", () => {
+    const viewModel = buildResultViewModel(result, "zh-CN", "CNY")
+
+    expect(viewModel.summarySection.annualIncomeFormatted).toBe("¥300,000")
+    expect(viewModel.summarySection.annualTotalCostFormatted).toBe("¥445,000")
+    expect(viewModel.costSection.inputPriceFormatted).toBe("$2.5")
+    expect(viewModel.costSection.outputPriceFormatted).toBe("$15")
+    expect(viewModel.costSection.exchangeRateDisclosure).toBeUndefined()
+    expect(viewModel.tokenListSection.annualTotalCostFormatted).toBe("¥445,000")
+  })
+})

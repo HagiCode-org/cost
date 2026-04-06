@@ -1,5 +1,9 @@
+import type { SupportedLanguage } from "@/i18n/config"
+import type { SiteRegion } from "@/lib/region"
+
 import type { CityTier } from "./benchmark-data"
-import { pricingData } from "./pricing-data"
+import { benchmarkData, getCityTierLabel } from "./benchmark-data"
+import { getLocalizedModelCopy, pricingData } from "./pricing-data"
 import type { SalaryCurrency } from "../lib/currency"
 
 export interface FormOption<T extends string = string> {
@@ -21,14 +25,8 @@ export interface ModelOption {
   providerName: string
   label: string
   description: string
+  pricingContext?: string
 }
-
-export const cityOptions: FormOption<CityTier>[] = [
-  { value: "tier1", label: "北京 / 上海 / 深圳 / 广州", labelEn: "Beijing / Shanghai / Shenzhen / Guangzhou" },
-  { value: "new-tier1", label: "杭州 / 成都 / 苏州 / 南京", labelEn: "Hangzhou / Chengdu / Suzhou / Nanjing" },
-  { value: "tier2", label: "武汉 / 西安 / 天津 / 郑州", labelEn: "Wuhan / Xi'an / Tianjin / Zhengzhou" },
-  { value: "other", label: "宜昌 / 洛阳 / 南充 / 上饶", labelEn: "Yichang / Luoyang / Nanchong / Shangrao" },
-]
 
 export const salaryCurrencyOptions: FormOption<SalaryCurrency>[] = [
   { value: "CNY", label: "人民币 CNY", labelEn: "CNY" },
@@ -61,14 +59,28 @@ export function getIncomeOptions(currency: SalaryCurrency): IncomeOption[] {
   return incomeOptionConfig[currency]
 }
 
-export const modelOptions: ModelOption[] = pricingData.models.map((model) => {
-  const provider = pricingData.providers.find((item) => item.id === model.providerId)
+export function getCityOptions(
+  region: SiteRegion,
+  language: SupportedLanguage,
+): Array<{ value: CityTier, label: string }> {
+  return benchmarkData.cityCoefficients.map((city) => ({
+    value: city.tier,
+    label: getCityTierLabel(city.tier, region, language),
+  }))
+}
 
-  return {
-    value: model.id,
-    providerId: model.providerId,
-    providerName: provider?.name ?? model.providerId,
-    label: model.name,
-    description: model.description,
-  }
-})
+export function getModelOptions(language: SupportedLanguage): ModelOption[] {
+  return pricingData.models.map((model) => {
+    const provider = pricingData.providers.find((item) => item.id === model.providerId)
+    const copy = getLocalizedModelCopy(model, language)
+
+    return {
+      value: model.id,
+      providerId: model.providerId,
+      providerName: provider?.name ?? model.providerId,
+      label: model.name,
+      description: copy.description,
+      pricingContext: copy.pricingContext,
+    }
+  })
+}

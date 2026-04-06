@@ -35,6 +35,7 @@
     },
     "form": {
       "currency": "Which salary currency do you use?",
+      "regionHint": "Current default region: {{region}}. Explicit URL values and manual edits still win.",
       "currencyHint": "Income presets and custom input switch with the selected currency. Current input unit: {{unit}}.",
       "exchangeRateHint": "If you choose USD, the calculator normalizes with 1 USD = {{rate}} CNY.",
       "incomeAmount": "What is your annual salary? ({{unit}})",
@@ -58,6 +59,10 @@
       "performanceMultiplierPlaceholder": "e.g. 2.5",
       "dailyTokenUsage": "How many M tokens do you roughly need per day?",
       "dailyTokenUsagePlaceholder": "e.g. 12"
+    },
+    "regions": {
+      "cn-mainland": "China mainland",
+      "international": "International"
     },
     "cities": {
       "tier1": "Beijing / Shanghai / Shenzhen / Guangzhou",

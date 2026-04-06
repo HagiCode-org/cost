@@ -35,6 +35,7 @@
     },
     "form": {
       "currency": "你的薪资单位是？",
+      "regionHint": "当前默认地区：{{region}}。显式 URL 参数与手动选择仍会优先保留。",
       "currencyHint": "收入预设与自定义输入会随币种切换。当前输入单位：{{unit}}。",
       "exchangeRateHint": "若选择 USD，内部统一按 1 USD = {{rate}} CNY 折算。",
       "incomeAmount": "你的年薪是？（{{unit}}）",
@@ -58,6 +59,10 @@
       "performanceMultiplierPlaceholder": "例如：2.5",
       "dailyTokenUsage": "这个模型你每天大概需要多少 M Token？",
       "dailyTokenUsagePlaceholder": "例如：12"
+    },
+    "regions": {
+      "cn-mainland": "中国大陆场景",
+      "international": "国际场景"
     },
     "cities": {
       "tier1": "北京 / 上海 / 深圳 / 广州",

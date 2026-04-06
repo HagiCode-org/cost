@@ -2,6 +2,8 @@ import i18n from "i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 import { initReactI18next } from "react-i18next"
 
+import { detectRegion, syncRegionPreferenceFromUrl, type SiteRegion } from "@/lib/region"
+
 import enUS from "./locales/en-US.json"
 import zhCN from "./locales/zh-CN.json"
 
@@ -14,6 +16,8 @@ const resources = {
   "zh-CN": { translation: zhCN },
   "en-US": { translation: enUS },
 } as const
+
+syncRegionPreferenceFromUrl()
 
 i18n
   .use(LanguageDetector)
@@ -33,5 +37,25 @@ i18n
       lookupLocalStorage: "cost-language",
     },
   })
+
+export function getResolvedLanguage(): SupportedLanguage {
+  const language = i18n.resolvedLanguage ?? i18n.language ?? defaultLanguage
+
+  if (language === "en-US" || language.startsWith("en")) {
+    return "en-US"
+  }
+
+  return "zh-CN"
+}
+
+export function getResolvedExperienceContext(): {
+  language: SupportedLanguage
+  region: SiteRegion
+} {
+  return {
+    language: getResolvedLanguage(),
+    region: detectRegion(),
+  }
+}
 
 export default i18n

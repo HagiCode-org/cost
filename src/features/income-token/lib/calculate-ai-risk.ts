@@ -1,6 +1,8 @@
 import { benchmarkData } from "../content/benchmark-data"
 import type { CityTier } from "../content/benchmark-data"
 import { pricingData } from "../content/pricing-data"
+import type { SalaryCurrency } from "./currency"
+import { normalizeIncomeInputToAnnualCny } from "./currency"
 
 export const WORKING_DAYS_PER_YEAR = 22 * 12
 
@@ -10,6 +12,11 @@ export interface EvaluationInput {
   modelId: string
   performanceMultiplier: number
   dailyTokenUsageM: number
+}
+
+export interface SalaryCurrencyInput {
+  annualIncomeInput: number
+  salaryCurrency: SalaryCurrency
 }
 
 export interface SelectedModelMeta {
@@ -106,6 +113,10 @@ function getCityCoefficient(cityTier: CityTier): number {
 export function calculateAnnualTotalCost(input: Pick<EvaluationInput, "annualIncomeCny" | "cityTier">): number {
   const coefficient = getCityCoefficient(input.cityTier)
   return input.annualIncomeCny * (1 + coefficient) + input.annualIncomeCny / 12
+}
+
+export function normalizeAnnualIncomeCny(input: SalaryCurrencyInput) {
+  return normalizeIncomeInputToAnnualCny(input.annualIncomeInput, input.salaryCurrency)
 }
 
 export function calculateMixedCostPer1mTokenCny(modelId: string): number {

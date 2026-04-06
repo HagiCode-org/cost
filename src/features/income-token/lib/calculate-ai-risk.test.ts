@@ -9,6 +9,7 @@ import {
   calculateMixedCostPer1mTokenCny,
   calculateTokenCeilings,
   evaluate,
+  normalizeAnnualIncomeCny,
 } from "./calculate-ai-risk"
 
 const baseInput = {
@@ -22,6 +23,16 @@ const baseInput = {
 describe("calculateAnnualTotalCost", () => {
   it("converts salary to full employment cost with city coefficient", () => {
     expect(calculateAnnualTotalCost(baseInput)).toBe(445000)
+  })
+})
+
+describe("normalizeAnnualIncomeCny", () => {
+  it("keeps CNY salary input on the CNY baseline", () => {
+    expect(normalizeAnnualIncomeCny({ annualIncomeInput: 30, salaryCurrency: "CNY" })).toBe(300000)
+  })
+
+  it("converts USD salary input to the shared CNY baseline", () => {
+    expect(normalizeAnnualIncomeCny({ annualIncomeInput: 40, salaryCurrency: "USD" })).toBe(290000)
   })
 })
 

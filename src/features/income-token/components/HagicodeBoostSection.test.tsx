@@ -9,7 +9,7 @@ import type { EvaluationInput } from "@/features/income-token/lib/calculate-ai-r
 const baseInput: EvaluationInput = {
   annualIncomeCny: 300_000,
   cityTier: "tier1",
-  modelId: "claude-3-7-sonnet",
+  modelId: "gpt-5",
   performanceMultiplier: 2.5,
   dailyTokenUsageM: 12,
 }
@@ -20,7 +20,13 @@ describe("HagicodeBoostSection", () => {
   })
 
   it("repeats the boosted final verdict inside the agent report panel and the standalone conclusion panel", () => {
-    renderWithProviders(<HagicodeBoostSection baseInput={baseInput} selectedCurrency="CNY" />)
+    renderWithProviders(
+      <HagicodeBoostSection
+        baseInput={baseInput}
+        selectedCurrency="CNY"
+        region="cn-mainland"
+      />,
+    )
 
     expect(screen.getByText("套上 Hagicode 之后")).toBeInTheDocument()
   })

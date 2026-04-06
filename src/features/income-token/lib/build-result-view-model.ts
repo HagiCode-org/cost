@@ -1,7 +1,15 @@
 import type { SupportedLanguage } from "@/i18n/config"
+import type { SiteRegion } from "@/lib/region"
 
-import { benchmarkData } from "../content/benchmark-data"
-import { pricingData } from "../content/pricing-data"
+import { benchmarkData, getCityTierLabel } from "../content/benchmark-data"
+import {
+  getLocalizedModelCopy,
+  getLocalizedPricingSource,
+  getLocalizedProviderCopy,
+  getModelById,
+  getProviderById,
+  pricingData,
+} from "../content/pricing-data"
 import { buildShareCopy } from "../content/share-copy"
 import { WORKING_DAYS_PER_YEAR, type CalculationResult, type TokenCeiling } from "./calculate-ai-risk"
 import {
@@ -183,18 +191,30 @@ function formatBudgetByCurrency(currency: "USD" | "CNY", annualCostCny: number):
   return formatCurrencyPrice(currency, budget)
 }
 
-function getCityLabel(cityTier: CalculationResult["cityTier"], language: SupportedLanguage): string {
-  const city = benchmarkData.cityCoefficients.find((item) => item.tier === cityTier)
-  if (!city) return cityTier
-  if (language === "zh-CN") return city.label
+function getLocalizedModelMeta(modelId: string, language: SupportedLanguage) {
+  return getLocalizedModelCopy(getModelById(modelId), language)
+}
 
-  const labels: Record<CalculationResult["cityTier"], string> = {
-    tier1: "Beijing / Shanghai / Shenzhen / Guangzhou",
-    "new-tier1": "Hangzhou / Chengdu / Suzhou / Nanjing",
-    tier2: "Wuhan / Xi'an / Tianjin / Zhengzhou",
-    other: "Yichang / Luoyang / Nanchong / Shangrao",
+function getLocalizedProviderMeta(providerId: string, language: SupportedLanguage) {
+  const provider = getProviderById(providerId)
+
+  if (!provider) {
+    return {
+      providerName: providerId,
+      sourceLabel: getLocalizedPricingSource(language),
+      sourceUrl: "",
+      sourceNote: getLocalizedPricingSource(language),
+    }
   }
-  return labels[cityTier]
+
+  const copy = getLocalizedProviderCopy(provider, language)
+
+  return {
+    providerName: provider.name,
+    sourceLabel: copy.sourceLabel,
+    sourceUrl: provider.sourceUrl,
+    sourceNote: copy.sourceNote,
+  }
 }
 
 function buildCoworkerLead(result: CalculationResult, language: SupportedLanguage): string {
@@ -391,6 +411,7 @@ export function buildResultViewModel(
   result: CalculationResult,
   language: SupportedLanguage,
   selectedCurrency: SalaryCurrency,
+  region: SiteRegion,
 ): ResultViewModel {
   const cityCoefficient =
     benchmarkData.cityCoefficients.find((item) => item.tier === result.cityTier)?.coefficient ??
@@ -406,6 +427,8 @@ export function buildResultViewModel(
   const displayMixedCostPer1m = convertCnyAmountToCurrency(result.mixedCostPer1mTokenCny, selectedCurrency)
   const exchangeRateDisclosure = buildExchangeRateDisclosure(language, selectedCurrency)
   const selectedModel = result.selectedModel
+  const selectedModelMeta = getLocalizedModelMeta(selectedModel.modelId, language)
+  const selectedProviderMeta = getLocalizedProviderMeta(selectedModel.providerId, language)
   const ratio = pricingData.inputOutputRatio
   const mixedPriceInModelCurrency =
     (ratio * selectedModel.inputCostPer1mToken + selectedModel.outputCostPer1mToken) / (ratio + 1)
@@ -416,7 +439,7 @@ export function buildResultViewModel(
     annualTotalCostFormula:
       `${formatCurrencyAmount(annualIncomeDisplay, selectedCurrency)} × (1 + ${cityCoefficient.toFixed(1)}) + ${formatCurrencyAmount(annualIncomeDisplay / 12, selectedCurrency)} = ${formatCurrencyAmount(annualTotalCostDisplay, selectedCurrency)}`,
     annualTotalCostExplanation: buildAnnualTotalCostExplanation(language),
-    cityLabel: getCityLabel(result.cityTier, language),
+    cityLabel: getCityTierLabel(result.cityTier, region, language),
     selectedModelName: result.selectedModel.modelName,
     selectedModelDescription: buildCoworkerLead(result, language),
     performanceMultiplierFormatted: formatMultiplier(result.performanceMultiplier),
@@ -473,14 +496,14 @@ export function buildResultViewModel(
 
   const costSection: ModelCostViewModel = {
     annualTotalCostFormatted: formatCurrencyAmount(annualTotalCostDisplay, selectedCurrency),
-    providerName: selectedModel.providerName,
+    providerName: selectedProviderMeta.providerName,
     modelName: selectedModel.modelName,
-    modelDescription: selectedModel.modelDescription,
-    pricingContext: selectedModel.pricingContext,
-    pricingNote: selectedModel.pricingNote,
-    sourceLabel: selectedModel.sourceLabel,
-    sourceUrl: selectedModel.sourceUrl,
-    sourceNote: selectedModel.sourceNote,
+    modelDescription: selectedModelMeta.description,
+    pricingContext: selectedModelMeta.pricingContext,
+    pricingNote: selectedModelMeta.pricingNote,
+    sourceLabel: selectedProviderMeta.sourceLabel,
+    sourceUrl: selectedProviderMeta.sourceUrl,
+    sourceNote: selectedProviderMeta.sourceNote,
     inputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken),
     outputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken),
     mixedPriceFormatted: `${formatCurrencyPrice(selectedModel.currency, mixedPriceInModelCurrency)} / 1M`,
@@ -508,47 +531,56 @@ export function buildResultViewModel(
     exchangeRateDisclosure,
   }
 
-  const tokenCeilings: TokenCeilingDisplay[] = result.tokenCeilings.map((tc: TokenCeiling) => ({
-    modelId: tc.modelId,
-    providerId: tc.providerId,
-    providerName: tc.providerName,
-    modelName: tc.modelName,
-    modelDescription: tc.modelDescription,
-    averageWorkdayTokensFormatted: formatTokens(tc.totalTokens / WORKING_DAYS_PER_YEAR),
-    mixInputFormula:
-      `${formatBudgetByCurrency(tc.pricingCurrency, result.annualTotalCostCny)} ÷ (${pricingData.inputOutputRatio} × ${formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken)} + ${formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken)}) × ${pricingData.inputOutputRatio} = ${formatTokens(tc.inputTokensInMix)}`,
-    mixOutputFormula:
-      `${formatBudgetByCurrency(tc.pricingCurrency, result.annualTotalCostCny)} ÷ (${pricingData.inputOutputRatio} × ${formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken)} + ${formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken)}) = ${formatTokens(tc.outputTokensInMix)}`,
-    inputPriceFormatted: formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken),
-    outputPriceFormatted: formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken),
-    cacheReadPriceFormatted:
-      tc.cacheReadCostPer1mToken !== undefined
-        ? formatCurrencyPrice(tc.pricingCurrency, tc.cacheReadCostPer1mToken)
-        : undefined,
-    cacheWritePriceFormatted:
-      tc.cacheWriteCostPer1mToken !== undefined
-        ? formatCurrencyPrice(tc.pricingCurrency, tc.cacheWriteCostPer1mToken)
-        : undefined,
-    pricingContext: tc.pricingContext,
-    pricingNote: tc.pricingNote,
-    sourceLabel: tc.sourceLabel,
-    sourceUrl: tc.sourceUrl,
-    inputTokensFormatted: formatTokens(tc.inputTokens),
-    outputTokensFormatted: formatTokens(tc.outputTokens),
-    totalTokensFormatted: formatTokens(tc.totalTokens),
-    inputTokensInMixFormatted: formatTokens(tc.inputTokensInMix),
-    outputTokensInMixFormatted: formatTokens(tc.outputTokensInMix),
-  }))
+  const tokenCeilings: TokenCeilingDisplay[] = result.tokenCeilings.map((tc: TokenCeiling) => {
+    const modelMeta = getLocalizedModelMeta(tc.modelId, language)
+    const providerMeta = getLocalizedProviderMeta(tc.providerId, language)
+
+    return {
+      modelId: tc.modelId,
+      providerId: tc.providerId,
+      providerName: providerMeta.providerName,
+      modelName: tc.modelName,
+      modelDescription: modelMeta.description,
+      averageWorkdayTokensFormatted: formatTokens(tc.totalTokens / WORKING_DAYS_PER_YEAR),
+      mixInputFormula:
+        `${formatBudgetByCurrency(tc.pricingCurrency, result.annualTotalCostCny)} ÷ (${pricingData.inputOutputRatio} × ${formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken)} + ${formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken)}) × ${pricingData.inputOutputRatio} = ${formatTokens(tc.inputTokensInMix)}`,
+      mixOutputFormula:
+        `${formatBudgetByCurrency(tc.pricingCurrency, result.annualTotalCostCny)} ÷ (${pricingData.inputOutputRatio} × ${formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken)} + ${formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken)}) = ${formatTokens(tc.outputTokensInMix)}`,
+      inputPriceFormatted: formatCurrencyPrice(tc.pricingCurrency, tc.inputCostPer1mToken),
+      outputPriceFormatted: formatCurrencyPrice(tc.pricingCurrency, tc.outputCostPer1mToken),
+      cacheReadPriceFormatted:
+        tc.cacheReadCostPer1mToken !== undefined
+          ? formatCurrencyPrice(tc.pricingCurrency, tc.cacheReadCostPer1mToken)
+          : undefined,
+      cacheWritePriceFormatted:
+        tc.cacheWriteCostPer1mToken !== undefined
+          ? formatCurrencyPrice(tc.pricingCurrency, tc.cacheWriteCostPer1mToken)
+          : undefined,
+      pricingContext: modelMeta.pricingContext,
+      pricingNote: modelMeta.pricingNote,
+      sourceLabel: providerMeta.sourceLabel,
+      sourceUrl: providerMeta.sourceUrl,
+      inputTokensFormatted: formatTokens(tc.inputTokens),
+      outputTokensFormatted: formatTokens(tc.outputTokens),
+      totalTokensFormatted: formatTokens(tc.totalTokens),
+      inputTokensInMixFormatted: formatTokens(tc.inputTokensInMix),
+      outputTokensInMixFormatted: formatTokens(tc.outputTokensInMix),
+    }
+  })
 
   const pricingProviders: PricingProviderDisplay[] = pricingData.providers
-    .map((provider) => ({
-      providerId: provider.id,
-      providerName: provider.name,
-      sourceLabel: provider.sourceLabel,
-      sourceUrl: provider.sourceUrl,
-      sourceNote: provider.sourceNote,
-      models: tokenCeilings.filter((item) => item.providerId === provider.id),
-    }))
+    .map((provider) => {
+      const providerMeta = getLocalizedProviderMeta(provider.id, language)
+
+      return {
+        providerId: provider.id,
+        providerName: providerMeta.providerName,
+        sourceLabel: providerMeta.sourceLabel,
+        sourceUrl: providerMeta.sourceUrl,
+        sourceNote: providerMeta.sourceNote,
+        models: tokenCeilings.filter((item) => item.providerId === provider.id),
+      }
+    })
     .filter((provider) => provider.models.length > 0)
 
   return {
@@ -562,14 +594,18 @@ export function buildResultViewModel(
     },
     dataDisclaimer: {
       pricingUpdatedAt: pricingData.updatedAt,
-      pricingSource: pricingData.source,
-      pricingReferences: pricingData.providers.map((provider) => ({
-        providerId: provider.id,
-        providerName: provider.name,
-        sourceLabel: provider.sourceLabel,
-        sourceUrl: provider.sourceUrl,
-        sourceNote: provider.sourceNote,
-      })),
+      pricingSource: getLocalizedPricingSource(language),
+      pricingReferences: pricingData.providers.map((provider) => {
+        const providerMeta = getLocalizedProviderMeta(provider.id, language)
+
+        return {
+          providerId: provider.id,
+          providerName: providerMeta.providerName,
+          sourceLabel: providerMeta.sourceLabel,
+          sourceUrl: providerMeta.sourceUrl,
+          sourceNote: providerMeta.sourceNote,
+        }
+      }),
     },
   }
 }

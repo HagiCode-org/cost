@@ -174,6 +174,16 @@ describe("HomePage", () => {
     )
   })
 
+  it("renders snapshot-backed related sites while keeping GitHub and pricing references in the footer", () => {
+    renderWithProviders(<HomePage />)
+
+    expect(screen.getByRole("link", { name: /HagiCode 主站\s*产品入口/ })).toHaveAttribute("href", "https://hagicode.com/")
+    expect(screen.getByRole("link", { name: /Docker Compose Builder\s*Docker 部署 Hagicode/ })).toHaveAttribute("href", "https://builder.hagicode.com/")
+    expect(screen.getByRole("link", { name: "GitHub 仓库" })).toHaveAttribute("href", "https://github.com/HagiCode-org/site")
+    expect(screen.getByRole("link", { name: "定价参考来源" })).toHaveAttribute("href", "https://openai.com/api/pricing/")
+    expect(screen.queryByRole("link", { name: /AI Replacement Calculator/ })).not.toBeInTheDocument()
+  })
+
   it("renders the Hagicode feature showcase before the footer with all three panels", () => {
     renderWithProviders(<HomePage />)
 

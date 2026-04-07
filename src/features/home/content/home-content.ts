@@ -1,7 +1,8 @@
 import type { TFunction } from "i18next"
 import { hagicodeCompliance } from "@/config/compliance"
+import { resolveCostFooterSiteLinks } from "./footer-site-links"
 
-export function getHomePageContent(t: TFunction) {
+export function getHomePageContent(t: TFunction, locale: "zh-CN" | "en-US") {
   return {
     footer: {
       disclaimerTitle: t("footer.disclaimerTitle"),
@@ -22,14 +23,7 @@ export function getHomePageContent(t: TFunction) {
       ],
       linksTitle: t("footer.linksTitle"),
       links: [
-        {
-          label: t("footer.links.website"),
-          href: "https://hagicode.com/",
-        },
-        {
-          label: t("footer.links.docs"),
-          href: "https://docs.hagicode.com/",
-        },
+        ...resolveCostFooterSiteLinks(locale),
         {
           label: t("footer.links.github"),
           href: "https://github.com/HagiCode-org/site",

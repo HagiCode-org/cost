@@ -16,6 +16,7 @@ interface HomeFooterProps {
   linksTitle: string
   links: Array<{
     label: string
+    description?: string
     href: string
   }>
   copyright: string
@@ -58,9 +59,12 @@ export const HomeFooter = forwardRef<HTMLElement, HomeFooterProps>(function Home
                     href={link.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                    className="flex flex-col items-start gap-1 rounded-lg px-1 py-1 text-left underline-offset-4 transition-colors hover:text-foreground hover:underline"
                   >
-                    {link.label}
+                    <span className="font-medium text-foreground">{link.label}</span>
+                    {link.description ? (
+                      <span className="text-xs leading-5 text-muted-foreground">{link.description}</span>
+                    ) : null}
                   </a>
                 ))}
               </div>

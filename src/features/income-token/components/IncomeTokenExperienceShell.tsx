@@ -16,13 +16,14 @@ import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils"
 
 export function IncomeTokenExperienceShell() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [result, setResult] = useState<ResultViewModel | null>(null)
 
   useHomeSEO()
 
   const tone = result?.summarySection.verdictTone ?? "neutral"
-  const pageContent = getHomePageContent(t)
+  const locale = i18n.resolvedLanguage === "zh-CN" ? "zh-CN" : "en-US"
+  const pageContent = getHomePageContent(t, locale)
   const { shareCurrentSite } = useShareCurrentSite()
 
   function handleFloatingShare() {

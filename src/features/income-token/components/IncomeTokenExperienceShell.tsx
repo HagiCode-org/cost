@@ -45,11 +45,11 @@ export function IncomeTokenExperienceShell() {
         className={cn(
           "pointer-events-none fixed inset-0 z-0 transition-all duration-700",
           tone === "danger" &&
-            "bg-[radial-gradient(circle_at_bottom_center,rgba(239,68,68,0.16),transparent_38%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.14),transparent_24%)] dark:bg-[radial-gradient(circle_at_bottom_center,rgba(248,113,113,0.18),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,146,60,0.12),transparent_22%)]",
+            "bg-[radial-gradient(circle_at_50%_0%,rgba(24,226,153,0.10),transparent_28%),radial-gradient(circle_at_bottom_center,rgba(212,86,86,0.14),transparent_34%)] dark:bg-[radial-gradient(circle_at_50%_0%,rgba(24,226,153,0.12),transparent_24%),radial-gradient(circle_at_bottom_center,rgba(212,86,86,0.16),transparent_32%)]",
           tone === "warning" &&
-            "bg-[radial-gradient(circle_at_bottom_center,rgba(245,158,11,0.16),transparent_38%),radial-gradient(circle_at_top_left,rgba(251,191,36,0.12),transparent_24%)] dark:bg-[radial-gradient(circle_at_bottom_center,rgba(245,158,11,0.18),transparent_34%),radial-gradient(circle_at_top_left,rgba(250,204,21,0.12),transparent_22%)]",
+            "bg-[radial-gradient(circle_at_50%_0%,rgba(24,226,153,0.10),transparent_28%),radial-gradient(circle_at_bottom_center,rgba(195,125,13,0.12),transparent_34%)] dark:bg-[radial-gradient(circle_at_50%_0%,rgba(24,226,153,0.12),transparent_24%),radial-gradient(circle_at_bottom_center,rgba(195,125,13,0.14),transparent_32%)]",
           tone === "safe" &&
-            "bg-[radial-gradient(circle_at_bottom_center,rgba(16,185,129,0.12),transparent_38%),radial-gradient(circle_at_top_left,rgba(56,189,248,0.10),transparent_22%)] dark:bg-[radial-gradient(circle_at_bottom_center,rgba(16,185,129,0.16),transparent_34%),radial-gradient(circle_at_top_left,rgba(14,165,233,0.12),transparent_24%)]"
+            "bg-[radial-gradient(circle_at_50%_0%,rgba(24,226,153,0.14),transparent_30%),radial-gradient(circle_at_bottom_center,rgba(24,226,153,0.08),transparent_36%)] dark:bg-[radial-gradient(circle_at_50%_0%,rgba(24,226,153,0.16),transparent_28%),radial-gradient(circle_at_bottom_center,rgba(24,226,153,0.10),transparent_34%)]"
         )}
       />
       <div className="relative z-10">
@@ -79,7 +79,7 @@ export function IncomeTokenExperienceShell() {
       <button
         type="button"
         onClick={handleFloatingShare}
-        className="fixed bottom-5 right-5 z-50 flex size-14 items-center justify-center rounded-full border border-border/60 bg-background/90 text-foreground shadow-lg backdrop-blur-md transition-all active:scale-95 md:hidden"
+        className="fixed bottom-5 right-5 z-50 flex size-14 items-center justify-center rounded-full border border-border/80 bg-background text-foreground shadow-[var(--shadow-card)] transition-all active:scale-95 md:hidden"
         aria-label={t("share.currentSiteAria")}
       >
         <Share2 className="size-5" />

@@ -89,9 +89,9 @@ function ComparisonMetricCard({
   boostedLabel,
 }: ComparisonMetricCardProps) {
   return (
-    <div className="min-w-0 rounded-[1.5rem] border bg-background/74 p-4">
+    <div className="min-w-0 rounded-[1.5rem] border border-border/80 bg-background p-4">
       <div className="flex items-start justify-between gap-3">
-        <p className="min-w-0 text-xs font-medium text-muted-foreground">{label}</p>
+        <p className="min-w-0 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
         <span className={`shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${getDeltaTone(deltaValue, deltaMode)}`}>
           {delta}
         </span>
@@ -126,7 +126,7 @@ function BoostVerdictCard({ label, headline, body, toneClass, compact = false }:
   return (
     <div className={`rounded-[1.5rem] border p-5 ${toneClass}`}>
       <div className={compact ? "space-y-2" : "space-y-2"}>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-current/85">
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-current/85">
           <LinkHagicode>{label}</LinkHagicode>
         </p>
         <p className={compact ? "text-base font-bold" : "text-lg font-bold"}>{headline}</p>
@@ -180,10 +180,10 @@ export function HagicodeBoostSection({ baseInput, selectedCurrency, region }: Ha
 
   const verdictToneClass =
     boostedSummary.verdictTone === "danger"
-      ? "border-destructive/30 bg-destructive/8 text-destructive"
+      ? "border-destructive/25 bg-destructive/8 text-destructive"
       : boostedSummary.verdictTone === "warning"
-        ? "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300"
-        : "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+        ? "border-amber-500/25 bg-amber-500/8 text-amber-700 dark:text-amber-300"
+        : "border-primary/25 bg-primary/8 text-emerald-700 dark:text-emerald-300"
 
   const shareLabel =
     shareState === "copied"
@@ -193,15 +193,15 @@ export function HagicodeBoostSection({ baseInput, selectedCurrency, region }: Ha
         : t("share.currentSite")
 
   return (
-    <section className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-5xl rounded-none p-4 sm:rounded-[2rem] sm:p-8" aria-labelledby="hagicode-boost-heading">
+    <section className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-7xl rounded-[1.5rem] p-5 sm:rounded-[2rem] sm:p-8" aria-labelledby="hagicode-boost-heading">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-semibold text-primary">
+          <div className="mint-chip">
             <Sparkles className="size-3.5" aria-hidden="true" />
             <LinkHagicode>Hagicode</LinkHagicode>
           </div>
           <div className="space-y-2">
-            <h2 id="hagicode-boost-heading" className="display-type text-2xl font-black tracking-tight sm:text-3xl">
+            <h2 id="hagicode-boost-heading" className="display-type text-3xl sm:text-4xl">
               <LinkHagicode>{t("results.hagicode.heading")}</LinkHagicode>
             </h2>
             <p className="text-sm leading-7 text-muted-foreground sm:text-base">
@@ -210,9 +210,9 @@ export function HagicodeBoostSection({ baseInput, selectedCurrency, region }: Ha
           </div>
         </div>
 
-        <div className="min-w-0 space-y-3 rounded-[1.5rem] border bg-background/72 px-4 py-4 text-left sm:min-w-[12rem] sm:text-right">
+        <div className="min-w-0 space-y-3 rounded-[1.5rem] border border-border/80 bg-background px-4 py-4 text-left sm:min-w-[12rem] sm:text-right">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground"><LinkHagicode>{t("results.hagicode.multiplierLabel")}</LinkHagicode></p>
+            <p className="mono-label text-muted-foreground"><LinkHagicode>{t("results.hagicode.multiplierLabel")}</LinkHagicode></p>
             <p className="mt-2 display-type text-3xl font-bold text-primary">{boostFactor}</p>
             <p className="mt-2 text-xs text-muted-foreground">
               {t("results.hagicode.utilizationCompact", { value: formatMultiplier(tokenEfficiencyFactor) })}
@@ -236,7 +236,7 @@ export function HagicodeBoostSection({ baseInput, selectedCurrency, region }: Ha
         </div>
       </div>
 
-      <div className="mt-6 min-w-0 overflow-hidden rounded-[1.75rem] border bg-background/72 p-5">
+      <div className="mt-6 min-w-0 overflow-hidden rounded-[1.75rem] border border-border/80 bg-background p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold text-foreground"><LinkHagicode>{t("results.hagicode.sliderLabel")}</LinkHagicode></p>
@@ -297,7 +297,7 @@ export function HagicodeBoostSection({ baseInput, selectedCurrency, region }: Ha
 
         <Collapsible open={detailOpen} onOpenChange={setDetailOpen}>
           <CollapsibleTrigger
-            className="mt-5 flex w-full items-center justify-between rounded-xl border bg-muted/20 px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/30"
+            className="mt-5 flex w-full items-center justify-between rounded-[1.25rem] border border-border/80 bg-background px-4 py-3 text-sm font-medium transition-colors hover:text-primary"
             aria-label={t("results.hagicode.detailCollapseAria")}
           >
             <span>{t("results.hagicode.detailCollapseLabel")}</span>

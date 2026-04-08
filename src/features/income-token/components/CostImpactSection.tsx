@@ -16,7 +16,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
 
   return (
     <section
-      className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-5xl rounded-none p-4 sm:rounded-[2rem] sm:p-8"
+      className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-7xl rounded-[1.5rem] p-5 sm:rounded-[2rem] sm:p-8"
       aria-labelledby="cost-heading"
     >
       <div className="mb-6 flex items-start gap-3">
@@ -24,7 +24,8 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
           <Calculator className="size-5" aria-hidden="true" />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 id="cost-heading" className="display-type text-xl font-bold sm:text-2xl">
+          <p className="mono-label text-primary">{t("results.cost.collapseLabel")}</p>
+          <h2 id="cost-heading" className="mt-2 display-type text-3xl sm:text-4xl">
             {t("results.cost.title")}
           </h2>
           <p className="text-sm leading-relaxed text-muted-foreground">{t("results.cost.subtitle")}</p>
@@ -33,7 +34,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
 
       <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger
-          className="mb-6 flex w-full items-center justify-between rounded-xl border bg-muted/20 px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/30"
+          className="mb-6 flex w-full items-center justify-between rounded-[1.25rem] border border-border/80 bg-background px-4 py-3 text-sm font-medium transition-colors hover:text-primary"
           aria-label={t("results.cost.collapseAria")}
         >
           <span>{t("results.cost.collapseLabel")}</span>
@@ -41,9 +42,9 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
         </CollapsibleTrigger>
         <CollapsibleContent>
       <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="rounded-2xl border bg-background/70 p-5">
-          <div className="mb-4 rounded-xl bg-muted/30 p-4">
-            <p className="text-xs text-muted-foreground">{t("results.cost.annualTotalCost")}</p>
+        <div className="rounded-[1.5rem] border border-border/80 bg-background p-5">
+          <div className="mb-4 rounded-[1.25rem] bg-muted/45 p-4">
+            <p className="mono-label text-muted-foreground">{t("results.cost.annualTotalCost")}</p>
             <p className="mt-1 display-type text-2xl font-bold">{data.annualTotalCostFormatted}</p>
           </div>
 
@@ -65,16 +66,16 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
           </div>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl bg-muted/40 p-4">
-              <p className="text-xs text-muted-foreground">{t("results.cost.unitInputPrice")}</p>
+            <div className="rounded-[1.25rem] bg-muted/45 p-4">
+              <p className="mono-label text-muted-foreground">{t("results.cost.unitInputPrice")}</p>
               <p className="mt-1 font-mono text-lg font-semibold">{data.inputPriceFormatted}</p>
             </div>
-            <div className="rounded-xl bg-muted/40 p-4">
-              <p className="text-xs text-muted-foreground">{t("results.cost.unitOutputPrice")}</p>
+            <div className="rounded-[1.25rem] bg-muted/45 p-4">
+              <p className="mono-label text-muted-foreground">{t("results.cost.unitOutputPrice")}</p>
               <p className="mt-1 font-mono text-lg font-semibold">{data.outputPriceFormatted}</p>
             </div>
-            <div className="rounded-xl bg-muted/40 p-4">
-              <p className="text-xs text-muted-foreground">{t("results.cost.mixedPrice")}</p>
+            <div className="rounded-[1.25rem] bg-muted/45 p-4">
+              <p className="mono-label text-muted-foreground">{t("results.cost.mixedPrice")}</p>
               <p className="mt-1 font-mono text-lg font-semibold">{data.mixedPriceFormatted}</p>
               <p className="mt-2 break-all font-mono text-xs max-md:text-xs md:text-[11px] text-muted-foreground">
                 {data.mixedPriceFormula}
@@ -83,13 +84,13 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
                 {data.mixedPriceExplanation}
               </p>
             </div>
-            <div className="rounded-xl bg-muted/40 p-4">
-              <p className="text-xs text-muted-foreground">{t("results.cost.dailyTokenUsage")}</p>
+            <div className="rounded-[1.25rem] bg-muted/45 p-4">
+              <p className="mono-label text-muted-foreground">{t("results.cost.dailyTokenUsage")}</p>
               <p className="mt-1 font-mono text-lg font-semibold">{data.dailyTokenUsageFormatted}</p>
             </div>
           </div>
 
-          <div className="mt-5 space-y-3 rounded-2xl border bg-muted/15 p-4 text-sm">
+          <div className="mt-5 space-y-3 rounded-[1.5rem] border border-border/80 bg-muted/35 p-4 text-sm">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
                 <p className="font-medium">{t("results.cost.dailyAiCost")}</p>
@@ -117,26 +118,26 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
           </div>
         </div>
 
-        <div className="space-y-4 rounded-2xl border bg-background/70 p-5">
+        <div className="space-y-4 rounded-[1.5rem] border border-border/80 bg-background p-5">
           <div>
             <p className="text-sm font-semibold">{t("results.cost.budgetTokenTitle")}</p>
             <p className="mt-1 text-sm text-muted-foreground">{t("results.cost.budgetTokenDesc")}</p>
           </div>
 
-          <div className="rounded-xl bg-muted/40 p-4">
-            <p className="text-xs text-muted-foreground">{t("results.cost.totalTokens")}</p>
+          <div className="rounded-[1.25rem] bg-muted/45 p-4">
+            <p className="mono-label text-muted-foreground">{t("results.cost.totalTokens")}</p>
             <p className="mt-1 display-type text-2xl font-bold">{data.fullBudgetTotalTokensFormatted}</p>
           </div>
 
-          <div className="rounded-xl bg-muted/40 p-4">
-            <p className="text-xs text-muted-foreground">{t("results.cost.workdayTokenAverage")}</p>
+          <div className="rounded-[1.25rem] bg-muted/45 p-4">
+            <p className="mono-label text-muted-foreground">{t("results.cost.workdayTokenAverage")}</p>
             <p className="mt-1 display-type text-2xl font-bold">{data.fullBudgetWorkdayTokensFormatted}</p>
             <p className="mt-2 break-all font-mono text-xs max-md:text-xs md:text-[11px] text-muted-foreground">
               {data.workdayAverageFormula}
             </p>
           </div>
 
-          <div className="rounded-xl border border-dashed p-4 text-xs leading-relaxed text-muted-foreground">
+          <div className="rounded-[1.25rem] border border-dashed border-border/90 p-4 text-xs leading-relaxed text-muted-foreground">
             <a
               href={data.sourceUrl}
               target="_blank"

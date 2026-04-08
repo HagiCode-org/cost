@@ -37,13 +37,13 @@ export function AgentScaleIndicator({
         ]
 
   return (
-    <div className={compact ? "space-y-3" : "rounded-2xl border bg-background/78 p-4"}>
+    <div className={compact ? "space-y-3" : "rounded-[1.25rem] border border-border/80 bg-background p-4"}>
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">{title}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{title}</p>
           <p className={compact ? "display-type text-xl font-bold" : "display-type text-2xl font-bold"}>{value}</p>
         </div>
-        <span className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-xs font-semibold text-primary">
+        <span className="rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
           {badge}
         </span>
       </div>

@@ -16,7 +16,7 @@ interface ResultSectionsProps {
 
 export function ResultSections({ result, baseInput, selectedCurrency, region }: ResultSectionsProps) {
   return (
-    <div className="space-y-6 pt-8 sm:px-6">
+    <div className="mx-auto max-w-7xl space-y-6 pt-10">
       <AgentVerdictSection data={result.summarySection} />
       <HagicodeBoostSection baseInput={baseInput} selectedCurrency={selectedCurrency} region={region} />
       <CostImpactSection data={result.costSection} />

@@ -13,13 +13,14 @@ export function TokenCeilingListSection({ data }: TokenCeilingListSectionProps) 
   const { t } = useTranslation()
 
   return (
-    <section className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-5xl rounded-none p-4 sm:rounded-[2rem] sm:p-8" aria-labelledby="token-list-heading">
+    <section className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-7xl rounded-[1.5rem] p-5 sm:rounded-[2rem] sm:p-8" aria-labelledby="token-list-heading">
       <div className="mb-6 flex items-start gap-3">
         <div className="flex size-10 items-center justify-center rounded-xl bg-primary/12 text-primary">
           <DollarSign className="size-5" aria-hidden="true" />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 id="token-list-heading" className="display-type text-xl font-bold sm:text-2xl">
+          <p className="mono-label text-primary">{t("results.cost.totalTokens")}</p>
+          <h2 id="token-list-heading" className="mt-2 display-type text-3xl sm:text-4xl">
             {t("results.tokenList.title")}
           </h2>
           <p className="text-sm text-muted-foreground">
@@ -33,7 +34,7 @@ export function TokenCeilingListSection({ data }: TokenCeilingListSectionProps) 
           <Button
             type="button"
             variant="outline"
-            className="group w-full justify-between rounded-2xl border-border/70 bg-background/70 px-4 py-5 text-left"
+            className="group w-full justify-between rounded-[1.25rem] border-border/80 bg-background px-4 py-5 text-left"
             aria-controls="token-ceiling-list-content"
           >
             <span className="min-w-0">
@@ -51,7 +52,7 @@ export function TokenCeilingListSection({ data }: TokenCeilingListSectionProps) 
 
         <CollapsibleContent id="token-ceiling-list-content" className="space-y-4">
           {data.pricingProviders.map((provider) => (
-            <div key={provider.providerId} className="space-y-3 rounded-2xl border bg-muted/15 p-4">
+            <div key={provider.providerId} className="space-y-3 rounded-[1.5rem] border border-border/80 bg-muted/35 p-4">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-foreground">{provider.providerName}</p>
@@ -69,7 +70,7 @@ export function TokenCeilingListSection({ data }: TokenCeilingListSectionProps) 
 
               <div className="grid gap-3 md:grid-cols-2">
                 {provider.models.map((model) => (
-                  <div key={model.modelId} className="space-y-3 rounded-xl border bg-background/80 p-4">
+                  <div key={model.modelId} className="space-y-3 rounded-[1.25rem] border border-border/80 bg-background p-4">
                     <div className="flex items-start justify-between gap-4">
                       <div className="space-y-1">
                         <p className="font-medium">{model.modelName}</p>
@@ -92,7 +93,7 @@ export function TokenCeilingListSection({ data }: TokenCeilingListSectionProps) 
                       </div>
                     </div>
 
-                    <div className="space-y-1 rounded-lg bg-muted/40 p-3 text-xs md:text-[11px] text-muted-foreground">
+                    <div className="space-y-1 rounded-xl bg-muted/45 p-3 text-xs md:text-[11px] text-muted-foreground">
                       <div className="flex justify-between gap-3">
                         <span>{t("results.cost.unitInputPrice")}</span>
                         <span className="font-mono text-foreground">{model.inputPriceFormatted}</span>

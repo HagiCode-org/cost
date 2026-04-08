@@ -29,10 +29,10 @@ interface MetricValueProps extends DetailTooltipProps {
 }
 
 const mobileTooltipTriggerClassName =
-  "inline-flex size-6 items-center justify-center rounded-full border border-primary/20 bg-primary/8 text-xs font-bold text-primary transition-colors hover:bg-primary/12"
+  "inline-flex size-6 items-center justify-center rounded-full border border-primary/15 bg-primary/8 text-xs font-medium text-primary transition-colors hover:bg-primary/12"
 
 const desktopTooltipTriggerClassName =
-  "inline-flex size-5 items-center justify-center rounded-full border border-primary/20 bg-primary/8 text-[11px] font-bold text-primary transition-colors hover:bg-primary/12"
+  "inline-flex size-5 items-center justify-center rounded-full border border-primary/15 bg-primary/8 text-[11px] font-medium text-primary transition-colors hover:bg-primary/12"
 
 function MobileDetailTooltip({ label, formula, explanation }: DetailTooltipProps) {
   const { t } = useTranslation()
@@ -137,13 +137,14 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
 
   return (
     <section
-      className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-5xl rounded-none p-4 sm:rounded-[2rem] sm:p-8"
+      className="glass-panel surface-outline mx-auto min-w-0 w-full max-w-7xl rounded-[1.5rem] p-5 sm:rounded-[2rem] sm:p-8"
       aria-labelledby="agent-verdict-heading"
     >
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="flex min-w-0 items-start gap-4">
           <div className="min-w-0 space-y-2">
-            <h2 id="agent-verdict-heading" className="display-type text-2xl font-black tracking-tight sm:text-4xl">
+            <p className="mono-label text-primary">{t("results.summary.detailCollapseLabel")}</p>
+            <h2 id="agent-verdict-heading" className="display-type text-3xl sm:text-4xl">
               {t("results.summary.heading", {
                 model: data.selectedModelName,
                 equivalent: data.effectivePeopleEquivalentFormatted,
@@ -156,7 +157,7 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
           type="button"
           size="sm"
           variant={shareState === "error" ? "destructive" : "outline"}
-          className="w-full justify-center rounded-full border-border/60 bg-background/80 md:mt-3 md:w-auto md:shrink-0"
+          className="w-full justify-center md:mt-3 md:w-auto md:shrink-0"
           onClick={() => {
             void shareCurrentSite(data.shareCopy).then(() => toast.success(t("share.copied")))
           }}
@@ -169,7 +170,7 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
 
       <Collapsible open={detailOpen} onOpenChange={setDetailOpen}>
         <CollapsibleTrigger
-          className="mb-6 flex w-full items-center justify-between rounded-xl border bg-muted/20 px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/30"
+          className="mb-6 flex w-full items-center justify-between rounded-[1.25rem] border border-border/80 bg-background px-4 py-3 text-sm font-medium transition-colors hover:text-primary"
           aria-label={t("results.summary.detailCollapseAria")}
         >
           <span>{t("results.summary.detailCollapseLabel")}</span>
@@ -180,8 +181,8 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border bg-background/75 p-4">
-              <p className="text-xs text-muted-foreground">{t("results.summary.annualIncome")}</p>
+            <div className="rounded-[1.25rem] border border-border/80 bg-background p-4">
+              <p className="mono-label text-muted-foreground">{t("results.summary.annualIncome")}</p>
               <p className="mt-1 display-type text-2xl font-bold">{data.annualIncomeFormatted}</p>
               <p className="mt-2 text-xs text-muted-foreground">
                 {data.cityLabel} · {t("results.summary.totalEmploymentCost")}: {data.annualTotalCostFormatted}
@@ -196,8 +197,8 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
               </div>
             </div>
 
-            <div className="rounded-2xl border bg-background/75 p-4">
-              <p className="text-xs text-muted-foreground">{t("results.summary.performanceMultiplier")}</p>
+            <div className="rounded-[1.25rem] border border-border/80 bg-background p-4">
+              <p className="mono-label text-muted-foreground">{t("results.summary.performanceMultiplier")}</p>
               <MetricValue
                 className="mt-1"
                 label={t("results.summary.performanceMultiplier")}
@@ -215,8 +216,8 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
               </div>
             </div>
 
-            <div className="rounded-2xl border bg-background/75 p-4">
-              <p className="text-xs text-muted-foreground">{t("results.summary.annualAiCost")}</p>
+            <div className="rounded-[1.25rem] border border-border/80 bg-background p-4">
+              <p className="mono-label text-muted-foreground">{t("results.summary.annualAiCost")}</p>
               <MetricValue
                 className="mt-1"
                 label={t("results.summary.annualAiCost")}
@@ -250,7 +251,7 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border bg-muted/20 p-4">
+            <div className="rounded-[1.25rem] border border-border/80 bg-muted/45 p-4">
               <div className="mb-2 flex items-center gap-2">
                 <TrendingUp className="size-4 text-primary" aria-hidden="true" />
                 <p className="font-medium">{t("results.summary.dailyAiCost")}</p>
@@ -263,7 +264,7 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
               />
             </div>
 
-            <div className="rounded-2xl border bg-muted/20 p-4">
+            <div className="rounded-[1.25rem] border border-border/80 bg-muted/45 p-4">
               <div className="mb-2 flex items-center gap-2">
                 <TrendingUp className="size-4 text-primary" aria-hidden="true" />
                 <p className="font-medium">{t("results.summary.costEffectiveness")}</p>
@@ -276,7 +277,7 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
               />
             </div>
 
-            <div className="rounded-2xl border bg-muted/20 p-4">
+            <div className="rounded-[1.25rem] border border-border/80 bg-muted/45 p-4">
               <div className="mb-2 flex items-center gap-2">
                 <TrendingUp className="size-4 text-primary" aria-hidden="true" />
                 <p className="font-medium">{t("results.summary.peopleEquivalent")}</p>
@@ -293,9 +294,9 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
       </Collapsible>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
-        <div className="rounded-[1.5rem] border bg-background/75 p-4">
+        <div className="rounded-[1.5rem] border border-border/80 bg-background p-4">
           <div className="mb-4">
-            <p className="text-xs text-muted-foreground">{t("results.hagicode.currentLabel")}</p>
+            <p className="mono-label text-muted-foreground">{t("results.hagicode.currentLabel")}</p>
             <p className="mt-1 text-sm font-semibold text-foreground">
               {data.effectivePeopleEquivalentFormatted}
             </p>
@@ -310,9 +311,9 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
             ticks={["1.0x", "1.5x", "2.0x", "3.0x"]}
           />
         </div>
-        <div className="rounded-[1.5rem] border bg-background/75 p-4">
+        <div className="rounded-[1.5rem] border border-border/80 bg-background p-4">
           <div className="mb-4">
-            <p className="text-xs text-muted-foreground">{t("results.hagicode.currentLabel")}</p>
+            <p className="mono-label text-muted-foreground">{t("results.hagicode.currentLabel")}</p>
             <p className="mt-1 text-sm font-semibold text-foreground">
               {data.costEffectivenessFormatted}
             </p>
@@ -329,14 +330,14 @@ export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
         </div>
       </div>
 
-      <div className="mt-6 rounded-[1.5rem] border bg-background/75 p-5">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+      <div className="mt-6 rounded-[1.5rem] border border-border/80 bg-background p-5">
+        <p className="mono-label text-muted-foreground">
           {t("results.summary.heading", {
             model: data.selectedModelName,
             equivalent: data.effectivePeopleEquivalentFormatted,
           })}
         </p>
-        <p className="mt-3 text-lg font-bold">{data.verdictHeadline}</p>
+        <p className="mt-3 display-type text-2xl">{data.verdictHeadline}</p>
         <p className="mt-2 text-sm leading-7 text-muted-foreground">{data.verdictBody}</p>
       </div>
     </section>

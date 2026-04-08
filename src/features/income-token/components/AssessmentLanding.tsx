@@ -27,7 +27,6 @@ import {
 import { evaluate, normalizeAnnualIncomeCny, type EvaluationInput } from "@/features/income-token/lib/calculate-ai-risk"
 import { evaluateSpecialTitles } from "@/features/income-token/lib/evaluate-special-titles"
 import { mergeEarnedTitleIds, readEarnedTitleIds, writeEarnedTitleIds } from "@/features/income-token/lib/title-storage"
-import type { SpecialTitleId } from "@/features/income-token/lib/title-types"
 import { getResolvedExperienceContext, getResolvedLanguage } from "@/i18n/config"
 import {
   getDefaultCityTierForRegion,
@@ -157,9 +156,9 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
   const [modelId, setModelId] = useState(initialState.modelId)
   const [performanceMultiplier, setPerformanceMultiplier] = useState(initialState.performanceMultiplier)
   const [dailyTokenUsage, setDailyTokenUsage] = useState(initialState.dailyTokenUsage)
-  const [earnedTitleIds, setEarnedTitleIds] = useState<SpecialTitleId[]>(() => readEarnedTitleIds())
   const [hasInteracted, setHasInteracted] = useState(false)
   const previousMatchedTitleSignatureRef = useRef("")
+  const storedEarnedTitleIds = readEarnedTitleIds()
 
   const incomeOptions = useMemo(() => getIncomeOptions(selectedCurrency), [selectedCurrency])
   const language = getResolvedLanguage()
@@ -220,18 +219,18 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
         dailyTokenUsageM: hasValidDailyTokens ? tokenValue : null,
       },
       calculationResult,
-      earnedTitleIds,
+      earnedTitleIds: storedEarnedTitleIds,
     })
   }, [
     calculationResult,
     cityTier,
-    earnedTitleIds,
     hasValidDailyTokens,
     hasValidMultiplier,
     isZeroTokenSpecialPath,
     modelId,
     multiplierValue,
     normalizedAnnualIncomeCny,
+    storedEarnedTitleIds,
     tokenValue,
   ])
 
@@ -266,17 +265,16 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
       return
     }
 
-    const mergedTitleIds = mergeEarnedTitleIds(earnedTitleIds, rawTitleEvaluation.matchedTitleIds)
+    const mergedTitleIds = mergeEarnedTitleIds(storedEarnedTitleIds, rawTitleEvaluation.matchedTitleIds)
     if (
-      mergedTitleIds.length === earnedTitleIds.length &&
-      mergedTitleIds.every((titleId, index) => titleId === earnedTitleIds[index])
+      mergedTitleIds.length === storedEarnedTitleIds.length &&
+      mergedTitleIds.every((titleId, index) => titleId === storedEarnedTitleIds[index])
     ) {
       return
     }
 
-    setEarnedTitleIds(mergedTitleIds)
     writeEarnedTitleIds(mergedTitleIds)
-  }, [earnedTitleIds, hasInteracted, rawTitleEvaluation, t])
+  }, [hasInteracted, rawTitleEvaluation, storedEarnedTitleIds, t])
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -353,227 +351,250 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
   }
 
   return (
-    <div className="space-y-6 px-4 py-12 sm:px-6 sm:py-16">
-      <div className="glass-panel surface-outline mx-auto max-w-5xl rounded-[2rem] p-5 sm:p-8 lg:p-10">
-        <div className="mb-8 flex items-start gap-4">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-destructive/15 text-destructive">
-            <AlertTriangle className="size-6" aria-hidden="true" />
-          </div>
-          <div className="space-y-2">
-            <h1 className="display-type text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
-              {t("assessment.hero.title")}
-            </h1>
-            <p className="max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg">
-              {t("assessment.hero.subtitle")}
-            </p>
-          </div>
-        </div>
+    <div className="px-4 pb-6 pt-10 sm:px-6 sm:pb-8 sm:pt-14 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1fr)] lg:items-start">
+          <section className="glass-panel surface-outline relative overflow-hidden rounded-[2rem] p-6 sm:p-8 lg:sticky lg:top-24">
+            <div aria-hidden="true" className="hero-orb top-4 right-[-4rem] h-40 w-40 bg-primary/20" />
+            <div aria-hidden="true" className="hero-orb bottom-0 left-[-3rem] h-32 w-32 bg-primary/12" />
 
-        <div className="space-y-4">
-          <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[0]}</p>
-            <Label id="currency-label" className="block text-xl font-bold leading-tight sm:text-2xl">
-              {t("assessment.form.currency")}
-            </Label>
-            <div
-              className="mt-4 grid gap-3 sm:grid-cols-2"
-              role="radiogroup"
-              aria-labelledby="currency-label"
-            >
-              {salaryCurrencyOptions.map((option) => {
-                const isActive = selectedCurrency === option.value
+            <div className="relative space-y-6">
+              <span className="mint-chip">{t("site.name")}</span>
 
-                return (
-                  <Button
-                    key={option.value}
-                    type="button"
-                    variant={isActive ? "default" : "outline"}
-                    size="lg"
-                    onClick={() => handleCurrencySelect(option.value)}
-                    role="radio"
-                    aria-checked={isActive}
-                    className={cn(
-                      "h-16 rounded-2xl border-2 px-4 text-base font-bold sm:text-lg",
-                      isActive
-                        ? "border-primary shadow-lg shadow-primary/15"
-                        : "bg-background/60 hover:border-primary/40 hover:bg-primary/5",
-                    )}
-                  >
-                    {language === "zh-CN" ? option.label : option.labelEn}
-                  </Button>
-                )
-              })}
-            </div>
-            <div className="mt-4 space-y-1 text-sm text-muted-foreground">
-              <p>{t("assessment.form.regionHint", { region: t(`assessment.regions.${region}`) })}</p>
-              <p>{t("assessment.form.currencyHint", { unit: t(incomeUnitKey) })}</p>
-              <p>{t("assessment.form.exchangeRateHint", { rate: pricingData.exchangeRateUsdToCny })}</p>
-            </div>
-          </div>
-
-          <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[1]}</p>
-            <Label id="income-amount-label" className="block text-xl font-bold leading-tight sm:text-2xl">
-              {t("assessment.form.incomeAmount", { unit: t(incomeUnitKey) })}
-            </Label>
-            <div
-              className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3"
-              role="radiogroup"
-              aria-labelledby="income-amount-label"
-            >
-              {incomeOptions.map((option) => {
-                const isActive = incomePreset === option.value
-
-                return (
-                  <Button
-                    key={option.id}
-                    type="button"
-                    variant={isActive ? "default" : "outline"}
-                    size="lg"
-                    onClick={() => handleIncomePresetSelect(option.value)}
-                    role="radio"
-                    aria-checked={isActive}
-                    className={cn(
-                      "h-16 rounded-2xl border-2 px-4 text-base font-bold sm:text-lg",
-                      isActive
-                        ? "border-primary shadow-lg shadow-primary/15"
-                        : "bg-background/60 hover:border-primary/40 hover:bg-primary/5",
-                    )}
-                  >
-                    {language === "zh-CN" ? option.label : option.labelEn}
-                  </Button>
-                )
-              })}
-
-              <Button
-                type="button"
-                variant={incomePreset === CUSTOM_INCOME_VALUE ? "default" : "outline"}
-                size="lg"
-                onClick={() => handleIncomePresetSelect(CUSTOM_INCOME_VALUE)}
-                role="radio"
-                aria-checked={incomePreset === CUSTOM_INCOME_VALUE}
-                className={cn(
-                  "h-16 rounded-2xl border-2 px-4 text-base font-bold sm:text-lg",
-                  incomePreset === CUSTOM_INCOME_VALUE
-                    ? "border-primary shadow-lg shadow-primary/15"
-                    : "bg-background/60 hover:border-primary/40 hover:bg-primary/5",
-                )}
-              >
-                {t("assessment.form.incomeCustom")}
-              </Button>
-            </div>
-
-            <p className="mt-4 text-sm text-muted-foreground">
-              {t("assessment.form.presetHint", { unit: t(incomeUnitKey) })}
-            </p>
-
-            {incomePreset === CUSTOM_INCOME_VALUE ? (
-              <div className="mt-4 space-y-2">
-                <Input
-                  id="income-amount"
-                  type="number"
-                  min="1"
-                  step="any"
-                  placeholder={t("assessment.form.incomePlaceholder", { example: selectedCurrency === "USD" ? "45" : "30" })}
-                  value={incomeAmount}
-                  onChange={(e) => {
-                    setHasInteracted(true)
-                    setIncomeAmount(e.target.value)
-                  }}
-                  className="h-14 rounded-2xl border-2 px-4 text-lg font-semibold"
-                />
-                <p className="text-sm text-muted-foreground">
-                  {t("assessment.form.incomeCustomHint", { unit: t(incomeUnitKey) })}
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-destructive/15 bg-destructive/8 text-destructive">
+                    <AlertTriangle className="size-5" aria-hidden="true" />
+                  </div>
+                  <h1 className="display-type text-4xl sm:text-5xl lg:text-6xl">{t("assessment.hero.title")}</h1>
+                </div>
+                <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+                  {t("assessment.hero.subtitle")}
                 </p>
               </div>
-            ) : null}
-          </div>
 
-          <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[2]}</p>
-            <Label htmlFor="city-tier" className="block text-xl font-bold leading-tight sm:text-2xl">
-              {t("assessment.form.city")}
-            </Label>
-            <NativeSelect
-              id="city-tier"
-              size="lg"
-              value={cityTier}
-              onChange={(e) => {
-                setHasInteracted(true)
-                setCityTier(e.target.value as CityTier)
-              }}
-              className="mt-4 w-full"
-            >
-              {cityOptions.map((option) => (
-                <NativeSelectOption key={option.value} value={option.value}>
-                  {option.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-          </div>
+              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                <div className="mint-card p-4">
+                  <p className="mono-label text-muted-foreground">{questionOrder[0]}</p>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                    {t("assessment.form.regionHint", { region: t(`assessment.regions.${region}`) })}
+                  </p>
+                </div>
+                <div className="mint-card p-4">
+                  <p className="mono-label text-muted-foreground">{questionOrder[1]}</p>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                    {t("assessment.form.currencyHint", { unit: t(incomeUnitKey) })}
+                  </p>
+                </div>
+                <div className="mint-card p-4">
+                  <p className="mono-label text-muted-foreground">{questionOrder[2]}</p>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                    {t("assessment.form.exchangeRateHint", { rate: pricingData.exchangeRateUsdToCny })}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
 
-          <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[3]}</p>
-            <Label htmlFor="model-id" className="block text-xl font-bold leading-tight sm:text-2xl">
-              {t("assessment.form.model")}
-            </Label>
-            <NativeSelect
-              id="model-id"
-              size="lg"
-              value={modelId}
-              onChange={(e) => {
-                setHasInteracted(true)
-                setModelId(e.target.value)
-              }}
-              className="mt-4 w-full"
-            >
-              {modelOptions.map((option) => (
-                <NativeSelectOption key={option.value} value={option.value}>
-                  {option.providerName} · {option.label} · {option.description}
-                  {option.pricingContext ? ` · ${option.pricingContext}` : ""}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-          </div>
+          <div className="space-y-4">
+            <div className="rounded-[1.5rem] border border-border/80 bg-background p-5 shadow-[var(--shadow-soft)] sm:p-6">
+              <p className="mono-label text-primary">{questionOrder[0]}</p>
+              <Label id="currency-label" className="mt-3 block display-type text-[1.7rem] sm:text-[2rem]">
+                {t("assessment.form.currency")}
+              </Label>
+              <div
+                className="mt-5 grid gap-3 sm:grid-cols-2"
+                role="radiogroup"
+                aria-labelledby="currency-label"
+              >
+                {salaryCurrencyOptions.map((option) => {
+                  const isActive = selectedCurrency === option.value
 
-          <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[4]}</p>
-            <Label htmlFor="performance-multiplier" className="block text-xl font-bold leading-tight sm:text-2xl">
-              {t("assessment.form.performanceMultiplier")}
-            </Label>
-            <Input
-              id="performance-multiplier"
-              type="number"
-              min="1"
-              step="0.1"
-              placeholder={t("assessment.form.performanceMultiplierPlaceholder")}
-              value={performanceMultiplier}
-              onChange={(e) => {
-                setHasInteracted(true)
-                setPerformanceMultiplier(e.target.value)
-              }}
-              className="mt-4 h-14 rounded-2xl border-2 px-4 text-lg font-semibold"
-            />
-          </div>
+                  return (
+                    <Button
+                      key={option.value}
+                      type="button"
+                      variant={isActive ? "default" : "outline"}
+                      size="lg"
+                      onClick={() => handleCurrencySelect(option.value)}
+                      role="radio"
+                      aria-checked={isActive}
+                      className={cn(
+                        "h-14 justify-start rounded-[1.25rem] px-5 text-left text-base",
+                        isActive && "border-foreground/80",
+                      )}
+                    >
+                      {language === "zh-CN" ? option.label : option.labelEn}
+                    </Button>
+                  )
+                })}
+              </div>
+            </div>
 
-          <div className="rounded-[1.75rem] border bg-background/80 p-5 transition-shadow hover:shadow-xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.22em] text-primary/75">{questionOrder[5]}</p>
-            <Label htmlFor="daily-token-usage" className="block text-xl font-bold leading-tight sm:text-2xl">
-              {t("assessment.form.dailyTokenUsage")}
-            </Label>
-            <Input
-              id="daily-token-usage"
-              type="number"
-              min="0"
-              step="0.1"
-              placeholder={t("assessment.form.dailyTokenUsagePlaceholder")}
-              value={dailyTokenUsage}
-              onChange={(e) => {
-                setHasInteracted(true)
-                setDailyTokenUsage(e.target.value)
-              }}
-              className="mt-4 h-14 rounded-2xl border-2 px-4 text-lg font-semibold"
-            />
+            <div className="rounded-[1.5rem] border border-border/80 bg-background p-5 shadow-[var(--shadow-soft)] sm:p-6">
+              <p className="mono-label text-primary">{questionOrder[1]}</p>
+              <Label id="income-amount-label" className="mt-3 block display-type text-[1.7rem] sm:text-[2rem]">
+                {t("assessment.form.incomeAmount", { unit: t(incomeUnitKey) })}
+              </Label>
+              <div
+                className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3"
+                role="radiogroup"
+                aria-labelledby="income-amount-label"
+              >
+                {incomeOptions.map((option) => {
+                  const isActive = incomePreset === option.value
+
+                  return (
+                    <Button
+                      key={option.id}
+                      type="button"
+                      variant={isActive ? "default" : "outline"}
+                      size="lg"
+                      onClick={() => handleIncomePresetSelect(option.value)}
+                      role="radio"
+                      aria-checked={isActive}
+                      className={cn(
+                        "h-14 justify-start rounded-[1.25rem] px-5 text-left text-base",
+                        isActive && "border-foreground/80",
+                      )}
+                    >
+                      {language === "zh-CN" ? option.label : option.labelEn}
+                    </Button>
+                  )
+                })}
+
+                <Button
+                  type="button"
+                  variant={incomePreset === CUSTOM_INCOME_VALUE ? "default" : "outline"}
+                  size="lg"
+                  onClick={() => handleIncomePresetSelect(CUSTOM_INCOME_VALUE)}
+                  role="radio"
+                  aria-checked={incomePreset === CUSTOM_INCOME_VALUE}
+                  className={cn(
+                    "h-14 justify-start rounded-[1.25rem] px-5 text-left text-base",
+                    incomePreset === CUSTOM_INCOME_VALUE && "border-foreground/80",
+                  )}
+                >
+                  {t("assessment.form.incomeCustom")}
+                </Button>
+              </div>
+
+              <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                {t("assessment.form.presetHint", { unit: t(incomeUnitKey) })}
+              </p>
+
+              {incomePreset === CUSTOM_INCOME_VALUE ? (
+                <div className="mt-4 space-y-2">
+                  <Input
+                    id="income-amount"
+                    type="number"
+                    min="1"
+                    step="any"
+                    placeholder={t("assessment.form.incomePlaceholder", { example: selectedCurrency === "USD" ? "45" : "30" })}
+                    value={incomeAmount}
+                    onChange={(e) => {
+                      setHasInteracted(true)
+                      setIncomeAmount(e.target.value)
+                    }}
+                    className="h-14 rounded-full px-5 text-base"
+                  />
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    {t("assessment.form.incomeCustomHint", { unit: t(incomeUnitKey) })}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-[1.5rem] border border-border/80 bg-background p-5 shadow-[var(--shadow-soft)] sm:p-6">
+                <p className="mono-label text-primary">{questionOrder[2]}</p>
+                <Label htmlFor="city-tier" className="mt-3 block display-type text-[1.7rem] sm:text-[2rem]">
+                  {t("assessment.form.city")}
+                </Label>
+                <NativeSelect
+                  id="city-tier"
+                  size="lg"
+                  value={cityTier}
+                  onChange={(e) => {
+                    setHasInteracted(true)
+                    setCityTier(e.target.value as CityTier)
+                  }}
+                  className="mt-5 w-full"
+                >
+                  {cityOptions.map((option) => (
+                    <NativeSelectOption key={option.value} value={option.value}>
+                      {option.label}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+              </div>
+
+              <div className="rounded-[1.5rem] border border-border/80 bg-background p-5 shadow-[var(--shadow-soft)] sm:p-6">
+                <p className="mono-label text-primary">{questionOrder[3]}</p>
+                <Label htmlFor="model-id" className="mt-3 block display-type text-[1.7rem] sm:text-[2rem]">
+                  {t("assessment.form.model")}
+                </Label>
+                <NativeSelect
+                  id="model-id"
+                  size="lg"
+                  value={modelId}
+                  onChange={(e) => {
+                    setHasInteracted(true)
+                    setModelId(e.target.value)
+                  }}
+                  className="mt-5 w-full"
+                >
+                  {modelOptions.map((option) => (
+                    <NativeSelectOption key={option.value} value={option.value}>
+                      {option.providerName} · {option.label} · {option.description}
+                      {option.pricingContext ? ` · ${option.pricingContext}` : ""}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-[1.5rem] border border-border/80 bg-background p-5 shadow-[var(--shadow-soft)] sm:p-6">
+                <p className="mono-label text-primary">{questionOrder[4]}</p>
+                <Label htmlFor="performance-multiplier" className="mt-3 block display-type text-[1.7rem] sm:text-[2rem]">
+                  {t("assessment.form.performanceMultiplier")}
+                </Label>
+                <Input
+                  id="performance-multiplier"
+                  type="number"
+                  min="1"
+                  step="0.1"
+                  placeholder={t("assessment.form.performanceMultiplierPlaceholder")}
+                  value={performanceMultiplier}
+                  onChange={(e) => {
+                    setHasInteracted(true)
+                    setPerformanceMultiplier(e.target.value)
+                  }}
+                  className="mt-5 h-14 rounded-full px-5 text-base"
+                />
+              </div>
+
+              <div className="rounded-[1.5rem] border border-border/80 bg-background p-5 shadow-[var(--shadow-soft)] sm:p-6">
+                <p className="mono-label text-primary">{questionOrder[5]}</p>
+                <Label htmlFor="daily-token-usage" className="mt-3 block display-type text-[1.7rem] sm:text-[2rem]">
+                  {t("assessment.form.dailyTokenUsage")}
+                </Label>
+                <Input
+                  id="daily-token-usage"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  placeholder={t("assessment.form.dailyTokenUsagePlaceholder")}
+                  value={dailyTokenUsage}
+                  onChange={(e) => {
+                    setHasInteracted(true)
+                    setDailyTokenUsage(e.target.value)
+                  }}
+                  className="mt-5 h-14 rounded-full px-5 text-base"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

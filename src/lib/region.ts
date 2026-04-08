@@ -137,6 +137,7 @@ export function getDefaultCurrencyForRegion(region: SiteRegion): PricingCurrency
   return region === "cn-mainland" ? "CNY" : "USD"
 }
 
-export function getDefaultCityTierForRegion(_region: SiteRegion) {
+export function getDefaultCityTierForRegion(region: SiteRegion) {
+  void region
   return "tier1" as const
 }

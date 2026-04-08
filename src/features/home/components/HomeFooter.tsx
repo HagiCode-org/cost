@@ -24,17 +24,18 @@ interface HomeFooterProps {
 
 export const HomeFooter = forwardRef<HTMLElement, HomeFooterProps>(function HomeFooter(props, ref) {
   return (
-    <footer ref={ref} className="px-4 pb-10 pt-4 sm:px-6 lg:px-8">
-      <div className="glass-panel surface-outline mx-auto max-w-7xl rounded-[2rem] px-6 py-6 sm:px-8">
-        <div className="grid gap-6 md:grid-cols-[1.15fr_0.85fr] md:items-start">
-          <div className="space-y-3">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{props.disclaimerTitle}</p>
-            <p className="text-sm leading-7 text-muted-foreground">{props.disclaimer}</p>
-            <p className="text-sm leading-7 text-muted-foreground">{props.extensionNote}</p>
+    <footer ref={ref} className="px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-[1.5rem] border border-border/80 bg-background px-6 py-8 shadow-[var(--shadow-card)] sm:px-8">
+        <div className="grid gap-8 md:grid-cols-[1.12fr_0.88fr] md:items-start">
+          <div className="space-y-4">
+            <p className="mono-label text-primary">{props.disclaimerTitle}</p>
+            <p className="max-w-3xl text-sm leading-7 text-muted-foreground">{props.disclaimer}</p>
+            <p className="max-w-3xl text-sm leading-7 text-muted-foreground">{props.extensionNote}</p>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2">
+
+          <div className="grid gap-6 sm:grid-cols-2">
             <div className="space-y-3 text-sm leading-7 text-muted-foreground">
-              <p className="font-semibold text-foreground">{props.registrationLabel}</p>
+              <p className="display-type text-base text-foreground">{props.registrationLabel}</p>
               <div className="flex flex-col gap-1.5">
                 {props.registrationItems.map((item) => (
                   <a
@@ -43,7 +44,7 @@ export const HomeFooter = forwardRef<HTMLElement, HomeFooterProps>(function Home
                     target="_blank"
                     rel="noreferrer"
                     aria-label={item.ariaLabel}
-                    className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                    className="underline-offset-4 transition-colors hover:text-primary hover:underline"
                   >
                     {item.label}
                   </a>
@@ -51,7 +52,7 @@ export const HomeFooter = forwardRef<HTMLElement, HomeFooterProps>(function Home
               </div>
             </div>
             <div className="space-y-3 text-sm leading-7 text-muted-foreground">
-              <p className="font-semibold text-foreground">{props.linksTitle}</p>
+              <p className="display-type text-base text-foreground">{props.linksTitle}</p>
               <div className="flex flex-col gap-1.5">
                 {props.links.map((link) => (
                   <a
@@ -59,7 +60,7 @@ export const HomeFooter = forwardRef<HTMLElement, HomeFooterProps>(function Home
                     href={link.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex flex-col items-start gap-1 rounded-lg px-1 py-1 text-left underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                    className="flex flex-col items-start gap-1 rounded-2xl border border-transparent px-3 py-3 text-left underline-offset-4 transition-colors hover:border-border/80 hover:text-primary hover:underline"
                   >
                     <span className="font-medium text-foreground">{link.label}</span>
                     {link.description ? (
@@ -71,8 +72,10 @@ export const HomeFooter = forwardRef<HTMLElement, HomeFooterProps>(function Home
             </div>
           </div>
         </div>
-        <Separator className="my-5" />
-        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground"><LinkHagicode>{props.copyright}</LinkHagicode></p>
+        <Separator className="my-6 bg-border/80" />
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+          <LinkHagicode>{props.copyright}</LinkHagicode>
+        </p>
       </div>
     </footer>
   )

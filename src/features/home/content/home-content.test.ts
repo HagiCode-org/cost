@@ -32,6 +32,10 @@ describe("getHomePageContent", () => {
       href: "https://hagicode.com/",
     })
     expect(content.footer.links.some((link) => link.href === "https://cost.hagicode.com/")).toBe(false)
+    expect(content.footer.links).toContainEqual({
+      label: "footer.links.steam",
+      href: "https://store.steampowered.com/app/4625540/Hagicode/",
+    })
     expect(content.footer.links.at(-1)).toEqual({
       label: "footer.links.pricing",
       href: "https://openai.com/api/pricing/",

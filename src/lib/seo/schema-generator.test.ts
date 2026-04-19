@@ -18,9 +18,13 @@ describe("injectAllSchemas", () => {
     const webpage = JSON.parse(document.getElementById("json-ld-webpage")?.textContent ?? "{}")
 
     expect(organization.url).toBe("https://cost.hagicode.com")
+    expect(organization.sameAs).toContain("https://hagicode.com/")
+    expect(organization.sameAs).toContain("https://docs.hagicode.com/")
     expect(website.url).toBe("https://cost.hagicode.com/")
     expect(website.inLanguage).toBe("zh-CN")
+    expect(website.isPartOf.url).toBe("https://hagicode.com/")
     expect(webpage.isPartOf["@id"]).toBe("https://cost.hagicode.com/#website")
+    expect(webpage.relatedLink).toContain("https://builder.hagicode.com/")
   })
 
   it("updates localized JSON-LD in place when the active locale changes", () => {

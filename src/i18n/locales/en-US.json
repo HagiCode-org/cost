@@ -15,8 +15,8 @@
     "versionLabel": "Version",
     "links": {
       "official": "HagiCode website",
-      "currentRepo": "This repository",
-      "siteRepo": "HagiCode Site"
+      "docs": "HagiCode docs",
+      "builder": "Docker Compose Builder"
     }
   },
   "accessibility": {

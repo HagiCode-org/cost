@@ -190,12 +190,12 @@ export const HomeHeader = forwardRef<HTMLElement>(function HomeHeader(_, ref) {
         href: "https://hagicode.com/",
       },
       {
-        label: t("header.links.currentRepo"),
-        href: "https://github.com/HagiCode-org/cost",
+        label: t("header.links.docs"),
+        href: "https://docs.hagicode.com/",
       },
       {
-        label: t("header.links.siteRepo"),
-        href: "https://github.com/HagiCode-org/site",
+        label: t("header.links.builder"),
+        href: "https://builder.hagicode.com/",
       },
     ],
     [t],

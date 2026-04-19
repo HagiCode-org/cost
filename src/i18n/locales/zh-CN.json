@@ -15,8 +15,8 @@
     "versionLabel": "版本",
     "links": {
       "official": "HagiCode 官网",
-      "currentRepo": "本仓库",
-      "siteRepo": "HagiCode Site"
+      "docs": "HagiCode 文档",
+      "builder": "Docker Compose Builder"
     }
   },
   "accessibility": {

@@ -77,7 +77,7 @@ describe("AssessmentLanding currency flow", () => {
 
     expect(screen.getByRole("radio", { name: "美元 USD" })).toHaveAttribute("aria-checked", "true")
     expect(screen.getByText("$55k")).toBeInTheDocument()
-    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("gpt-5-mini")
+    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("gpt-5.4-mini")
 
     await waitFor(() => {
       expect(window.location.search).toContain("region=international")
@@ -92,10 +92,26 @@ describe("AssessmentLanding currency flow", () => {
     renderWithProviders(<AssessmentLanding />)
 
     expect(
-      screen.getByRole("option", { name: /OpenAI · GPT-5 mini · Best-value coding model/ }),
+      screen.getByRole("option", { name: /OpenAI · GPT-5.4 mini · Best-value coding model.*models.dev API/ }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("option", { name: /DeepSeek · DeepSeek-V3 · Mainline coding model · Cache miss/ }),
+      screen.getByRole("option", { name: /DeepSeek · DeepSeek-V4-Flash · Mainline coding model · Cache miss · models.dev API/ }),
     ).toBeInTheDocument()
+  })
+
+  it("canonicalizes legacy model query parameters and writes back canonical IDs", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/?region=cn-mainland&currency=CNY&incomePreset=26&income=26&city=tier1&model=deepseek-v3&multiplier=5&dailyTokens=100",
+    )
+
+    renderWithProviders(<AssessmentLanding />)
+
+    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("deepseek-v4-flash")
+
+    await waitFor(() => {
+      expect(new URLSearchParams(window.location.search).get("model")).toBe("deepseek-v4-flash")
+    })
   })
 })

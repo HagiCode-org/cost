@@ -15,7 +15,7 @@ import {
   salaryCurrencyOptions,
 } from "@/features/income-token/content/form-options"
 import { benchmarkData, type CityTier } from "@/features/income-token/content/benchmark-data"
-import { pricingData } from "@/features/income-token/content/pricing-data"
+import { pricingData, resolveCanonicalModelId } from "@/features/income-token/content/pricing-data"
 import { buildResultViewModel, type ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 import {
   convertAnnualCnyToSalaryInput,
@@ -105,9 +105,9 @@ function getInitialCityTier(params: URLSearchParams, region: SiteRegion): CityTi
 }
 
 function getInitialModelId(params: URLSearchParams) {
-  const model = params.get("model")
-  if (model && validModelValues.has(model)) {
-    return model
+  const canonicalModelId = resolveCanonicalModelId(params.get("model"))
+  if (canonicalModelId && validModelValues.has(canonicalModelId)) {
+    return canonicalModelId
   }
 
   return defaultModelId
@@ -291,7 +291,7 @@ export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
     }
 
     params.set("city", cityTier)
-    params.set("model", modelId)
+    params.set("model", resolveCanonicalModelId(modelId) ?? defaultModelId)
     params.set("multiplier", performanceMultiplier)
     params.set("dailyTokens", dailyTokenUsage)
 

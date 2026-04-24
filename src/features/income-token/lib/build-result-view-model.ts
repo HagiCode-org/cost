@@ -73,6 +73,8 @@ export interface ModelCostViewModel {
   sourceLabel: string
   sourceUrl: string
   sourceNote: string
+  sourceSyncedAt: string
+  availabilityStatus: string
   inputPriceFormatted: string
   outputPriceFormatted: string
   mixedPriceFormatted: string
@@ -109,6 +111,8 @@ export interface TokenCeilingDisplay {
   pricingNote?: string
   sourceLabel: string
   sourceUrl: string
+  sourceSyncedAt: string
+  availabilityStatus: string
   inputTokensFormatted: string
   outputTokensFormatted: string
   totalTokensFormatted: string
@@ -137,11 +141,13 @@ export interface ResultViewModel {
   dataDisclaimer: {
     pricingUpdatedAt: string
     pricingSource: string
-    pricingReferences: Array<{
+  pricingReferences: Array<{
+      referenceId: string
       providerId: string
       providerName: string
       sourceLabel: string
       sourceUrl: string
+      sourceSyncedAt: string
       sourceNote: string
     }>
   }
@@ -193,6 +199,12 @@ function formatBudgetByCurrency(currency: "USD" | "CNY", annualCostCny: number):
 
 function getLocalizedModelMeta(modelId: string, language: SupportedLanguage) {
   return getLocalizedModelCopy(getModelById(modelId), language)
+}
+
+function getAvailabilityLabel(status: string, language: SupportedLanguage) {
+  if (status === "coming-soon") return language === "zh-CN" ? "即将开放" : "Coming soon"
+  if (status === "legacy-mapped") return language === "zh-CN" ? "旧 ID 已映射" : "Legacy ID mapped"
+  return language === "zh-CN" ? "可用" : "Available"
 }
 
 function getLocalizedProviderMeta(providerId: string, language: SupportedLanguage) {
@@ -501,9 +513,11 @@ export function buildResultViewModel(
     modelDescription: selectedModelMeta.description,
     pricingContext: selectedModelMeta.pricingContext,
     pricingNote: selectedModelMeta.pricingNote,
-    sourceLabel: selectedProviderMeta.sourceLabel,
-    sourceUrl: selectedProviderMeta.sourceUrl,
-    sourceNote: selectedProviderMeta.sourceNote,
+    sourceLabel: selectedModelMeta.sourceLabel,
+    sourceUrl: selectedModel.sourceUrl,
+    sourceNote: selectedModelMeta.sourceNote,
+    sourceSyncedAt: selectedModel.sourceSyncedAt,
+    availabilityStatus: getAvailabilityLabel(selectedModel.availabilityStatus, language),
     inputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken),
     outputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken),
     mixedPriceFormatted: `${formatCurrencyPrice(selectedModel.currency, mixedPriceInModelCurrency)} / 1M`,
@@ -558,8 +572,10 @@ export function buildResultViewModel(
           : undefined,
       pricingContext: modelMeta.pricingContext,
       pricingNote: modelMeta.pricingNote,
-      sourceLabel: providerMeta.sourceLabel,
-      sourceUrl: providerMeta.sourceUrl,
+      sourceLabel: modelMeta.sourceLabel,
+      sourceUrl: tc.sourceUrl,
+      sourceSyncedAt: tc.sourceSyncedAt,
+      availabilityStatus: getAvailabilityLabel(tc.availabilityStatus, language),
       inputTokensFormatted: formatTokens(tc.inputTokens),
       outputTokensFormatted: formatTokens(tc.outputTokens),
       totalTokensFormatted: formatTokens(tc.totalTokens),
@@ -583,6 +599,33 @@ export function buildResultViewModel(
     })
     .filter((provider) => provider.models.length > 0)
 
+  const pricingReferences = pricingData.models.reduce<ResultViewModel["dataDisclaimer"]["pricingReferences"]>(
+    (references, model) => {
+      const providerMeta = getLocalizedProviderMeta(model.providerId, language)
+      const modelMeta = getLocalizedModelMeta(model.id, language)
+      const referenceId = `${model.providerId}:${model.sourceUrl}:${model.sourceSyncedAt}:${model.sourceLabel}`
+      const existingReference = references.find((reference) => reference.referenceId === referenceId)
+
+      if (existingReference) {
+        existingReference.sourceNote = `${existingReference.sourceNote}; ${model.name}: ${modelMeta.pricingContext ?? modelMeta.sourceNote}`
+        return references
+      }
+
+      references.push({
+        referenceId,
+        providerId: model.providerId,
+        providerName: providerMeta.providerName,
+        sourceLabel: modelMeta.sourceLabel,
+        sourceUrl: model.sourceUrl,
+        sourceSyncedAt: model.sourceSyncedAt,
+        sourceNote: `${model.name}: ${modelMeta.pricingContext ?? modelMeta.sourceNote}`,
+      })
+
+      return references
+    },
+    [],
+  )
+
   return {
     summarySection,
     costSection,
@@ -595,17 +638,7 @@ export function buildResultViewModel(
     dataDisclaimer: {
       pricingUpdatedAt: pricingData.updatedAt,
       pricingSource: getLocalizedPricingSource(language),
-      pricingReferences: pricingData.providers.map((provider) => {
-        const providerMeta = getLocalizedProviderMeta(provider.id, language)
-
-        return {
-          providerId: provider.id,
-          providerName: providerMeta.providerName,
-          sourceLabel: providerMeta.sourceLabel,
-          sourceUrl: providerMeta.sourceUrl,
-          sourceNote: providerMeta.sourceNote,
-        }
-      }),
+      pricingReferences,
     },
   }
 }

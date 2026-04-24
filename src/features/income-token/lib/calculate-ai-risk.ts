@@ -1,6 +1,6 @@
 import { benchmarkData } from "../content/benchmark-data"
 import type { CityTier } from "../content/benchmark-data"
-import { pricingData } from "../content/pricing-data"
+import { pricingData, resolveCanonicalModelId } from "../content/pricing-data"
 import type { SalaryCurrency } from "./currency"
 import { normalizeIncomeInputToAnnualCny } from "./currency"
 
@@ -35,6 +35,8 @@ export interface SelectedModelMeta {
   sourceLabel: string
   sourceUrl: string
   sourceNote: string
+  sourceSyncedAt: string
+  availabilityStatus: string
 }
 
 export interface CalculationResult {
@@ -75,6 +77,8 @@ export interface TokenCeiling {
   sourceLabel: string
   sourceUrl: string
   sourceNote: string
+  sourceSyncedAt: string
+  availabilityStatus: string
   inputTokens: number
   outputTokens: number
   totalTokens: number
@@ -83,7 +87,8 @@ export interface TokenCeiling {
 }
 
 function getSelectedModel(modelId: string): SelectedModelMeta {
-  const model = pricingData.models.find((item) => item.id === modelId) ?? pricingData.models[0]
+  const canonicalModelId = resolveCanonicalModelId(modelId)
+  const model = pricingData.models.find((item) => item.id === canonicalModelId) ?? pricingData.models[0]
   const provider = pricingData.providers.find((item) => item.id === model.providerId)
 
   return {
@@ -99,9 +104,11 @@ function getSelectedModel(modelId: string): SelectedModelMeta {
     cacheWriteCostPer1mToken: model.cacheWriteCostPer1mToken,
     pricingContext: model.pricingContext,
     pricingNote: model.pricingNote,
-    sourceLabel: provider?.sourceLabel ?? pricingData.source,
-    sourceUrl: provider?.sourceUrl ?? "",
-    sourceNote: provider?.sourceNote ?? pricingData.source,
+    sourceLabel: model.sourceLabel,
+    sourceUrl: model.sourceUrl,
+    sourceNote: model.sourceNote,
+    sourceSyncedAt: model.sourceSyncedAt,
+    availabilityStatus: model.availabilityStatus,
   }
 }
 
@@ -193,9 +200,11 @@ export function calculateTokenCeilings(annualBudgetCny: number): TokenCeiling[] 
       cacheWriteCostPer1mToken: model.cacheWriteCostPer1mToken,
       pricingContext: model.pricingContext,
       pricingNote: model.pricingNote,
-      sourceLabel: provider?.sourceLabel ?? pricingData.source,
-      sourceUrl: provider?.sourceUrl ?? "",
-      sourceNote: provider?.sourceNote ?? pricingData.source,
+      sourceLabel: model.sourceLabel,
+      sourceUrl: model.sourceUrl,
+      sourceNote: model.sourceNote,
+      sourceSyncedAt: model.sourceSyncedAt,
+      availabilityStatus: model.availabilityStatus,
       inputTokens,
       outputTokens,
       totalTokens: inputTokensInMix + outputTokensInMix,

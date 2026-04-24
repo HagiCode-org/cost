@@ -26,7 +26,7 @@ export function ComplianceFooterSection({ data }: ComplianceFooterSectionProps) 
         <div className="border-t pt-3 space-y-2">
           <p className="font-medium text-foreground">{t("results.compliance.referenceTitle")}</p>
           {data.pricingReferences.map((reference) => (
-            <div key={reference.providerId} className="space-y-1">
+            <div key={reference.referenceId} className="space-y-1">
               <a
                 href={reference.sourceUrl}
                 target="_blank"
@@ -35,6 +35,7 @@ export function ComplianceFooterSection({ data }: ComplianceFooterSectionProps) 
               >
                 {reference.providerName}: {reference.sourceLabel}
               </a>
+              <p>Synced: {reference.sourceSyncedAt}</p>
               <p>{reference.sourceNote}</p>
             </div>
           ))}

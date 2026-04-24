@@ -57,6 +57,7 @@ export function TokenCeilingListSection({ data }: TokenCeilingListSectionProps) 
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-foreground">{provider.providerName}</p>
                   <p className="text-xs text-muted-foreground">{provider.sourceNote}</p>
+                  <p className="text-xs text-muted-foreground">{t("results.cost.officialSource")}: {provider.sourceLabel}</p>
                 </div>
                 <a
                   href={provider.sourceUrl}
@@ -80,6 +81,9 @@ export function TokenCeilingListSection({ data }: TokenCeilingListSectionProps) 
                             {t("results.cost.pricingContext")}: {model.pricingContext}
                           </p>
                         ) : null}
+                        <p className="text-xs md:text-[11px] text-muted-foreground">
+                          {model.sourceLabel} · {model.availabilityStatus} · {model.sourceSyncedAt}
+                        </p>
                       </div>
                       <div className="text-right">
                         <p className="display-type text-lg font-bold">{model.totalTokensFormatted}</p>

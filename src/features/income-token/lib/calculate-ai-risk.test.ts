@@ -11,6 +11,7 @@ import {
   evaluate,
   normalizeAnnualIncomeCny,
 } from "./calculate-ai-risk"
+import { pricingData, resolveCanonicalModelId } from "../content/pricing-data"
 
 const baseInput = {
   annualIncomeCny: 300000,
@@ -37,9 +38,10 @@ describe("normalizeAnnualIncomeCny", () => {
 })
 
 describe("calculateMixedCostPer1mTokenCny", () => {
-  it("uses CNY prices directly for domestic models", () => {
+  it("resolves legacy DeepSeek IDs to canonical models before calculating", () => {
     const cost = calculateMixedCostPer1mTokenCny("deepseek-v3")
-    expect(cost).toBe(3.5)
+    expect(resolveCanonicalModelId("deepseek-v3")).toBe("deepseek-v4-flash")
+    expect(cost).toBeCloseTo(2.28375, 5)
   })
 
   it("converts USD-priced models to CNY", () => {
@@ -52,9 +54,9 @@ describe("calculateAiCost", () => {
   it("calculates daily and annual AI cost from daily token usage", () => {
     const result = calculateAiCost(baseInput)
 
-    expect(result.mixedCostPer1mTokenCny).toBe(3.5)
-    expect(result.dailyAiCostCny).toBe(35)
-    expect(result.annualAiCostCny).toBe(35 * WORKING_DAYS_PER_YEAR)
+    expect(result.mixedCostPer1mTokenCny).toBeCloseTo(2.28375, 5)
+    expect(result.dailyAiCostCny).toBeCloseTo(22.8375, 5)
+    expect(result.annualAiCostCny).toBeCloseTo(22.8375 * WORKING_DAYS_PER_YEAR, 5)
   })
 })
 
@@ -80,17 +82,18 @@ describe("calculateFullBudgetTokenCapacity", () => {
   it("returns annual and workday token budget capacity", () => {
     const result = calculateFullBudgetTokenCapacity(445000, "deepseek-v3")
 
-    expect(result.fullBudgetTotalTokens).toBe(127_142_857_142)
-    expect(result.fullBudgetWorkdayTokens).toBe(Math.floor(127_142_857_142 / WORKING_DAYS_PER_YEAR))
+    expect(result.fullBudgetTotalTokens).toBe(194_854_953_475)
+    expect(result.fullBudgetWorkdayTokens).toBe(Math.floor(194_854_953_475 / WORKING_DAYS_PER_YEAR))
   })
 })
 
 describe("calculateTokenCeilings", () => {
   it("keeps the original detailed token list for all configured models", () => {
     const ceilings = calculateTokenCeilings(445000)
-    expect(ceilings).toHaveLength(14)
-    expect(ceilings.some((item) => item.modelId === "deepseek-v3")).toBe(true)
+    expect(ceilings).toHaveLength(pricingData.models.length)
+    expect(ceilings.some((item) => item.modelId === "deepseek-v4-flash")).toBe(true)
     expect(ceilings.some((item) => item.modelId === "claude-sonnet-4-6")).toBe(true)
+    expect(ceilings.some((item) => item.sourceLabel === "models.dev API")).toBe(true)
   })
 })
 
@@ -98,19 +101,21 @@ describe("evaluate", () => {
   it("returns a complete agent-era result payload", () => {
     const result = evaluate(baseInput)
 
-    expect(result.selectedModel.modelId).toBe("deepseek-v3")
+    expect(result.selectedModel.modelId).toBe("deepseek-v4-flash")
+    expect(result.selectedModel.sourceLabel).toBe("models.dev API")
+    expect(result.selectedModel.sourceSyncedAt).toBe("2026-02-28")
     expect(result.annualTotalCostCny).toBe(445000)
     expect(result.annualTokenUsage).toBe(10 * 1_000_000 * WORKING_DAYS_PER_YEAR)
-    expect(result.dailyAiCostCny).toBe(35)
+    expect(result.dailyAiCostCny).toBeCloseTo(22.8375, 5)
     expect(result.efficiencyGainRatio).toBe(1.5)
-    expect(result.aiCostShareOfSalary).toBeCloseTo((35 * WORKING_DAYS_PER_YEAR) / 445000, 6)
+    expect(result.aiCostShareOfSalary).toBeCloseTo((22.8375 * WORKING_DAYS_PER_YEAR) / 445000, 6)
     expect(result.costEffectivenessRatio).toBeGreaterThan(1)
     expect(result.isCostInefficient).toBe(false)
-    expect(result.affordableWorkflowCount).toBeCloseTo(445000 / (35 * WORKING_DAYS_PER_YEAR), 6)
+    expect(result.affordableWorkflowCount).toBeCloseTo(445000 / (22.8375 * WORKING_DAYS_PER_YEAR), 6)
     expect(result.effectivePeopleEquivalent).toBe(2.5)
     expect(result.fullBudgetTotalTokens).toBeGreaterThan(0)
     expect(result.fullBudgetWorkdayTokens).toBeGreaterThan(0)
-    expect(result.tokenCeilings).toHaveLength(14)
+    expect(result.tokenCeilings).toHaveLength(pricingData.models.length)
   })
 
   it("flags wasteful usage when AI cost share exceeds efficiency gain", () => {

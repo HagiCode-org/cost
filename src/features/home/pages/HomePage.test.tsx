@@ -66,7 +66,7 @@ describe("HomePage", () => {
 
     expect(screen.getByRole("radio", { name: "40 万" })).toHaveAttribute("aria-checked", "true")
     expect(screen.getByLabelText(/你的城市更接近哪座典型城市/)).toHaveValue("tier2")
-    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("deepseek-v3")
+    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("deepseek-v4-flash")
     expect(screen.getByLabelText(/用了这个模型，你的效率是以前的几倍/)).toHaveValue(3)
     expect(screen.getByLabelText(/这个模型你每天大概需要多少 M Token/)).toHaveValue(120)
   })
@@ -102,7 +102,7 @@ describe("HomePage", () => {
     renderWithProviders(<HomePage />)
 
     fireEvent.change(screen.getByLabelText(/你用的最多的模型是什么/), {
-      target: { value: "deepseek-v3" },
+      target: { value: "deepseek-v4-flash" },
     })
     fireEvent.change(screen.getByLabelText(/用了这个模型，你的效率是以前的几倍/), {
       target: { value: "6" },

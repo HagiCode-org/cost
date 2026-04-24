@@ -59,6 +59,9 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
                   {t("results.cost.pricingContext")}: {data.pricingContext}
                 </p>
               ) : null}
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t("results.cost.officialSource")}: {data.sourceLabel} · {data.availabilityStatus} · {data.sourceSyncedAt}
+              </p>
             </div>
             <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Coins className="size-5" aria-hidden="true" />
@@ -91,6 +94,20 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
           </div>
 
           <div className="mt-5 space-y-3 rounded-[1.5rem] border border-border/80 bg-muted/35 p-4 text-sm">
+            <div className="rounded-[1rem] border border-border/70 bg-background/70 p-3 text-xs leading-relaxed text-muted-foreground">
+              <a
+                href={data.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                {data.sourceLabel}
+              </a>
+              <p className="mt-1">{data.sourceNote}</p>
+              {data.pricingNote ? (
+                <p className="mt-1">{t("results.cost.priceNote")}: {data.pricingNote}</p>
+              ) : null}
+            </div>
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
                 <p className="font-medium">{t("results.cost.dailyAiCost")}</p>

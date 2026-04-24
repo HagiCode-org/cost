@@ -26,6 +26,8 @@ export interface ModelOption {
   label: string
   description: string
   pricingContext?: string
+  availabilityStatus: string
+  sourceLabel: string
 }
 
 export const salaryCurrencyOptions: FormOption<SalaryCurrency>[] = [
@@ -80,7 +82,17 @@ export function getModelOptions(language: SupportedLanguage): ModelOption[] {
       providerName: provider?.name ?? model.providerId,
       label: model.name,
       description: copy.description,
-      pricingContext: copy.pricingContext,
+      pricingContext: [copy.pricingContext, copy.sourceLabel, getAvailabilityLabel(model.availabilityStatus, language)]
+        .filter(Boolean)
+        .join(" · "),
+      availabilityStatus: model.availabilityStatus,
+      sourceLabel: copy.sourceLabel,
     }
   })
+}
+
+function getAvailabilityLabel(status: string, language: SupportedLanguage) {
+  if (status === "coming-soon") return language === "zh-CN" ? "即将开放" : "Coming soon"
+  if (status === "legacy-mapped") return language === "zh-CN" ? "旧 ID 已映射" : "Legacy ID mapped"
+  return undefined
 }

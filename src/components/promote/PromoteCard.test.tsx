@@ -11,10 +11,16 @@ const activePromotion = {
   link: 'https://example.invalid/one',
   platform: 'steam',
   ctaLabel: '加入愿望单',
+  image: {
+    src: 'https://index.hagicode.com/images/promotions/main-game.webp',
+    alt: 'HagiCode artwork',
+    width: 640,
+    height: 360,
+  },
 };
 
 describe('PromoteCard', () => {
-  it('renders the first active promotion as a dismissible clickable card', () => {
+  it('renders the full-width bottom shell with dismiss and CTA controls', () => {
     const markup = renderToStaticMarkup(
       <PromoteCard locale="zh-CN" className="test-promote" initialPromotion={activePromotion} />,
     );
@@ -23,8 +29,12 @@ describe('PromoteCard', () => {
     expect(markup).toContain('立即添加到愿望单');
     expect(markup).toContain('中文文案');
     expect(markup).toContain('promote-card__inner');
-    expect(markup).toContain('promote-card__surface');
     expect(markup).toContain('promote-card__close');
+    expect(markup).toContain('promote-card__surface');
+    expect(markup).toContain('data-has-image="true"');
+    expect(markup).toContain('promote-card__image');
+    expect(markup).toContain('src="https://index.hagicode.com/images/promotions/main-game.webp"');
+    expect(markup).toContain('alt="HagiCode artwork"');
     expect(markup).toContain('aria-label="关闭推广信息"');
     expect(markup).toContain('aria-label="加入愿望单: 立即添加到愿望单"');
   });

@@ -3,6 +3,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { HomeHeader } from "./HomeHeader"
 import i18n from "@/i18n/config"
+import { supportedLanguageMetadata } from "@/i18n/config"
 import { renderWithProviders } from "@/test/render"
 import { installViewportMock, setViewportWidth } from "@/test/viewport"
 
@@ -32,7 +33,7 @@ describe("HomeHeader", () => {
 
     const menuButton = await screen.findByRole("button", { name: "首页导航" })
     expect(screen.getByText("我会被AI替代吗")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /^EN$/i })).toBeInTheDocument()
+    expect(screen.getByRole("combobox", { name: "选择语言" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "切换主题" })).toBeInTheDocument()
 
     fireEvent.click(menuButton)
@@ -40,7 +41,7 @@ describe("HomeHeader", () => {
     const dialog = await screen.findByRole("dialog")
     expect(within(dialog).getByText("我会被AI替代吗")).toBeInTheDocument()
     expect(within(dialog).getByText(/相关链接如下/)).toBeInTheDocument()
-    expect(within(dialog).queryByRole("button", { name: /^EN$/i })).not.toBeInTheDocument()
+    expect(within(dialog).queryByRole("combobox", { name: "选择语言" })).not.toBeInTheDocument()
     expect(within(dialog).queryByRole("button", { name: "切换主题" })).not.toBeInTheDocument()
 
     fireEvent.click(within(dialog).getByRole("button", { name: "复制当前页面链接" }))
@@ -54,7 +55,7 @@ describe("HomeHeader", () => {
   it("keeps language and theme toggles in the mobile header instead of the sheet", async () => {
     renderWithProviders(<HomeHeader />)
 
-    fireEvent.click(screen.getByRole("button", { name: /^EN$/i }))
+    fireEvent.change(screen.getByRole("combobox", { name: "选择语言" }), { target: { value: "en-US" } })
     expect(await screen.findByText("Will AI Replace Me?")).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole("button", { name: "Toggle theme" }))
@@ -63,11 +64,54 @@ describe("HomeHeader", () => {
     fireEvent.click(screen.getByRole("button", { name: "Homepage navigation" }))
     const dialog = await screen.findByRole("dialog")
 
-    expect(within(dialog).queryByRole("button", { name: /^EN$/i })).not.toBeInTheDocument()
+    expect(within(dialog).queryByRole("combobox", { name: "Select language" })).not.toBeInTheDocument()
     expect(within(dialog).queryByRole("button", { name: "Toggle theme" })).not.toBeInTheDocument()
 
     fireEvent.click(within(dialog).getByRole("button", { name: "Copy the current page link" }))
     expect(screen.getByRole("dialog")).toBeInTheDocument()
+  })
+
+  it("renders the full locale set in a desktop dropdown and preserves unrelated query params when the language changes", async () => {
+    setViewportWidth(1280)
+    window.history.replaceState({}, "", "/?theme=dark&dailyTokens=120")
+
+    renderWithProviders(<HomeHeader />)
+
+    const languageSelect = screen.getByRole("combobox", { name: "选择语言" })
+    const options = within(languageSelect).getAllByRole("option")
+    expect(options).toHaveLength(supportedLanguageMetadata.length)
+    expect(options.map((option) => option.getAttribute("value"))).toEqual(
+      supportedLanguageMetadata.map((language) => language.value),
+    )
+
+    fireEvent.change(languageSelect, { target: { value: "fr-FR" } })
+
+    await waitFor(() => {
+      expect(i18n.resolvedLanguage).toBe("fr-FR")
+    })
+
+    expect(languageSelect).toHaveValue("fr-FR")
+    expect(document.documentElement.lang).toBe("fr-FR")
+    expect(localStorage.getItem("cost-language")).toBe("fr-FR")
+
+    const params = new URLSearchParams(window.location.search)
+    expect(params.get("lang")).toBe("fr-FR")
+    expect(params.get("theme")).toBe("dark")
+    expect(params.get("dailyTokens")).toBe("120")
+  })
+
+  it("uses the mobile dropdown to switch to any locale", async () => {
+    renderWithProviders(<HomeHeader />)
+
+    const languageSelect = screen.getByRole("combobox", { name: "选择语言" })
+    fireEvent.change(languageSelect, { target: { value: "de-DE" } })
+
+    await waitFor(() => {
+      expect(i18n.resolvedLanguage).toBe("de-DE")
+    })
+
+    expect(languageSelect).toHaveValue("de-DE")
+    expect(new URLSearchParams(window.location.search).get("lang")).toBe("de-DE")
   })
 
   it("supports overlay close, escape close, and viewport transitions back to desktop", async () => {
@@ -97,7 +141,7 @@ describe("HomeHeader", () => {
     setViewportWidth(1280)
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /^EN$/i })).toBeInTheDocument()
+      expect(screen.getByRole("combobox", { name: "选择语言" })).toBeInTheDocument()
     })
     expect(screen.queryByRole("button", { name: "首页导航" })).not.toBeInTheDocument()
 

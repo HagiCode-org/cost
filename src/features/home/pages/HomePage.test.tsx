@@ -33,7 +33,7 @@ describe("HomePage", () => {
   it("switches the page copy to English", async () => {
     renderWithProviders(<HomePage />)
 
-    fireEvent.click(screen.getByRole("button", { name: /^EN$/i }))
+    fireEvent.change(screen.getByRole("combobox", { name: "选择语言" }), { target: { value: "en-US" } })
 
     expect(await screen.findByRole("heading", { level: 1, name: /Calculate whether the Agent era makes you replaceable/i })).toBeInTheDocument()
     expect(screen.getByRole("heading", { level: 3, name: "Smart" })).toBeInTheDocument()
@@ -44,7 +44,7 @@ describe("HomePage", () => {
   it("keeps China-mainland city labels after switching the UI language", async () => {
     renderWithProviders(<HomePage />)
 
-    fireEvent.click(screen.getByRole("button", { name: /^EN$/i }))
+    fireEvent.change(screen.getByRole("combobox", { name: "选择语言" }), { target: { value: "en-US" } })
 
     expect(await screen.findByText(/Current default region: China mainland/)).toBeInTheDocument()
     expect(

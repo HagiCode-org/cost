@@ -1,6 +1,5 @@
+import type { SupportedLanguage } from "@/i18n/config"
 import footerSitesSnapshot from "@/data/footer-sites.snapshot.json"
-
-type CostLocale = "zh-CN" | "en-US"
 
 export interface FooterSiteLink {
   siteId: string
@@ -24,7 +23,7 @@ const DEFAULT_RELATED_SITE_ORDER = [
 
 const CURRENT_SITE_ID = "cost-calculator"
 
-export function resolveCostFooterSiteLinks(locale: CostLocale): FooterSiteLink[] {
+export function resolveCostFooterSiteLinks(locale: SupportedLanguage): FooterSiteLink[] {
   void locale
   const snapshotById = new Map(footerSitesSnapshot.entries.map((entry) => [entry.id, entry]))
 

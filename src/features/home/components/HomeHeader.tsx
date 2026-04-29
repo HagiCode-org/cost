@@ -15,11 +15,15 @@ import { LinkHagicode } from "@/components/link-hagicode"
 import { useTheme } from "@/contexts/theme-context"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useShareCurrentSite, type ShareState } from "@/hooks/use-share-current-site"
-import type { SupportedLanguage } from "@/i18n/config"
-import { setLocale, useAppDispatch } from "@/lib/store"
+import { applyLanguagePreference } from "@/i18n/apply-language"
+import {
+  getResolvedLanguage,
+  resolveSupportedLanguage,
+  supportedLanguageMetadata,
+  type SupportedLanguage,
+} from "@/i18n/config"
+import { useAppDispatch } from "@/lib/store"
 import { formatAppVersion, getAppVersion } from "@/lib/version"
-
-const languages: SupportedLanguage[] = ["zh-CN", "en-US"]
 
 type ProductLink = {
   label: string
@@ -33,6 +37,7 @@ interface MobileHomeHeaderProps {
   productLinks: ProductLink[]
   shareLabel: string
   shareState: ShareState
+  isApplyingLanguage: boolean
   changeLanguage: (language: SupportedLanguage) => Promise<void>
   shareCurrentSite: () => Promise<void>
   toggleTheme: () => void
@@ -53,6 +58,52 @@ function BrandMark({ compact = false, name, tagline }: { compact?: boolean; name
   )
 }
 
+function LanguageControls({
+  currentLanguage,
+  disabled,
+  compact = false,
+  onChange,
+  t,
+}: {
+  currentLanguage: SupportedLanguage
+  disabled: boolean
+  compact?: boolean
+  onChange: (language: SupportedLanguage) => Promise<void>
+  t: ReturnType<typeof useTranslation>["t"]
+}) {
+  return (
+    <div
+      className={
+        compact
+          ? "inline-flex items-center gap-2 rounded-full border border-border/80 bg-background px-2.5 shadow-[var(--shadow-button)]"
+          : "inline-flex items-center gap-2 rounded-full border border-border/80 bg-background px-3 shadow-[var(--shadow-button)]"
+      }
+    >
+      <Globe2 className={compact ? "size-3.5 text-muted-foreground" : "size-4 text-muted-foreground"} aria-hidden="true" />
+      <select
+        className={
+          compact
+            ? "h-8 max-w-16 bg-transparent text-xs font-medium text-foreground outline-none disabled:opacity-60"
+            : "h-8 min-w-24 bg-transparent text-sm font-medium text-foreground outline-none disabled:opacity-60"
+        }
+        value={currentLanguage}
+        disabled={disabled}
+        aria-label={t("header.languageSelect")}
+        onChange={(event) => {
+          const language = resolveSupportedLanguage(event.target.value, currentLanguage)
+          void onChange(language)
+        }}
+      >
+        {supportedLanguageMetadata.map((language) => (
+          <option key={language.value} value={language.value}>
+            {compact ? language.compactLabel : language.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
+
 function MobileHomeHeader({
   headerRef,
   appVersion,
@@ -60,6 +111,7 @@ function MobileHomeHeader({
   productLinks,
   shareLabel,
   shareState,
+  isApplyingLanguage,
   changeLanguage,
   shareCurrentSite,
   toggleTheme,
@@ -73,21 +125,13 @@ function MobileHomeHeader({
         <BrandMark compact name={t("site.name")} tagline={t("site.tagline")} />
 
         <div className="flex shrink-0 items-center gap-2">
-          <div className="inline-flex items-center rounded-full border border-border/80 bg-background p-1 shadow-[var(--shadow-button)]">
-            {languages.map((language) => (
-              <Button
-                key={language}
-                type="button"
-                size="sm"
-                variant={currentLanguage === language ? "default" : "ghost"}
-                className="h-8 min-w-10 px-2.5"
-                onClick={() => void changeLanguage(language)}
-                aria-pressed={currentLanguage === language}
-              >
-                {language === "zh-CN" ? "中" : "EN"}
-              </Button>
-            ))}
-          </div>
+          <LanguageControls
+            compact
+            currentLanguage={currentLanguage}
+            disabled={isApplyingLanguage}
+            onChange={changeLanguage}
+            t={t}
+          />
 
           <Button
             type="button"
@@ -181,8 +225,9 @@ export const HomeHeader = forwardRef<HTMLElement>(function HomeHeader(_, ref) {
   const isMobile = useIsMobile()
   const appVersion = formatAppVersion(getAppVersion())
   const { shareState, shareCurrentSite } = useShareCurrentSite()
+  const [isApplyingLanguage, setIsApplyingLanguage] = useState(false)
 
-  const currentLanguage = (i18n.resolvedLanguage || "zh-CN") as SupportedLanguage
+  const currentLanguage = resolveSupportedLanguage(i18n.resolvedLanguage || i18n.language || getResolvedLanguage())
   const productLinks = useMemo<ProductLink[]>(
     () => [
       {
@@ -202,8 +247,12 @@ export const HomeHeader = forwardRef<HTMLElement>(function HomeHeader(_, ref) {
   )
 
   async function changeLanguage(language: SupportedLanguage) {
-    dispatch(setLocale(language))
-    await i18n.changeLanguage(language)
+    setIsApplyingLanguage(true)
+    try {
+      await applyLanguagePreference(language, { dispatch })
+    } finally {
+      setIsApplyingLanguage(false)
+    }
   }
 
   function toggleTheme() {
@@ -226,6 +275,7 @@ export const HomeHeader = forwardRef<HTMLElement>(function HomeHeader(_, ref) {
         productLinks={productLinks}
         shareLabel={shareLabel}
         shareState={shareState}
+        isApplyingLanguage={isApplyingLanguage}
         changeLanguage={changeLanguage}
         shareCurrentSite={shareCurrentSite}
         toggleTheme={toggleTheme}
@@ -271,22 +321,12 @@ export const HomeHeader = forwardRef<HTMLElement>(function HomeHeader(_, ref) {
             {shareLabel}
           </Button>
 
-          <div className="inline-flex items-center rounded-full border border-border/80 bg-background p-1 shadow-[var(--shadow-button)]">
-            {languages.map((language) => (
-              <Button
-                key={language}
-                type="button"
-                size="sm"
-                variant={currentLanguage === language ? "default" : "ghost"}
-                className="h-8 px-3"
-                onClick={() => void changeLanguage(language)}
-                aria-pressed={currentLanguage === language}
-              >
-                <Globe2 className="size-3.5" aria-hidden="true" />
-                {language === "zh-CN" ? "中文" : "EN"}
-              </Button>
-            ))}
-          </div>
+          <LanguageControls
+            currentLanguage={currentLanguage}
+            disabled={isApplyingLanguage}
+            onChange={changeLanguage}
+            t={t}
+          />
 
           <Button
             type="button"

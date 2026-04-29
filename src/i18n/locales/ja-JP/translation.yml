@@ -1,0 +1,462 @@
+site:
+  name: AI に仕事を奪われる?
+  tagline: Agent 時代、あなたが置き換えられる側かをざっくり試算します。
+header:
+  badge: Agent 時代の生産性診断
+  themeToggle: テーマの切り替え
+  navigationLabel: ホームナビゲーション
+  poweredBy: このサイトは HagiCode で構築されています。関連リンクはこちらです。
+  share: このページを共有する
+  shareCopied: リンクがコピーされました
+  shareFailed: コピーに失敗しました
+  shareAria: 現在のページのリンクをコピーします
+  versionLabel: バージョン
+  links:
+    official: HagiCode ウェブサイト
+    docs: HagiCode ドキュメント
+    builder: Docker Compose Builder
+  languageSelect: 言語を選択
+  languageMore: その他
+accessibility:
+  skipToContent: メインコンテンツにスキップ
+share:
+  currentSite: このページを共有
+  currentSiteAria: 言語とテーマの設定を含む現在のページのリンクをコピーします。
+  copied: リンクがコピーされました
+  failed: コピーに失敗しました
+assessment:
+  hero:
+    title: Agent 時代、あなたが置き換えられる側かを試算します。
+    subtitle: 年収、よく使うモデル、体感の効率倍率、1 日の実際の Token 消費量を入力してください。
+  form:
+    currency: 給与の通貨は?
+    regionHint: '現在のデフォルト地域: {{region}}。明示的な URL 値と手動編集が引き続き有効です。'
+    currencyHint: '収入のプリセットとカスタム入力は、選択した通貨に応じて切り替わります。現在の入力ユニット: {{unit}}。'
+    exchangeRateHint: USD を選ぶと、内部では 1 USD = {{rate}} CNY で換算します。
+    incomeAmount: あなたの年収はいくらですか？ ({{unit}})
+    incomePlaceholder: 例えば{{example}}
+    incomeCustom: カスタム金額
+    incomeCustomHint: 実際の年収を {{unit}} 単位で入力してください。
+    presetHint: プリセットボタンとカスタム入力は同じ単位（{{unit}}）です。
+    units:
+      cny: 1万 CNY
+      usd: 千 USD
+    city: あなたの働き方に最も近い都市区分は?
+    job: 職種
+    selectPlaceholder: 選択してください
+    submit: 計算を始める
+    error:
+      incomplete: すべてのフィールドに入力してください
+    model: どのモデルをよく使用しますか?
+    performanceMultiplier: そのモデルを使うと、以前の何倍くらい効率が上がりますか?
+    performanceMultiplierPlaceholder: 例えば2.5
+    dailyTokenUsage: そのモデルで 1 日あたりどれくらいの M Token を使いますか?
+    dailyTokenUsagePlaceholder: 例えば12
+  regions:
+    cn-mainland: 中国本土
+    international: 国際
+  cities:
+    tier1: 北京 / 上海 / 深セン / 広州
+    new-tier1: 杭州 / 成都 / 蘇州 / 南京
+    tier2: 武漢 / 西安 / 天津 / 鄭州
+    other: 宜昌 / 洛陽 / 南充 / 上饒
+  jobs:
+    backend: バックエンド
+    frontend: フロントエンド
+    qa: QA/テスト
+    product: プロダクト
+    ui: UIデザイン
+    operations: 運営
+    admin: 管理
+    other: その他
+  titles:
+    eyebrow: 特別なタイトル
+    title: 特別称号パネル
+    subtitle: 入力側と結果側の条件をまとめて評価し、この Agent の使い方がどんなプレイヤー像に近いかを表示します。
+    zeroTokenHint: 今回は Token 消費が 0 のため通常計算は行いませんが、現在の入力で獲得条件を満たす称号は判定できます。
+    progress: '{{matched}} / {{total}} 個の称号を達成'
+    states:
+      newly-earned: 新規獲得
+      earned: 獲得済み
+      locked: 未達成
+    origins:
+      input: 入力側トリガー
+      output: 結果側トリガー
+    explainers:
+      input: 入力側の条件です。現在のフォーム内容だけで獲得できます。
+      output: 結果側の条件です。通常計算の結果が指定のしきい値を超える必要があります。
+    catalog:
+      craftsmanSpirit:
+        name: 職人魂
+        description: 日次 Token = 0 で、年収・都市・モデル・効率倍率はすべて入力済み。まずはワークフローを磨き切ってから Token を使うタイプです。
+      promptAlchemist:
+        name: Prompt 錬金術師
+        description: 効率倍率 >= 6 かつ 0 < 日次 Token <= 20。過剰ではない Token 消費で、大きな効率向上を引き出しています。
+      allInOperator:
+        name: オールインオペレーター
+        description: 日次 Token >= 150 かつ効率倍率 >= 3。高投入・高強度で Agent を回す典型的なスタイルです。
+      minimalistRunner:
+        name: ミニマリストランナー
+        description: 0 < 日次 Token <= 5 かつ効率倍率 >= 2。ごく小さな予算でも、実用的なワークフローを維持しています。
+      costTamer:
+        name: コストテイマー
+        description: AI 投入対効果 >= 2.5 で、AI コスト比率は <= 15%。コストとリターンのバランスがかなりきれいです。
+      dangerOracle:
+        name: デンジャー・オラクル
+        description: 等価人員が >= 2.5、または危険度が高リスク帯に入っています。「拡張された同僚」の圧力を、かなり現実的に感じ始めている状態です。
+      budgetCoordinator:
+        name: 予算コーディネーター
+        description: 現在の予算で、同等のワークフローを 8 本以上まかなえます。このやり方は回るだけでなく、横展開もしやすいです。
+    overlay:
+      eyebrow: 獲得したタイトル
+      title: 新しいタイトルのロックが解除されました
+      description: 常設パネルではなく、条件を初めて満たした瞬間にだけ全画面で表示され、その後通常画面に戻ります。
+      footer: 全画面表示は初回獲得時のみです。同じ条件を再度満たしても、繰り返し表示されません。
+      action: ページに戻る
+    toast:
+      title: 新たな称号を獲得
+      description: 'ロック解除: {{titles}}'
+loading:
+  title: AI に置き換えられるリスクを計算中...
+  steps:
+    cost: 総雇用コストの計算
+    pricing: AI モデルの価格のベンチマーク
+    replacement: 職種の代替可能性を分析
+    timeline: 置換タイムラインを生成
+results:
+  countdown:
+    title: AI 置換リスク カウントダウン
+    remaining: AI に置き換えられるまで、あと
+    days: 日
+    weeks: 週
+    replacementRate: 職種の代替率
+    aiWorkHours: AI があなたの 1 週間分の仕事を終えるまでの時間
+    efficiencyWeeks: 効率ギャップ
+  cost:
+    title: モデルコストと Token 予算
+    annualTotalCost: 年間雇用コストの合計
+    preTaxBase: 税引前の年間ベース
+    tokenTitle: Token 購買力
+    calcBasis: 'コードシナリオ: 入力:出力比 {{ratio}}:1'
+    pureInput: 純入力 Token
+    pureOutput: 純出力 Token
+    totalTokens: トークンの総予算上限
+    mixDetail: 合計 (入力:出力 {{ratio}}:1)
+    mixInput: うち入力 Token
+    mixOutput: うち出力 Token
+    tokens: トークン
+    officialSource: 公式ソース
+    pricingContext: 価格設定のコンテキスト
+    unitInputPrice: 入力価格 / 100 万トークン
+    unitOutputPrice: 出力価格 / 100万トークン
+    cacheReadPrice: キャッシュ読み取り / 100 万トークン
+    cacheWritePrice: キャッシュ書き込み / 1M トークン
+    priceNote: 注記
+    workdayAverage: '{{days}} 勤務日の平均: {{tokens}} / 日'
+    subtitle: お客様が選択したモデル、乗数、毎日のトークン需要を年間コストに換算します。
+    mixedPrice: 3:1の比率でブレンドした価格
+    dailyTokenUsage: 記載されている毎日のトークンの使用量
+    dailyAiCost: 1 日あたりの AI コスト
+    annualAiCost: 年間 AI コスト
+    budgetTokenTitle: 年間雇用予算の全額がトークン予算になった場合
+    budgetTokenDesc: その雇用予算で、同じモデル・同じ比率の Token を最大どれだけ買えるかを見てみましょう。
+    workdayTokenAverage: 勤務日あたりの平均
+    annualTokenUsage: 現在の想定での年間トークン使用量
+    collapseLabel: モデルのコストとトークンの予算の詳細を表示する
+    collapseAria: 展開してモデルのコストとトークンの予算の詳細を表示します
+  peer:
+    title: ピアベンチマーク
+    percentile: 給与パーセンタイル
+    percentileDesc: 同じ役割を持つ同僚の中でのあなたの収入上の地位
+    aiAdoption: AI 導入率
+    aiAdoptionDesc: AI ツールを使用する役割の割合
+    headcountReduction: 人員削減
+    headcountDesc: この役割の人員削減が予想される
+  share:
+    title: 警告通知と共有
+    job: 役割
+    cost: 年間コスト
+    countdown: カウントダウン
+    risk: リスクレベル
+    savePoster: 警告通知を保存
+    copyText: 共有テキストをコピー
+    copy: コピー
+  ranking:
+    title: 業界別 代替リスクランキング
+    red: 高リスク
+    black: 管理可能
+  compliance:
+    title: データに関する注意事項と免責事項
+    disclaimer: この結果には、公開モデルの価格に加えて、独自の主観的な生産性の仮定が使用されています。これは、Agent 時代のレバレッジのみを理解するためのものであり、キャリア、法的、財務上のアドバイスではありません。
+    noCollection: このサイトは、フォームに入力されたデータを収集、アップロード、または保存しません。すべての計算は現在のブラウザ ページ内に留まります。
+    dataUpdated: ベンチマークデータが更新されました
+    pricingUpdated: 価格データが更新されました
+    referenceTitle: 価格の参照リンク
+  retry: もう一度計算する
+  summary:
+    heading: 'ひとまず、同僚の年収があなたと同程度だとすると、その同僚は:'
+    annualIncome: あなたの年収
+    performanceMultiplier: あなたの推定生産性乗数
+    dailyTokenUsage: 毎日のトークンの使用量
+    annualAiCost: この強度で見積もった年間 AI コスト
+    salaryShare: 年間総雇用コストに占める割合
+    dangerScale: 同僚脅威スケール
+    detailAria: '{{label}} の計算の詳細を表示する'
+    costEffectiveness: AI の費用対効果
+    costEffectivenessScale: AI 費用対効果スケール
+    affordableWorkflow: 予算でカバーできる同等の Agent ワークフロー
+    dailyAiCost: 1 日あたりの AI コスト
+    peopleEquivalent: あなた + AI の実質人員
+    totalEmploymentCost: 年間雇用コストの合計
+    closeDetail: 閉じる
+    detailCollapseLabel: 詳細データの表示 (給与、効率、トークン、コスト)
+    detailCollapseAria: 展開して詳細な給与、効率乗数、トークンの使用量、およびコストのデータを表示します
+  tokenList:
+    title: Token の完全な購買力リスト
+    subtitle: 年間総雇用コスト {{annualTotalCost}} に基づいて、元の完全なトークンの内訳が維持されます。
+  hagicode:
+    heading: Hagicode を使って効率をさらに引き上げたら?
+    subtitle: Hagicode は複数の Agent を並列で動かし、提案・実装・修正・レビューを順番待ちではなく同時進行に変えます。下のスライダーで並列セッション数を調整すると、同僚脅威度と AI 費用対効果をすぐに再計算します。
+    multiplierLabel: 並列セッション
+    sliderLabel: 並列セッション
+    sliderHint: 1.5 ～ 10 の間でスライドして、Hagicode が同時に管理する並列セッションの数を設定します。並列セッションが増えると、主観的な効率がさらに向上します。
+    utilizationLabel: Token 使用率の向上
+    utilizationHint: 1.1 と 2.0 の間でスライドします。使用率が高いということは、OpenSpec の手戻り、誤用、幻覚が減少することを意味するため、実際のトークンの支出は同じ目標出力の下で薄められます。
+    utilizationCompact: Token 使用率 {{value}}
+    currentLabel: 今
+    boostedLabel: Hagicode 後
+    beforeAfterLabel: 現在 -> ハギコード後
+    afterBoostLabel: Hagicode 適用後
+    scaledEfficiency: 並列セッションスケーリング後の生産性
+    scaledTokenUsage: スケールされた毎日のトークン使用量
+    scaledAnnualAiCost: 年間AIコストの規模調整
+    syncResult: 同期した見出しの影響
+    syncFormula: 同僚の脅威 {{threatBefore}} -> {{threatAfter}}、AI 値 {{valueBefore}} -> {{valueAfter}}
+    modelLabel: 改訂されたトークンモデル
+    modelFormula: >-
+      新しいトークンの支出 = ベース {{base}} x ハギコード {{boost}} ÷ トークン使用率 {{utilization}} = {{final}}。言い換えれば、まず {{raw}}
+      まで拡張され、その後標準化されたワークフロー効率によって有効支出が {{final}} まで引き下げられます。
+    scaledAnnualAiCostFormula: '{{tokenUsage}} × モデル単価 = {{cost}}'
+    detailCollapseLabel: 詳細な比較を表示
+    detailCollapseAria: 展開して詳細な効率、トークン、コストの比較データを表示します
+footer:
+  disclaimerTitle: 免責事項
+  disclaimer: このページは、Agent ワークフローが個々の出力をどのように増幅するかを説明するのに役立ちます。本当のリスクは AI だけではなく、すでに反復可能なシステムとしてそれを使用している同僚にあります。
+  copyright: HAGICODE AI APPLICATION SITE · 2026
+  extensionNote: このページのモデルの価格、計算式、結論は、Agent ワークフローのコストと活用のみを理解するためのものであり、投資、採用、またはキャリアに関するアドバイスではありません。
+  registrationLabel: 登録
+  registrationAria:
+    icp: ICP の申請情報を表示する
+    publicSecurity: 公安申告情報の表示
+  linksTitle: 関連リンク
+  links:
+    website: HagiCode ウェブサイト
+    docs: ドキュメント
+    github: GitHub リポジトリ
+    steam: Steam
+    pricing: 価格のリファレンス
+featureShowcase:
+  section:
+    eyebrow: HAGICODE 機能紹介
+    title: Hagicode の 3 つの中核機能
+  smart:
+    badge: スマート
+    title: スマート
+    subtitle: アイデアをより早く実装へつなぐ OpenSpec ワークフロー
+    description: アイデア、提案、レビューからコード、テスト、アーカイブまで、Hagicode は AI コーディングを一回きりのチャットから、チームで追跡・監査・再利用できるワークフローへ変えます。
+    efficiencyLabel: ワークフロー効率の向上
+    efficiencyValue: 300%
+    comparison:
+      traditional: 従来のシリアルフロー
+      hagicode: ハギコード + OpenSpec
+    workflowTitle: 9 段階の OpenSpec ワークフロー
+    workflowHint: Idea から Archive まで、公式サイトのパネル順に並んでいます。
+    workflow:
+      idea:
+        label: アイデア
+        description: 明確な目標と範囲から始める
+      proposal:
+        label: 提案
+        description: AI に提案と影響の概要の草案を作成してもらいましょう
+      review:
+        label: レビュー
+        description: 実装を開始する前に計画を確認する
+      tasks:
+        label: タスク
+        description: 作業を実行可能なステップに分割する
+      code:
+        label: コード
+        description: 安定したプロジェクトコンテキストで実装する
+      test:
+        label: テスト
+        description: 動作と回帰カバレッジを検証する
+      refactor:
+        label: リファクタリング
+        description: 検証後に構造を磨き上げる
+      docs:
+        label: ドキュメント
+        description: ドキュメントと再利用可能なナレッジを公開する
+      archive:
+        label: アーカイブ
+        description: 将来の再利用のために結果をアーカイブする
+  efficient:
+    badge: 高効率
+    title: 高効率
+    subtitle: クォータを遊ばせない、マルチ Agent・マルチインスタンス実行
+    description: Claude Code、Codex などの CLI Agent は複数インスタンスを同時に回せるため、提案、修正、レビュー、補助タスクを単一キューで待たせず、並列に進められます。
+    comparison:
+      traditional: 従来の単一エージェント/単一インスタンス
+      multiAgent: マルチエージェント並列マトリックス
+    throughputLabel: スループットの向上
+    throughputValue: 10x+パラレル
+    providersTitle: 現在サポートされている CLI
+    supportedProviders:
+      - ClaudeCodeCli
+      - CodexCli
+      - GitHubCopilot
+      - CodebuddyCli
+      - OpenCodeCli
+      - IFlowCli
+    matrix:
+      title: 並列実行マトリックス
+      badge: 複数のエージェント/複数のインスタンス
+      status: 現在、複数のエージェントが複数のインスタンスを駆動しています
+      agents:
+        claude:
+          name: Claude Code
+          role: 提案 / レビュー
+          instances:
+            - Spec 草案
+            - 設計確認
+            - アーカイブレビュー
+        codex:
+          name: Codex
+          role: 実装/修正
+          instances:
+            - 機能 A を実装
+            - 機能 B を実装
+            - 回帰修正
+        router:
+          name: Qwen · GLM
+          role: 分析・サポート
+          instances:
+            - 課題調査
+            - 文案磨き
+            - 知見整理
+  interesting:
+    badge: 面白い
+    title: 面白い
+    subtitle: Hero Dungeon が学習、協業、レビューを“進行する冒険”に変えます
+    description: >-
+      Prompt ワークベンチ、提案ダンジョン、キャプテン名簿、戦闘レポートは同じビジュアル ワークフロー内に存在するため、キャンパスの研究室、学生チーム、製品チームは、単に「AI
+      を使用する」というよりも、調整された冒険を進めているように感じられます。
+    featurePills:
+      dungeons:
+        label: Hero ダンジョン
+        description: 生成、実行、プロンプトのワークベンチをダンジョンの実行に変える
+      captains:
+        label: キャプテン名簿
+        description: 各ダンジョンに適切なヒーローキャプテンを割り当てます
+      battle:
+        label: バトルレポート
+        description: 各プッシュ後に XP、レベル、実行結果を確認する
+    dungeonCards:
+      proposal:
+        title: Proposal ダンジョン
+        description: OpenSpec の generate / apply / archive
+        status: キャプテン準備完了
+      autotask:
+        title: AutoTask ダンジョン
+        description: 並行修正とバッチ自動化
+        status: 2 つのインスタンスがアクティブです
+      prompt:
+        title: Prompt ダンジョン
+        description: Prompt プレビューおよびスタイル ワークベンチ
+        status: ビジュアル同期の準備完了
+    battleReport:
+      title: 今日のダンジョンレポート
+      badge: Hero 戦闘
+      note: 複数のダンジョンが並行して進むと、レポートには経験値、レベル、実行結果がひとつの共通表示として集約されます。
+      metrics:
+        dungeons:
+          value: '4'
+          label: 進行したダンジョン
+        level:
+          value: Lv.27
+          label: キャプテンレベル
+        xp:
+          value: 1280万
+          label: 今日のXP
+    roster:
+      title: 現在のキャプテン名簿
+      heroes:
+        strategist:
+          name: スペックストラテジスト
+          role: 提案キャプテン
+        runner:
+          name: パッチランナー
+          role: 実行キャプテン
+        artist:
+          name: Prompt Artist
+          role: ビジュアル支援
+    gallery:
+      dungeons:
+        title: ダンジョンマップカルーセル
+        subtitle: 公式ホームページのギャラリーからコピーされた 10 枚のダンジョン ビジュアルは、提案、実行、プロンプト マップの雰囲気をそのままにしています。
+      heroes:
+        title: Hero ギャラリー カルーセル
+        subtitle: コピーされた 10 個のヒーローのビジュアルは、ソース ショーケースの名簿、役割、ストーリーテリングのスタイルを保持しています。
+      images:
+        dungeons:
+          docsEditorialStillLife: 編集用静物ワークスペースのダンジョン ギャラリー画像
+          proposalFfFuturistPoster: ダンジョンギャラリーの未来派プロポーズポスターのイメージ
+          annotationNotebookScrapbook: ダンジョンギャラリー注釈ノートスクラップブックのイメージ
+          proposalNameBadgeForge: ダンジョンギャラリー 偽造プロポーズ名札イメージ
+          proposalNewFantasySketch: ダンジョンギャラリーの新しいファンタジープロポーズスケッチのイメージ
+          indexBlueprintNetwork: ダンジョンギャラリーの青写真ネットワークインデックスのイメージ
+          proposalApplyCyberForge: サイバーフォージ適用シーンのダンジョンギャラリー画像
+          descriptionSoftEditorialRoom: ソフト編集室のダンジョンギャラリーイメージ
+          titleMinimalEditorial: 最小限の編集タイトル研究のダンジョン ギャラリー画像
+          proposalExploreAbstractAtlas: 抽象的なアトラス探索提案のダンジョン ギャラリー画像
+        heroes:
+          catLine03: Hero ラインアートの猫キャプテンのギャラリー画像
+          catInk09: Hero 墨猫船長のギャラリー画像
+          catSticker02: Hero ステッカー猫キャプテン A のギャラリー画像
+          catSticker08: Hero ステッカー猫キャプテン B のギャラリー画像
+          thorn06: Hero とげをテーマにしたヒーローのギャラリー画像
+          catPaper04: Hero 紙コラージュの猫ヒーローのギャラリー画像
+          tide09: Hero 潮をテーマにしたヒーローのギャラリー画像
+          royal10: Hero 王室をテーマにしたヒーローのギャラリー画像
+          catOil09: Hero 油絵の猫ヒーローのギャラリー画像
+          aurora04: Hero オーロラをテーマにしたヒーローのギャラリー画像
+promotion:
+  sectionLabel: プロモーション
+  badgeFallback: 昇格
+  closeLabel: 昇進を却下する
+seo:
+  home:
+    title: Agent 時代のレバレッジで仕事は置き換わる? | HagiCode
+    description: 年収、よく使うモデル、効率倍率、1 日の Token 使用量を入力して、AI を加えた今の自分が 2 人分以上かどうかを試算します。
+    siteName: AI に仕事を奪われる?
+    keywords:
+      - Agent
+      - AI 生産性
+      - トークンコスト
+      - モデルの価格設定
+      - AI コラボレーション
+      - キャリアレバレッジ
+      - HagiCode
+shareTemplates:
+  verdict: >-
+    今の設定だと、私の年収基準は {{annualIncome}}、年間の総雇用コストは {{annualTotalCost}}。同僚が {{modelName}} を使えば、
+    {{effectivePeopleEquivalent}} 相当まで伸びる可能性があります。 {{verdictHeadline}}
+  costImpact: >-
+    試算してみると、私にかかる年間総雇用コストは {{annualTotalCost}}、この強度での年間 AI 支出は約 {{annualAiCost}}。同僚も {{modelName}} を使えば、
+    およそ {{effectivePeopleEquivalent}} 相当まで伸びます。 {{exchangeRateText}}
+  challenge: >-
+    同僚が同じ {{modelName}} ワークフローを回したら、{{effectivePeopleEquivalent}} 相当まで伸びるかもしれません。私にかかる年間総雇用コストは
+    {{annualTotalCost}}、年間 AI 支出は約 {{annualAiCost}}。あなたも試してみてください。 {{exchangeRateText}}
+assessmentAvailability:
+  available: 利用可能
+  comingSoon: 近日公開
+  legacyMapped: マッピングされたレガシー ID

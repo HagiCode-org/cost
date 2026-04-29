@@ -1,0 +1,525 @@
+site:
+  name: ¿AI me reemplazará?
+  tagline: Calcule si el apalancamiento de la era Agent cambia su reemplazabilidad.
+header:
+  badge: Agent Calculadora de productividad
+  themeToggle: Alternar tema
+  navigationLabel: Navegación de la página de inicio
+  poweredBy: Este sitio está construido con HagiCode. Explore los enlaces relacionados aquí.
+  share: Comparte esta página
+  shareCopied: Enlace copiado
+  shareFailed: Copia fallida
+  shareAria: Copiar el enlace de la página actual
+  versionLabel: Versión
+  links:
+    official: Sitio web HagiCode
+    docs: HagiCode documentos
+    builder: Docker Compose Builder
+  languageSelect: Seleccionar idioma
+  languageMore: Más
+accessibility:
+  skipToContent: Saltar al contenido principal
+share:
+  currentSite: Comparte esta vista
+  currentSiteAria: Copie el enlace de la página actual, incluida la configuración de idioma y tema.
+  copied: Enlace copiado
+  failed: Copia fallida
+assessment:
+  hero:
+    title: Calcula si la era Agent te hace reemplazable.
+    subtitle: Ingrese su salario, modelo familiar, multiplicador de productividad percibido y su demanda real de tokens diaria.
+  form:
+    currency: ¿Qué moneda salarial utilizas?
+    regionHint: 'Región predeterminada actual: {{region}}. Los valores de URL explícitos y las ediciones manuales siguen ganando.'
+    currencyHint: >-
+      Ajustes preestablecidos de ingresos y cambio de entrada personalizado con la moneda seleccionada. Unidad de
+      entrada actual: {{unit}}.
+    exchangeRateHint: Si elige USD, la calculadora se normaliza con 1 USD = {{rate}} CNY.
+    incomeAmount: ¿Cuál es su salario anual? ({{unit}})
+    incomePlaceholder: p.ej. {{example}}
+    incomeCustom: Cantidad personalizada
+    incomeCustomHint: Ingrese su salario anual real en {{unit}}.
+    presetHint: 'Los botones preestablecidos y la entrada personalizada usan la misma unidad: {{unit}}.'
+    units:
+      cny: 10k CNY
+      usd: k USD
+    city: ¿Qué ciudad típica está más cerca de la tuya?
+    job: Rol laboral
+    selectPlaceholder: Seleccionar...
+    submit: Ejecute la estimación
+    error:
+      incomplete: Por favor complete todos los campos
+    model: ¿Qué modelo usas más?
+    performanceMultiplier: Con ese modelo, ¿cuántas veces más eficiente eres que antes?
+    performanceMultiplierPlaceholder: p.ej. 2.5
+    dailyTokenUsage: ¿Cuántos tokens M necesitas aproximadamente por día?
+    dailyTokenUsagePlaceholder: p.ej. 12
+  regions:
+    cn-mainland: China continental
+    international: Internacional
+  cities:
+    tier1: Pekín / Shanghái / Shenzhen / Cantón
+    new-tier1: Hangzhou / Chengdu / Suzhou / Nanjing
+    tier2: Wuhan / Xi'an / Tianjin / Zhengzhou
+    other: Yichang / Luoyang / Nanchong / Shangrao
+  jobs:
+    backend: backend
+    frontend: Interfaz
+    qa: Control de calidad/pruebas
+    product: Producto
+    ui: Diseño de interfaz de usuario
+    operations: Operaciones
+    admin: Administración
+    other: Otro
+  titles:
+    eyebrow: TÍTULOS ESPECIALES
+    title: tablero de título especial
+    subtitle: >-
+      Las reglas del lado de entrada y del lado de resultados se evalúan juntas para que la página pueda indicarle a qué
+      tipo de operador Agent se parece esta configuración.
+    zeroTokenHint: >-
+      No gastaste tokens, por lo que se omite la estimación normal para esta ejecución, pero aún podemos juzgar qué
+      títulos desbloquea tu configuración actual.
+    progress: '{{matched}} / {{total}} títulos coincidentes'
+    states:
+      newly-earned: recién ganado
+      earned: Ganado
+      locked: bloqueado
+    origins:
+      input: Gatillo del lado de entrada
+      output: Activador del lado del resultado
+    explainers:
+      input: >-
+        Desde una regla del lado de entrada: los valores del formulario actual por sí solos son suficientes para
+        desbloquearlo.
+      output: 'Desde una regla del lado de los resultados: la estimación normal debe cruzar los umbrales requeridos.'
+    catalog:
+      craftsmanSpirit:
+        name: Espíritu artesano
+        description: >-
+          Fichas diarias = 0, mientras que el salario, la ciudad, el modelo y el multiplicador son todos válidos. Está
+          refinando el flujo de trabajo antes de decidir gastar tokens.
+      promptAlchemist:
+        name: Prompt Alquimista
+        description: >-
+          Multiplicador de rendimiento >= 6 y 0 <tokens diarios <= 20. Estás obteniendo un gran apalancamiento de un
+          presupuesto de tokens aún disciplinado.
+      allInOperator:
+        name: Operador integral
+        description: >-
+          Tokens diarios >= 150 y multiplicador de rendimiento >= 3. Esta es la firma de un flujo de trabajo Agent de
+          alta intensidad y alto gasto.
+      minimalistRunner:
+        name: Corredor minimalista
+        description: >-
+          0 < tokens diarios <= 5 y multiplicador de rendimiento >= 2. Mantienes el flujo de trabajo útil incluso con un
+          presupuesto de tokens casi pequeño.
+      costTamer:
+        name: Domador de costos
+        description: >-
+          Rentabilidad >= 2,5 mientras que AI coste compartido se mantiene <= 15 %. Encontró un equilibrio notablemente
+          limpio entre gasto y rentabilidad.
+      dangerOracle:
+        name: Peligro Oráculo
+        description: >-
+          Personas efectivas equivalentes >= 2,5, o la escala de peligro ya entró en riesgo alto. Estás mirando la
+          presión real de un compañero de trabajo multiplicado.
+      budgetCoordinator:
+        name: Coordinador de Presupuesto
+        description: >-
+          El presupuesto actual puede sostener >= 8 flujos de trabajo equivalentes. Esta configuración no sólo es
+          viable, sino que también es fácil de escalar.
+    overlay:
+      eyebrow: TÍTULO ADQUIRIDO
+      title: Nuevo título desbloqueado
+      description: >-
+        Ya no hay un panel de título siempre activo. Cuando se obtiene un título por primera vez, se muestra en pantalla
+        completa y luego la página vuelve a la normalidad.
+      footer: >-
+        La revelación sólo ocurre en la primera adquisición. Al alcanzar la misma condición nuevamente no se
+        reproducirá.
+      action: volver a la pagina
+    toast:
+      title: Nuevo título obtenido
+      description: 'Desbloqueado: {{titles}}'
+loading:
+  title: Calculando su riesgo de reemplazo AI...
+  steps:
+    cost: Calcular el costo total del empleo
+    pricing: Comparación de precios del modelo AI
+    replacement: Análisis de la reemplazabilidad laboral
+    timeline: Generando cronograma de reemplazo
+results:
+  countdown:
+    title: AI Cuenta regresiva de reemplazo
+    remaining: Días hasta que AI pueda reemplazarte
+    days: días
+    weeks: semanas
+    replacementRate: Tasa de reemplazo de empleo
+    aiWorkHours: AI horas para igualar tu trabajo semanal
+    efficiencyWeeks: Brecha de eficiencia
+  cost:
+    title: Costo del modelo y presupuesto Token
+    annualTotalCost: Coste total anual del empleo
+    preTaxBase: Base anual antes de impuestos
+    tokenTitle: Token Poder adquisitivo
+    calcBasis: 'Escenario de código: relación entrada:salida {{ratio}}:1'
+    pureInput: Entrada pura Tokens
+    pureOutput: Salida pura Tokens
+    totalTokens: Límite presupuestario total de tokens
+    mixDetail: Total (entrada:salida {{ratio}}:1)
+    mixInput: Introduzca Tokens en la mezcla
+    mixOutput: Salida Tokens en mezcla
+    tokens: fichas
+    officialSource: fuente oficial
+    pricingContext: Contexto de precios
+    unitInputPrice: Precio de entrada / 1 millón de tokens
+    unitOutputPrice: Precio de salida / 1 millón de tokens
+    cacheReadPrice: Lectura de caché/1 millón de tokens
+    cacheWritePrice: Escritura de caché/1 millón de tokens
+    priceNote: Nota
+    workdayAverage: 'Promedio en {{days}} días laborables: {{tokens}}/día'
+    subtitle: Traducimos el modelo elegido, el multiplicador y la demanda diaria de tokens en costos anualizados.
+    mixedPrice: Precio combinado en una proporción de 3:1
+    dailyTokenUsage: Su uso diario de tokens declarado
+    dailyAiCost: Costo diario AI
+    annualAiCost: Costo anual AI
+    budgetTokenTitle: Si el presupuesto anual completo para el empleo se convirtiera en un presupuesto simbólico
+    budgetTokenDesc: ¿Cuántas fichas podría comprar ese presupuesto de pleno empleo con el mismo modelo y proporción?
+    workdayTokenAverage: Promedio por jornada laboral
+    annualTokenUsage: Uso anual de tokens según su supuesto actual
+    collapseLabel: Ver detalles del costo del modelo y del presupuesto simbólico
+    collapseAria: Ampliar para ver el costo del modelo y los detalles del presupuesto simbólico
+  peer:
+    title: Punto de referencia de pares
+    percentile: Percentil salarial
+    percentileDesc: Su posición de ingresos entre pares con el mismo rol
+    aiAdoption: AI Tasa de adopción
+    aiAdoptionDesc: Porcentaje de roles que utilizan herramientas AI
+    headcountReduction: Reducción de personal
+    headcountDesc: Reducción esperada en la plantilla de este puesto.
+  share:
+    title: Aviso de advertencia y uso compartido
+    job: Role
+    cost: Costo Anual
+    countdown: Cuenta atrás
+    risk: Nivel de riesgo
+    savePoster: Guardar aviso de advertencia
+    copyText: Copiar compartir texto
+    copy: Copiar
+  ranking:
+    title: Clasificaciones de reemplazo de la industria
+    red: Alto riesgo
+    black: Manejable
+  compliance:
+    title: Notas de datos y descargo de responsabilidad
+    disclaimer: >-
+      Este resultado utiliza precios de modelos públicos más sus propios supuestos de productividad subjetivos. Su
+      objetivo es comprender únicamente el apalancamiento de la era Agent, no asesoramiento profesional, legal o
+      financiero.
+    noCollection: >-
+      Este sitio no recopila, carga ni almacena ningún dato que usted ingrese en el formulario; Todos los cálculos
+      permanecen dentro de la página actual de su navegador.
+    dataUpdated: Datos de referencia actualizados
+    pricingUpdated: Datos de precios actualizados
+    referenceTitle: Enlaces de referencia de precios
+  retry: Volver a calcular
+  summary:
+    heading: 'Si asumimos que un compañero gana más o menos lo mismo que tú, podría:'
+    annualIncome: Tu salario anual
+    performanceMultiplier: Su multiplicador de productividad estimado
+    dailyTokenUsage: Su uso diario de tokens
+    annualAiCost: Costo anual estimado AI
+    salaryShare: Proporción del costo total anual del empleo
+    dangerScale: Escala de amenaza de compañeros de trabajo
+    detailAria: Ver detalles de cálculo para {{label}}
+    costEffectiveness: AI rentabilidad
+    costEffectivenessScale: AI escala de valores
+    affordableWorkflow: Agent flujos de trabajo equivalentes que su presupuesto puede cubrir
+    dailyAiCost: Costo diario AI
+    peopleEquivalent: Usted + AI equivalente laboral
+    totalEmploymentCost: Coste total anual del empleo
+    closeDetail: Cerrar
+    detailCollapseLabel: Ver datos detallados (salario, eficiencia, tokens, costo)
+    detailCollapseAria: Ampliar para ver salarios detallados, multiplicador de eficiencia, uso de tokens y datos de costos
+  tokenList:
+    title: Lista completa de poder adquisitivo Token
+    subtitle: >-
+      Basado en el costo total de empleo anual de {{annualTotalCost}}, esto mantiene el desglose completo del token
+      original.
+  hagicode:
+    heading: ¿Qué pasaría si Hagicode amplificara su eficiencia?
+    subtitle: >-
+      Hagicode puede impulsar múltiples agentes en paralelo, convirtiendo la propuesta, implementación, correcciones y
+      revisión de esperas en serie en progreso paralelo. Ajuste el control deslizante a continuación e inmediatamente
+      volveremos a calcular la amenaza de los compañeros de trabajo y el valor AI según este modelo revisado.
+    multiplierLabel: Sesiones paralelas
+    sliderLabel: Sesiones paralelas
+    sliderHint: >-
+      Deslice entre 1,5 y 10 para establecer cuántas sesiones paralelas gestiona Hagicode simultáneamente. Más sesiones
+      paralelas significan una mayor amplificación de la eficiencia subjetiva.
+    utilizationLabel: Token aumento de utilización
+    utilizationHint: >-
+      Desliza entre 1.1 y 2.0. Una mayor utilización significa que OpenSpec reduce el retrabajo, el mal uso y las
+      alucinaciones, por lo que el gasto real en tokens se diluye bajo el mismo resultado objetivo.
+    utilizationCompact: Token utilización {{value}}
+    currentLabel: Ahora
+    boostedLabel: Después de Hagicode
+    beforeAfterLabel: Ahora -> Después de Hagicode
+    afterBoostLabel: Después del impulso de Hagicode
+    scaledEfficiency: Productividad después del escalado de sesiones paralelas
+    scaledTokenUsage: Uso de token diario escalado
+    scaledAnnualAiCost: Costo anual escalado AI
+    syncResult: Impacto de titulares sincronizado
+    syncFormula: Amenaza de compañero de trabajo {{threatBefore}} -> {{threatAfter}}, AI valor {{valueBefore}} -> {{valueAfter}}
+    modelLabel: Modelo de token revisado
+    modelFormula: >-
+      Nuevo gasto de token = base {{base}} x Hagicode {{boost}} ÷ utilización de token {{utilization}} = {{final}}. En
+      otras palabras, primero se expande a {{raw}}, luego la eficiencia del flujo de trabajo estandarizado reduce el
+      gasto efectivo a {{final}}.
+    scaledAnnualAiCostFormula: '{{tokenUsage}} × precio unitario del modelo = {{cost}}'
+    detailCollapseLabel: Ver comparación detallada
+    detailCollapseAria: Ampliar para ver datos detallados de comparación de costos, tokens y eficiencia
+footer:
+  disclaimerTitle: Descargo de responsabilidad
+  disclaimer: >-
+    Esta página ayuda a ilustrar cómo los flujos de trabajo Agent amplifican la producción individual. El riesgo real no
+    es solo AI, sino también los colegas que ya lo utilizan como sistema repetible.
+  copyright: HAGICODE AI SITIO DE APLICACIÓN · 2026
+  extensionNote: >-
+    Los precios de los modelos, las fórmulas y las conclusiones de esta página sirven únicamente para comprender el
+    costo y el apalancamiento del flujo de trabajo de Agent, no para la inversión, la contratación o el asesoramiento
+    profesional.
+  registrationLabel: Registro
+  registrationAria:
+    icp: Ver ICP información de presentación
+    publicSecurity: Ver información de presentación de seguridad pública
+  linksTitle: Enlaces relacionados
+  links:
+    website: Sitio web HagiCode
+    docs: Documentación
+    github: repositorio GitHub
+    steam: Steam
+    pricing: Referencia de precios
+featureShowcase:
+  section:
+    eyebrow: MUESTRA DE FUNCIONES DE HAGICODE
+    title: Las tres capacidades principales de Hagicode
+  smart:
+    badge: INTELIGENTE
+    title: Inteligente
+    subtitle: OpenSpec flujo de trabajo que lleva las ideas a la ejecución más rápido
+    description: >-
+      Desde ideas y propuestas hasta revisión, codificación, prueba y archivo, Hagicode convierte la codificación AI de
+      sesiones de chat únicas en un flujo de trabajo rastreado que los equipos pueden entregar, auditar y reutilizar.
+    efficiencyLabel: Aumento de la eficiencia del flujo de trabajo
+    efficiencyValue: 300%
+    comparison:
+      traditional: Flujo en serie tradicional
+      hagicode: Hagicode + OpenSpec
+    workflowTitle: Flujo de trabajo OpenSpec de nueve etapas
+    workflowHint: La secuencia coincide con el panel de la página de inicio de origen desde Idea hasta Archivo
+    workflow:
+      idea:
+        label: Idea
+        description: Comience con un objetivo y un alcance claros
+      proposal:
+        label: Propuesta
+        description: Deje que AI redacte la propuesta y el esquema de impacto.
+      review:
+        label: Revisar
+        description: Revisar el plan antes de que comience la implementación.
+      tasks:
+        label: Tareas
+        description: Divida el trabajo en pasos ejecutables.
+      code:
+        label: Código
+        description: Implementar con un contexto de proyecto estable
+      test:
+        label: Prueba
+        description: Verificar el comportamiento y la cobertura de regresión.
+      refactor:
+        label: Refactorizar
+        description: Pulir la estructura después de la validación.
+      docs:
+        label: Documentos
+        description: Publicar documentos y conocimientos reutilizables
+      archive:
+        label: Archivo
+        description: Archivar el resultado para reutilizarlo en el futuro
+  efficient:
+    badge: EFICIENTE
+    title: Eficiente
+    subtitle: Ejecución de múltiples agentes y múltiples instancias que mantiene ocupada su cuota
+    description: >-
+      Claude Code, Codex y otros agentes CLI pueden controlar varias instancias al mismo tiempo, por lo que las
+      propuestas, correcciones, revisiones y tareas de soporte se mueven en paralelo en lugar de esperar en una sola
+      cola.
+    comparison:
+      traditional: Agente único tradicional/instancia única
+      multiAgent: Matriz paralela multiagente
+    throughputLabel: Aumento del rendimiento
+    throughputValue: 10x+ paralelo
+    providersTitle: CLI actualmente soportadas
+    supportedProviders:
+      - ClaudeCodeCli
+      - CodexCli
+      - GitHubCopilot
+      - CodebuddyCli
+      - OpenCodeCli
+      - IFlowCli
+    matrix:
+      title: Matriz de ejecución paralela
+      badge: Múltiples agentes/varias instancias
+      status: Varios agentes están impulsando varias instancias en este momento
+      agents:
+        claude:
+          name: Claude Code
+          role: Propuesta / revisión
+          instances:
+            - Borrador de especificaciones
+            - Comprobar diseño
+            - Revisión de archivos
+        codex:
+          name: Codex
+          role: Implementación/arreglos
+          instances:
+            - Construir característica A
+            - Construir característica B
+            - Solución de regresión
+        router:
+          name: Qwen · GLM
+          role: Análisis / soporte
+          instances:
+            - Problema de seguimiento
+            - Pulir textos
+            - Capture conocimientos
+  interesting:
+    badge: INTERESANTE
+    title: Interesante
+    subtitle: Hero Dungeon hace que la capacitación, la colaboración y la revisión se sientan vivas
+    description: >-
+      Prompt bancos de trabajo, mazmorras de propuestas, listas de capitanes e informes de batalla viven dentro del
+      mismo flujo de trabajo visual, por lo que los laboratorios del campus, los equipos de estudiantes y los equipos de
+      productos sienten que están progresando a través de una aventura coordinada en lugar de simplemente "usar AI".
+    featurePills:
+      dungeons:
+        label: Hero Mazmorras
+        description: Convierta los bancos de trabajo de generación, ejecución y avisos en mazmorras
+      captains:
+        label: Lista de capitanes
+        description: Asigna el héroe capitán adecuado a cada mazmorra.
+      battle:
+        label: Informes de batalla
+        description: Revise XP, niveles y resultados de ejecución después de cada impulso
+    dungeonCards:
+      proposal:
+        title: Mazmorra de propuesta
+        description: OpenSpec generar/aplicar/archivar
+        status: Capitán listo
+      autotask:
+        title: AutoTask Mazmorra
+        description: Correcciones paralelas y automatización por lotes
+        status: 2 instancias activas
+      prompt:
+        title: Prompt Mazmorra
+        description: Prompt banco de trabajo de vista previa y estilo
+        status: Sincronización visual lista
+    battleReport:
+      title: Informe de mazmorra de hoy
+      badge: Hero Batalla
+      note: >-
+        Cuando varias mazmorras se mueven en paralelo, el informe agrupa la experiencia, los niveles y los resultados de
+        la ejecución en una lectura compartida.
+      metrics:
+        dungeons:
+          value: '4'
+          label: Mazmorras empujadas
+        level:
+          value: Lv.27
+          label: Nivel de capitán
+        xp:
+          value: 12,8 millones
+          label: XP hoy
+    roster:
+      title: Lista actual de capitanes
+      heroes:
+        strategist:
+          name: Estratega de especificaciones
+          role: Capitán de propuesta
+        runner:
+          name: Corredor de parches
+          role: Capitán de ejecución
+        artist:
+          name: Artista de prompts
+          role: Soporte visual
+    gallery:
+      dungeons:
+        title: Carrusel de mapas de mazmorras
+        subtitle: >-
+          Diez imágenes de mazmorras copiadas de la galería de la página de inicio oficial mantienen intactas la
+          propuesta, la ejecución y el ambiente del mapa de indicaciones.
+      heroes:
+        title: Hero carrusel de galería
+        subtitle: >-
+          Diez imágenes de héroes copiadas preservan la lista, el rol y el estilo de narración de la presentación
+          original.
+      images:
+        dungeons:
+          docsEditorialStillLife: Imagen de la galería de mazmorras de un espacio de trabajo editorial de naturaleza muerta
+          proposalFfFuturistPoster: Imagen de la galería de mazmorras de un cartel de propuesta futurista.
+          annotationNotebookScrapbook: Imagen de la galería de mazmorras de un álbum de recortes de cuaderno de anotaciones
+          proposalNameBadgeForge: Imagen de la galería de mazmorras de una placa con el nombre de una propuesta falsificada
+          proposalNewFantasySketch: Imagen de la galería de mazmorras de un nuevo boceto de propuesta de fantasía.
+          indexBlueprintNetwork: Imagen de la galería de mazmorras de un índice de red de planos
+          proposalApplyCyberForge: Imagen de la galería de mazmorras de una escena de aplicación de Cyber ​​Forge.
+          descriptionSoftEditorialRoom: Imagen de la galería de mazmorras de una sala editorial suave
+          titleMinimalEditorial: Imagen de la galería de mazmorras de un estudio de título editorial mínimo
+          proposalExploreAbstractAtlas: Imagen de la galería de mazmorras de una propuesta de exploración de atlas abstracto
+        heroes:
+          catLine03: Hero imagen de la galería de un capitán gato con arte lineal
+          catInk09: Hero imagen de la galería de un capitán gato de tinta
+          catSticker02: Hero imagen de la galería de una pegatina del gato capitán A
+          catSticker08: Hero imagen de la galería de una pegatina del gato capitán B
+          thorn06: Hero imagen de la galería de un héroe con temática de espinas
+          catPaper04: Hero imagen de la galería de un héroe gato con collage de papel
+          tide09: Hero imagen de la galería de un héroe con temática de mareas
+          royal10: Hero imagen de la galería de un héroe con temática real
+          catOil09: Hero imagen de la galería de un gato héroe pintado al óleo
+          aurora04: Hero imagen de la galería de un héroe con temática de auroras
+promotion:
+  sectionLabel: Promoción
+  badgeFallback: Destacado
+  closeLabel: Descartar promoción
+seo:
+  home:
+    title: ¿El apalancamiento de la era Agent lo reemplazará? | HagiCode
+    description: >-
+      Ingrese su salario, modelo favorito, multiplicador de productividad y uso diario de tokens para estimar si usted
+      más AI ahora equivale a dos personas o más.
+    siteName: ¿AI me reemplazará?
+    keywords:
+      - Agent
+      - AI productividad
+      - costo simbólico
+      - precio del modelo
+      - AI colaboración
+      - apalancamiento profesional
+      - HagiCode
+shareTemplates:
+  verdict: >-
+    En mi configuración actual, mi salario base anual es {{annualIncome}} y el costo total de empleo anual es
+    {{annualTotalCost}}. Si un compañero de trabajo usa {{modelName}}, podría escalar a aproximadamente
+    {{effectivePeopleEquivalent}}. {{verdictHeadline}}
+  costImpact: >-
+    Hice los números: el costo total de empleo anual de mi empleador es {{annualTotalCost}}, y el gasto anual de AI con
+    esta intensidad es aproximadamente {{annualAiCost}}. Si un compañero de trabajo también usa {{modelName}}, escalará
+    aproximadamente a {{effectivePeopleEquivalent}}. {{exchangeRateText}}
+  challenge: >-
+    Si un compañero de trabajo sigue el mismo flujo de trabajo {{modelName}}, podría escalar a aproximadamente
+    {{effectivePeopleEquivalent}}. Mi costo total de empleo anual es {{annualTotalCost}}, con un gasto anual de AI de
+    alrededor de {{annualAiCost}}. Prueba el tuyo también. {{exchangeRateText}}
+assessmentAvailability:
+  available: Disponible
+  comingSoon: Muy pronto
+  legacyMapped: ID heredado asignado

@@ -1,0 +1,30 @@
+localesRoot: src/i18n/locales
+repoRoot: .
+baseLocale: en-US
+targetLocales:
+  - zh-CN
+  - zh-Hant
+  - ja-JP
+  - ko-KR
+  - de-DE
+  - fr-FR
+  - es-ES
+  - pt-BR
+  - ru-RU
+doctor:
+  excludedDirectories:
+    - .git
+    - coverage
+    - dist
+    - node_modules
+    - public
+  textFileExtensions:
+    - .cjs
+    - .js
+    - .jsx
+    - .md
+    - .mjs
+    - .ts
+    - .tsx
+  excludedPathPrefixes:
+    - src/i18n/generated-locales/

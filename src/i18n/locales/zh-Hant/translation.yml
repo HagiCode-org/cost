@@ -1,0 +1,460 @@
+site:
+  name: 我會被AI取代嗎
+  tagline: 算一算，Agent 時代，你會不會被淘汰。
+header:
+  badge: Agent 時代效能測算
+  themeToggle: 切換主題
+  navigationLabel: 首頁導航
+  poweredBy: 本網站使用 HagiCode 驅動開發，相關連結如下。
+  share: 分享本站
+  shareCopied: 連結已複製
+  shareFailed: 複製失敗
+  shareAria: 複製當前頁面連結
+  versionLabel: 版本
+  links:
+    official: HagiCode 官網
+    docs: HagiCode 文件
+    builder: Docker Compose Builder
+  languageSelect: 選擇語言
+  languageMore: 更多
+accessibility:
+  skipToContent: 跳到主要內容
+share:
+  currentSite: 分享目前頁面
+  currentSiteAria: 複製當前頁面連結，並包含語言與主題設定
+  copied: 連結已複製
+  failed: 複製失敗
+assessment:
+  hero:
+    title: 算一算，Agent 時代，你會不會被淘汰。
+    subtitle: 輸入你的年薪、熟悉的模型、你的主觀效率倍數，以及你每天實際要消耗的 Token。
+  form:
+    currency: 你的薪資單位是？
+    regionHint: 目前預設地區：{{region}}。明確 URL 參數與手動選擇仍會優先保留。
+    currencyHint: 收入預設與自訂輸入會隨幣種切換。目前輸入單位：{{unit}}。
+    exchangeRateHint: 若選取 USD，內部統一以 1 USD = {{rate}} CNY 折算。
+    incomeAmount: 你的年薪是？ （{{unit}}）
+    incomePlaceholder: 例如：{{example}}
+    incomeCustom: 自訂輸入
+    incomeCustomHint: 請輸入你的實際年薪，目前單位是 {{unit}}。
+    presetHint: 預設按鈕與輸入框共用相同單位：{{unit}}。
+    units:
+      cny: 萬元
+      usd: 千美元
+    city: 你的城市更接近哪座典型城市？
+    job: 所屬崗位
+    selectPlaceholder: 請選擇
+    submit: 開始測算
+    error:
+      incomplete: 請完整填寫所有欄位
+    model: 你用的最多的模型是什麼
+    performanceMultiplier: 用了這個模型，你的效率是以前的幾倍？
+    performanceMultiplierPlaceholder: 例如：2.5
+    dailyTokenUsage: 這個模型你每天大概需要多少 M Token？
+    dailyTokenUsagePlaceholder: 例如：12
+  regions:
+    cn-mainland: 中國大陸場景
+    international: 國際場景
+  cities:
+    tier1: 北京 / 上海 / 深圳 / 廣州
+    new-tier1: 杭州 / 成都 / 蘇州 / 南京
+    tier2: 武漢 / 西安 / 天津 / 鄭州
+    other: 宜昌 / 洛陽 / 南充 / 上饒
+  jobs:
+    backend: 後端
+    frontend: 前端
+    qa: 測試
+    product: 產品
+    ui: UI
+    operations: 營運
+    admin: 行政
+    other: 其他
+  titles:
+    eyebrow: SPECIAL TITLES
+    title: 特殊稱號面板
+    subtitle: 輸入側與結果側規則會一起評估，告訴你這套 Agent 用法更像哪一種玩家畫像。
+    zeroTokenHint: 你沒有消耗任何 Token，本次不執行常規測算，但我們還是會根據當前輸入判斷你觸發了哪些稱號。
+    progress: 已符合 {{matched}} / {{total}} 個稱號
+    states:
+      newly-earned: 新獲得
+      earned: 已獲得
+      locked: 未達成
+    origins:
+      input: 輸入側觸發
+      output: 結果側觸發
+    explainers:
+      input: 來自輸入側規則：直接根據你目前表單的填寫狀態授予。
+      output: 來自結果側規則：需要常規測算結果達到指定閾值。
+    catalog:
+      craftsmanSpirit:
+        name: 匠人精神
+        description: 日均 Token = 0，且年薪、城市、模型、效率倍數都已填入。你選擇先把流程打磨清楚，再決定是否要花 Token。
+      promptAlchemist:
+        name: 提示詞煉金師
+        description: 效率倍數 >= 6，且 0 < 日均 Token <= 20。說明你用不算誇張的消耗，換到了很高的效率放大。
+      allInOperator:
+        name: 火力全開
+        description: 日均 Token >= 150，且效率倍數 >= 3。你是典型的高投入高強度 Agent 使用者。
+      minimalistRunner:
+        name: 極簡派
+        description: 0 < 日均 Token <= 5，且效率倍數 >= 2。你在極低預算下，依然保持了有效工作流程。
+      costTamer:
+        name: 成本馴獸師
+        description: AI 投入產出比 >= 2.5，且 AI 成本佔比 <= 15%。你把成本和效益壓在了一個很漂亮的平衡點。
+      dangerOracle:
+        name: 危險先知
+        description: 等效人力 >= 2.5，或危險刻度進入高危險區。你已經可以看到「同事把自己放大之後」的真正壓迫感。
+      budgetCoordinator:
+        name: 預算統籌官
+        description: 目前預算可以涵蓋 >= 8 份同類工作流程。說明這套打法不只是能跑，還很容易規模化複製。
+    overlay:
+      eyebrow: 稱號獲取
+      title: 新頭銜已解鎖
+      description: 這次不用常駐面板，達成條件時會直接觸發一次全螢幕展示，然後回到正常頁面。
+      footer: 稱號只會在首次獲取時做這次展示；之後再次達成同樣條件，不會重複彈出。
+      action: 繼續查看頁面
+    toast:
+      title: 獲得新稱號
+      description: 解鎖：{{titles}}
+loading:
+  title: 正在計算你的 AI 淘汰風險...
+  steps:
+    cost: 核算企業用工全成本
+    pricing: 對標 AI 模型定價
+    replacement: 分析崗位可替代度
+    timeline: 產生淘汰時間線
+results:
+  countdown:
+    title: AI 淘汰風險倒數計時
+    remaining: 距離你被 AI 淘汰，還有
+    days: 天
+    weeks: 週
+    replacementRate: 職位替代率
+    aiWorkHours: AI 完成你一週工作的時間
+    efficiencyWeeks: 效率碾壓
+  cost:
+    title: 模型成本與 Token 預算
+    annualTotalCost: 企業年度全用工成本
+    preTaxBase: 稅前年薪基線
+    tokenTitle: Token 購買力
+    calcBasis: 代碼場景依輸入:輸出 {{ratio}}:1 綜合計算
+    pureInput: 純輸入 Token
+    pureOutput: 純輸出 Token
+    totalTokens: 總 Token 預算上限
+    mixDetail: 總計（輸入:輸出 {{ratio}}:1）
+    mixInput: 其中輸入 Token
+    mixOutput: 其中輸出 Token
+    tokens: tokens
+    officialSource: 官方來源
+    pricingContext: 計價口徑
+    unitInputPrice: 輸入價 / 百萬 Token
+    unitOutputPrice: 輸出價 / 百萬 Token
+    cacheReadPrice: 快取讀取價 / 百萬 Token
+    cacheWritePrice: 快取寫入價 / 百萬 Token
+    priceNote: 備註
+    workdayAverage: 依 {{days}} 個工作天平均：{{tokens}} / 天
+    subtitle: 我們把你填寫的模型效率和日均 Token 用量，折算成真實的年化成本。
+    mixedPrice: 以 3:1 折算後的綜合單價
+    dailyTokenUsage: 你填寫的日均 Token 用量
+    dailyAiCost: 日均 AI 成本
+    annualAiCost: 年均 AI 成本
+    budgetTokenTitle: 如果把整個企業年度全用工成本當作 Token 預算
+    budgetTokenDesc: 看看這份企業預算，最多能買下多少同模型、同口徑的 Token。
+    workdayTokenAverage: 折算到每個工作日
+    annualTokenUsage: 依目前填寫折算的全年 Token 用量
+    collapseLabel: 查看模型成本與 Token 預算詳情
+    collapseAria: 展開查看模型成本與 Token 預算的詳細數據
+  peer:
+    title: 圈層對標
+    percentile: 同崗薪資百分位
+    percentileDesc: 在同城市同崗位的收入位置
+    aiAdoption: 職位 AI 落地率
+    aiAdoptionDesc: 所在職位已引入 AI 工具的比例
+    headcountReduction: 編制縮減預期
+    headcountDesc: 業界預期該職位的人員縮減幅度
+  share:
+    title: 預警通知書與分享
+    job: 崗位
+    cost: 年度全成本
+    countdown: 倒數計時
+    risk: 風險等級
+    savePoster: 保存預警通知書
+    copyText: 複製分享文案
+    copy: 複製
+  ranking:
+    title: 業界淘汰紅黑榜
+    red: 高風險
+    black: 可控
+  compliance:
+    title: 數據說明與免責聲明
+    disclaimer: 本結果是基於公開模型定價和你填寫的主觀效率假設生成，僅用於幫助理解 Agent 時代的效率差距，不構成職業、法律或財務建議。
+    noCollection: 本網站不會收集、上傳或儲存你在表單中填寫的任何資料；所有計算僅在目前瀏覽器頁面內完成。
+    dataUpdated: 產業對標數據更新於
+    pricingUpdated: 模型定價資料更新於
+    referenceTitle: 模型定價參考連結
+  retry: 重新測算
+  summary:
+    heading: 先假設同事的薪資和你差不多，那麼你的同事：
+    annualIncome: 你的年薪
+    performanceMultiplier: 你主觀估計的效率倍數
+    dailyTokenUsage: 你的日均 Token 用量
+    annualAiCost: 以此強度估算的 AI 年成本
+    salaryShare: 佔企業年度全用工成本的比例
+    dangerScale: 同事威脅刻度
+    detailAria: 查看{{label}}的計算詳情
+    costEffectiveness: AI 投入產出比
+    costEffectivenessScale: AI 性價比刻度
+    affordableWorkflow: 你的預算能涵蓋的 Agent 工作流程份數
+    dailyAiCost: 日均 AI 成本
+    peopleEquivalent: 你 + AI 的等值人力
+    totalEmploymentCost: 企業年度全用工成本
+    closeDetail: 關閉
+    detailCollapseLabel: 查看詳細資料（年薪、效率、Token、成本）
+    detailCollapseAria: 展開查看年薪、效率倍數、Token 用量和成本等詳細數據
+  tokenList:
+    title: 完整 Token 購買力列表
+    subtitle: 基於企業年度全用工成本 {{annualTotalCost}}，保留原來的完整 Token 計算明細。
+  hagicode:
+    heading: 如果你使用了 Hagicode 來改善你的效率呢？
+    subtitle: Hagicode 能同時驅動多個 Agent 並行工作，把提案、實現、修復與評審從串列等待改成並行推進。拖曳下方滑動條調整並行會話數，我們會按新的模型立刻重算同事威脅度和 AI 性價比。
+    multiplierLabel: 平行會話數
+    sliderLabel: 平行會話數
+    sliderHint: 1.5 - 10 之間滑動，代表 Hagicode 同時管理的平行會話數量。並行會話越多，主觀效率放大越顯著。
+    utilizationLabel: Token 利用率提升倍數
+    utilizationHint: 1.1 - 2 之間滑動。利用率越高，代表由於 OpenSpec 流程減少返工、誤用和幻覺，相同目標下實際 Token 消耗會進一步被稀釋。
+    utilizationCompact: Token 利用率 {{value}}
+    currentLabel: 目前
+    boostedLabel: Hagicode 後
+    beforeAfterLabel: 目前 -> Hagicode 後
+    afterBoostLabel: 套上 Hagicode 之後
+    scaledEfficiency: 平行會話放大後的主觀效率
+    scaledTokenUsage: 放大後的日均 Token 用量
+    scaledAnnualAiCost: 同步放大的 AI 年成本
+    syncResult: 同步變化後的核心結果
+    syncFormula: 同事威脅 {{threatBefore}} -> {{threatAfter}}，AI 性價比 {{valueBefore}} -> {{valueAfter}}
+    modelLabel: 新的 Token 計算模型
+    modelFormula: >-
+      新的 Token 消耗量 = 原始 {{base}} x Hagicode {{boost}} ÷ Token 利用率 {{utilization}} = {{final}}。也就是先放大到
+      {{raw}}，再因為流程規範化把等效消耗壓回 {{final}}。
+    scaledAnnualAiCostFormula: '{{tokenUsage}} × 模型單價 = {{cost}}'
+    detailCollapseLabel: 查看詳細比較數據
+    detailCollapseAria: 展開查看效率、Token、成本等詳細比較數據
+footer:
+  disclaimerTitle: 免責聲明
+  disclaimer: 本頁用來幫助你理解 Agent 對個人產能的放大效應。真正危險的不是 AI 本身，而是別人已經開始把 AI 變成穩定工作流程。
+  copyright: HAGICODE AI APPLICATION SITE · 2026
+  extensionNote: 本頁所示的模型價格、公式和結論，僅用於幫助理解 Agent 工作流程的成本與槓桿，不構成任何投資、用工或職涯決策建議。
+  registrationLabel: 備案資訊
+  registrationAria:
+    icp: 查看 ICP 備案資訊
+    publicSecurity: 查看公安備案資訊
+  linksTitle: 相關連結
+  links:
+    website: HagiCode 官網
+    docs: 產品文件
+    github: GitHub 倉庫
+    steam: Steam
+    pricing: 定價參考來源
+featureShowcase:
+  section:
+    eyebrow: HAGICODE 功能展示
+    title: HagiCode 三大核心能力
+  smart:
+    badge: SMART
+    title: 智慧
+    subtitle: OpenSpec 工作流程，讓想法更快進入執行
+    description: 從想法、提案、審查到程式碼、測試與歸檔，HagiCode 用完整的 9 階段 OpenSpec 流程幫你減少返工，把 AI 編程從一次性聊天變成可追踪、可交付、可複盤的持續協作。
+    efficiencyLabel: 流程效率提升
+    efficiencyValue: 300%
+    comparison:
+      traditional: 傳統序列流程
+      hagicode: HagiCode + OpenSpec
+    workflowTitle: OpenSpec 九階段工作流程
+    workflowHint: 從 Idea 到 Archive，步驟順序與官網特性區保持一致
+    workflow:
+      idea:
+        label: Idea
+        description: 從想法開始，先定義目標與範圍
+      proposal:
+        label: Proposal
+        description: AI 產生提案與影響分析
+      review:
+        label: Review
+        description: 在實現前完成評審校對
+      tasks:
+        label: Tasks
+        description: 將需求切成可執行任務
+      code:
+        label: Code
+        description: 進入實作並保持上下文連續
+      test:
+        label: Test
+        description: 補齊驗證與迴歸檢查
+      refactor:
+        label: Refactor
+        description: 在通過驗證後繼續整理結構
+      docs:
+        label: Docs
+        description: 同步輸出說明與知識沉澱
+      archive:
+        label: Archive
+        description: 歸檔結果，形成團隊可重複使用資產
+  efficient:
+    badge: EFFICIENT
+    title: 高效率
+    subtitle: 多 Agent、多實例並行，真正把額度跑滿
+    description: Claude Code、Codex 等 CLI Agent 可以同時驅動多個實例，把提案、實作、修復與評審從串列等待改成並行推進，讓團隊吞吐不再被單執行緒協作方式限制。
+    comparison:
+      traditional: 傳統單 Agent / 單一實例
+      multiAgent: 多 Agent 平行矩陣
+    throughputLabel: 吞吐提升
+    throughputValue: 並行 10x+
+    providersTitle: 目前支援的 CLI
+    supportedProviders:
+      - ClaudeCodeCli
+      - CodexCli
+      - GitHubCopilot
+      - CodebuddyCli
+      - OpenCodeCli
+      - IFlowCli
+    matrix:
+      title: 平行執行矩陣
+      badge: 多個 Agent / 多個實例
+      status: 多個 Agent 正在同時驅動多個實例
+      agents:
+        claude:
+          name: Claude Code
+          role: 提案 / 評審
+          instances:
+            - Spec 起草
+            - 設計校對
+            - 歸檔檢查
+        codex:
+          name: Codex
+          role: 實現 / 修復
+          instances:
+            - 實現 A
+            - 實現 B
+            - 回歸修復
+        router:
+          name: Qwen · GLM
+          role: 分析 / 補充
+          instances:
+            - 問題排查
+            - 文案優化
+            - 知識提煉
+  interesting:
+    badge: INTERESTING
+    title: 有趣
+    subtitle: Hero Dungeon 讓訓練、協作與複盤更像可推進的冒險
+    description: 把 Prompt 工作台、提案副本、隊長編組和戰報反饋放進同一個可視化流程裡，讓高校實驗室、學生團隊和產品協作場景不只是在“用 AI”，而是在經營一套能持續升級的工作流程。
+    featurePills:
+      dungeons:
+        label: 英雄副本
+        description: 把生成、執行和 Prompt 工作台都編成副本
+      captains:
+        label: 隊長編組
+        description: 為不同副本指定最適合的 Hero 隊長
+      battle:
+        label: 戰報反饋
+        description: 用 XP、等級與執行資料回看推進結果
+    dungeonCards:
+      proposal:
+        title: 提案副本
+        description: OpenSpec 產生 / 執行 / 歸檔
+        status: 隊長就緒
+      autotask:
+        title: AutoTask 副本
+        description: 並行修復與批次自動任務
+        status: 2 個執行個體運行中
+      prompt:
+        title: Prompt 副本
+        description: Prompt 預覽與風格工作台
+        status: 視覺預覽已同步
+    battleReport:
+      title: 今日副本戰報
+      badge: Hero Battle
+      note: 當多個副本並行推進時，戰報會把經驗、等級與執行結果聚合到一個統一讀數裡。
+      metrics:
+        dungeons:
+          value: '4'
+          label: 副本推進
+        level:
+          value: Lv.27
+          label: 隊長等級
+        xp:
+          value: 12.8M
+          label: 今日 XP
+    roster:
+      title: 目前隊長編組
+      heroes:
+        strategist:
+          name: Spec Strategist
+          role: 提案隊長
+        runner:
+          name: Patch Runner
+          role: 執行隊長
+        artist:
+          name: Prompt Artist
+          role: 視覺支援
+    gallery:
+      dungeons:
+        title: 副本地圖輪播
+        subtitle: 10 張官網同源副本視覺，繼續展示提案、執行和 Prompt 工作台的地圖感畫面。
+      heroes:
+        title: 英雄圖鑑輪播
+        subtitle: 10 張官網同源 Hero 視覺，用來補齊隊長、職業和風格層次。
+      images:
+        dungeons:
+          docsEditorialStillLife: 副本圖庫：文件靜物風格場景
+          proposalFfFuturistPoster: 副本畫廊：未來主義提案海報
+          annotationNotebookScrapbook: 副本畫廊：批註筆記剪貼簿
+          proposalNameBadgeForge: 副本畫廊：提案銘牌鍛造場景
+          proposalNewFantasySketch: 副本畫廊：新幻想風提案草圖
+          indexBlueprintNetwork: 副本畫廊：藍圖網路索引場景
+          proposalApplyCyberForge: 副本畫廊：賽博鍛造執行場景
+          descriptionSoftEditorialRoom: 副本畫廊：柔和編輯室視覺
+          titleMinimalEditorial: 副本圖庫：極簡標題編輯視覺
+          proposalExploreAbstractAtlas: 副本圖庫：抽象地圖探索提案
+        heroes:
+          catLine03: 英雄圖鑑：線稿風貓系英雄
+          catInk09: 英雄圖鑑：墨色貓系英雄
+          catSticker02: 英雄圖鑑：貼紙風貓系英雄 A
+          catSticker08: 英雄圖鑑：貼紙風貓系英雄 B
+          thorn06: 英雄圖鑑：荊棘系英雄
+          catPaper04: 英雄圖鑑：紙感拼貼貓系英雄
+          tide09: 英雄圖鑑：潮汐系英雄
+          royal10: 英雄圖鑑：皇家風英雄
+          catOil09: 英雄圖鑑：油畫風貓系英雄
+          aurora04: 英雄圖鑑：極光系英雄
+promotion:
+  sectionLabel: 推廣訊息
+  badgeFallback: 推薦
+  closeLabel: 關閉推廣訊息
+seo:
+  home:
+    title: Agent 時代，你會不會被淘汰？ | HagiCode
+    description: 輸入你的年薪、熟悉的模型、效率倍數和日均 Token 用量，算你和 AI 加起來是否等於過去兩個人甚至更多。
+    siteName: 我會被AI取代嗎
+    keywords:
+      - Agent
+      - AI 效率倍數
+      - Token 成本
+      - 模型成本
+      - 職場效率
+      - AI 協作
+      - HagiCode
+shareTemplates:
+  verdict: >-
+    以目前口徑來看，我的年薪基準是 {{annualIncome}}，企業年度全用工成本 {{annualTotalCost}}。如果同事也用 {{modelName}}，他大約可以放大到
+    {{effectivePeopleEquivalent}}。 {{verdictHeadline}}
+  costImpact: >-
+    算了一筆帳：企業為我承擔的年度全用工成本是 {{annualTotalCost}}，按當前強度全年 AI 成本約 {{annualAiCost}}。如果同事也用 {{modelName}}，他大約會變成
+    {{effectivePeopleEquivalent}}。 {{exchangeRateText}}
+  challenge: >-
+    如果同事也照這套方法用 {{modelName}}，他大約可以放大到 {{effectivePeopleEquivalent}}。我的企業年度全用工成本 {{annualTotalCost}}，全年 AI 成本
+    {{annualAiCost}}。你也來測測？ {{exchangeRateText}}
+assessmentAvailability:
+  available: 可用
+  comingSoon: 即將開放
+  legacyMapped: 舊 ID 已映射

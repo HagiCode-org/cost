@@ -1,0 +1,529 @@
+site:
+  name: Wird AI mich ersetzen?
+  tagline: Schätzen Sie, ob die Hebelwirkung der Agent-Ära Ihre Ersetzbarkeit verändert.
+header:
+  badge: Agent Produktivitätsrechner
+  themeToggle: Thema umschalten
+  navigationLabel: Homepage-Navigation
+  poweredBy: Diese Seite wurde mit HagiCode erstellt. Entdecken Sie die entsprechenden Links hier.
+  share: Teilen Sie diese Seite
+  shareCopied: Link kopiert
+  shareFailed: Das Kopieren ist fehlgeschlagen
+  shareAria: Kopieren Sie den Link zur aktuellen Seite
+  versionLabel: Version
+  links:
+    official: HagiCode Website
+    docs: HagiCode Dokumente
+    builder: Docker Compose Builder
+  languageSelect: Sprache auswählen
+  languageMore: Mehr
+accessibility:
+  skipToContent: Zum Hauptinhalt springen
+share:
+  currentSite: Teilen Sie diese Ansicht
+  currentSiteAria: Kopieren Sie den Link zur aktuellen Seite einschließlich der Sprach- und Designeinstellungen
+  copied: Link kopiert
+  failed: Das Kopieren ist fehlgeschlagen
+assessment:
+  hero:
+    title: Berechnen Sie, ob die Ära Agent Sie austauschbar macht.
+    subtitle: >-
+      Geben Sie Ihr Gehalt, Ihr bekanntes Modell, den wahrgenommenen Produktivitätsmultiplikator und Ihren tatsächlichen
+      täglichen Token-Bedarf ein.
+  form:
+    currency: Welche Gehaltswährung verwenden Sie?
+    regionHint: 'Aktuelle Standardregion: {{region}}. Explizite URL-Werte und manuelle Änderungen gewinnen immer noch.'
+    currencyHint: >-
+      Einkommensvoreinstellungen und benutzerdefinierter Eingabewechsel mit der ausgewählten Währung. Aktuelle
+      Eingabeeinheit: {{unit}}.
+    exchangeRateHint: Wenn Sie USD wählen, normalisiert der Rechner mit 1 USD = {{rate}} CNY.
+    incomeAmount: Wie hoch ist Ihr Jahresgehalt? ({{unit}})
+    incomePlaceholder: z.B. {{example}}
+    incomeCustom: Benutzerdefinierter Betrag
+    incomeCustomHint: Geben Sie Ihr tatsächliches Jahresgehalt in {{unit}} ein.
+    presetHint: 'Voreingestellte Tasten und benutzerdefinierte Eingaben verwenden dieselbe Einheit: {{unit}}.'
+    units:
+      cny: 10.000 CNY
+      usd: k USD
+    city: Welche typische Stadt ist Ihrer am nächsten?
+    job: Jobrolle
+    selectPlaceholder: Auswählen
+    submit: Führen Sie die Schätzung durch
+    error:
+      incomplete: Bitte füllen Sie alle Felder aus
+    model: Welches Modell verwenden Sie am häufigsten?
+    performanceMultiplier: Wie oft sind Sie mit diesem Modell effizienter als zuvor?
+    performanceMultiplierPlaceholder: z.B. 2.5
+    dailyTokenUsage: Wie viele M-Tokens benötigen Sie ungefähr pro Tag?
+    dailyTokenUsagePlaceholder: z.B. 12
+  regions:
+    cn-mainland: Chinesisches Festland
+    international: International
+  cities:
+    tier1: Peking / Shanghai / Shenzhen / Guangzhou
+    new-tier1: Hangzhou / Chengdu / Suzhou / Nanjing
+    tier2: Wuhan / Xi'an / Tianjin / Zhengzhou
+    other: Yichang / Luoyang / Nanchong / Shangrao
+  jobs:
+    backend: Backend
+    frontend: Frontend
+    qa: Qualitätssicherung / Tests
+    product: Produkt
+    ui: UI-Design
+    operations: Operationen
+    admin: Admin
+    other: Andere
+  titles:
+    eyebrow: SPEZIELLE TITEL
+    title: Spezielle Titeltafel
+    subtitle: >-
+      Eingabe- und ergebnisseitige Regeln werden gemeinsam ausgewertet, sodass Sie auf der Seite erkennen können,
+      welcher Art von Agent-Operator diese Konfiguration ähnelt.
+    zeroTokenHint: >-
+      Sie haben null Token ausgegeben, daher wird die normale Schätzung für diesen Lauf übersprungen, aber wir können
+      trotzdem beurteilen, welche Titel Ihr aktuelles Setup freischaltet.
+    progress: '{{matched}} / {{total}} Titel stimmten überein'
+    states:
+      newly-earned: Neu verdient
+      earned: Verdient
+      locked: Gesperrt
+    origins:
+      input: Eingangsseitiger Trigger
+      output: Ergebnisseitiger Trigger
+    explainers:
+      input: 'Aus einer eingabeseitigen Regel: Die aktuellen Formularwerte allein reichen aus, um es zu entsperren.'
+      output: 'Aus einer ergebnisseitigen Regel: Die normale Schätzung muss die erforderlichen Schwellenwerte überschreiten.'
+    catalog:
+      craftsmanSpirit:
+        name: Handwerkergeist
+        description: >-
+          Tägliche Token = 0, während Gehalt, Stadt, Modell und Multiplikator alle gültig sind. Sie verfeinern den
+          Arbeitsablauf, bevor Sie sich entscheiden, Token auszugeben.
+      promptAlchemist:
+        name: Prompt Alchemist
+        description: >-
+          Leistungsmultiplikator >= 6 und 0 < tägliche Token <= 20. Sie quetschen einen erheblichen Hebel aus einem
+          immer noch disziplinierten Token-Budget heraus.
+      allInOperator:
+        name: All-In-Betreiber
+        description: >-
+          Tägliche Token >= 150 und Leistungsmultiplikator >= 3. Dies ist die Signatur eines hochintensiven
+          Agent-Workflows mit hohen Ausgaben.
+      minimalistRunner:
+        name: Minimalistischer Läufer
+        description: >-
+          0 < tägliche Token <= 5 und Leistungsmultiplikator >= 2. Sie halten den Workflow auch bei einem fast winzigen
+          Token-Budget nützlich.
+      costTamer:
+        name: Kostenzähmer
+        description: >-
+          Kosteneffizienz >= 2,5, während der AI-Kostenanteil bei <= 15 % bleibt. Sie haben ein besonders sauberes
+          Gleichgewicht zwischen Ausgaben und Gewinnen gefunden.
+      dangerOracle:
+        name: Gefahrenorakel
+        description: >-
+          Effektives Personenäquivalent >= 2,5 oder die Gefahrenskala hat bereits das hohe Risiko erreicht. Sie sehen
+          den wahren Druck eines vervielfachten Kollegen.
+      budgetCoordinator:
+        name: Haushaltskoordinator
+        description: >-
+          Das aktuelle Budget kann >= 8 gleichwertige Arbeitsabläufe unterstützen. Dieses Setup ist nicht nur
+          realisierbar, sondern auch einfach zu skalieren.
+    overlay:
+      eyebrow: TITEL ERWORBEN
+      title: Neuer Titel freigeschaltet
+      description: >-
+        Es gibt kein ständig aktives Titelfeld mehr. Wenn ein Titel zum ersten Mal verdient wird, wird er einmal im
+        Vollbildmodus angezeigt und dann wird die Seite wieder normal angezeigt.
+      footer: >-
+        Die Enthüllung erfolgt nur beim ersten Erwerb. Wenn derselbe Zustand erneut erreicht wird, wird er nicht erneut
+        abgespielt.
+      action: Zurück zur Seite
+    toast:
+      title: Neuer Titel verdient
+      description: 'Entsperrt: {{titles}}'
+loading:
+  title: Berechnen Sie Ihr AI-Ersatzrisiko...
+  steps:
+    cost: Berechnung der Gesamtbeschäftigungskosten
+    pricing: Benchmarking der Modellpreise AI
+    replacement: Analyse der Ersetzbarkeit von Arbeitsplätzen
+    timeline: Generierung eines Ersatzzeitplans
+results:
+  countdown:
+    title: AI Ersatz-Countdown
+    remaining: Tage, bis AI Sie ersetzen kann
+    days: Tage
+    weeks: Wochen
+    replacementRate: Job-Ersetzungsrate
+    aiWorkHours: AI Stunden passend zu Ihrer wöchentlichen Arbeit
+    efficiencyWeeks: Effizienzlücke
+  cost:
+    title: Modellkosten und Token Budget
+    annualTotalCost: Jährliche Gesamtbeschäftigungskosten
+    preTaxBase: Jährliche Basis vor Steuern
+    tokenTitle: Token Kaufkraft
+    calcBasis: 'Codeszenario: Input:Output-Verhältnis {{ratio}}:1'
+    pureInput: Reine Eingabe Tokens
+    pureOutput: Reine Ausgabe Tokens
+    totalTokens: Gesamtobergrenze für das Token-Budget
+    mixDetail: Gesamt (Eingabe:Ausgabe {{ratio}}:1)
+    mixInput: Geben Sie Tokens im Mix ein
+    mixOutput: Geben Sie Tokens im Mix aus
+    tokens: Token
+    officialSource: Offizielle Quelle
+    pricingContext: Preiskontext
+    unitInputPrice: Eingabepreis / 1 Mio. Token
+    unitOutputPrice: Ausgabepreis / 1 Mio. Token
+    cacheReadPrice: Cache-Lesung / 1 Mio. Token
+    cacheWritePrice: Cache-Schreiben / 1 Mio. Token
+    priceNote: Notiz
+    workdayAverage: 'Durchschnitt über {{days}} Arbeitstage: {{tokens}} / Tag'
+    subtitle: >-
+      Wir übersetzen das von Ihnen gewählte Modell, den Multiplikator und die tägliche Token-Nachfrage in jährliche
+      Kosten.
+    mixedPrice: Mischpreis im Verhältnis 3:1
+    dailyTokenUsage: Ihre angegebene tägliche Token-Nutzung
+    dailyAiCost: Tägliche Kosten von AI
+    annualAiCost: Jährliche AI Kosten
+    budgetTokenTitle: Wenn das gesamte jährliche Beschäftigungsbudget zum symbolischen Budget wird
+    budgetTokenDesc: Wie viele Token könnte das Vollbeschäftigungsbudget nach dem gleichen Modell und Verhältnis kaufen?
+    workdayTokenAverage: Durchschnitt pro Arbeitstag
+    annualTokenUsage: Jährliche Token-Nutzung nach Ihrer aktuellen Annahme
+    collapseLabel: Details zu Modellkosten und Token-Budget anzeigen
+    collapseAria: Erweitern Sie, um Details zu Modellkosten und Tokenbudget anzuzeigen
+  peer:
+    title: Peer-Benchmark
+    percentile: Gehaltsperzentil
+    percentileDesc: Ihre Einkommensposition unter Gleichgesinnten
+    aiAdoption: AI Akzeptanzrate
+    aiAdoptionDesc: Prozentsatz der Rollen, die AI-Tools verwenden
+    headcountReduction: Personalabbau
+    headcountDesc: Erwarteter Personalabbau in dieser Rolle
+  share:
+    title: Warnhinweis und Weitergabe
+    job: Rolle
+    cost: Jährliche Kosten
+    countdown: Countdown
+    risk: Risikostufe
+    savePoster: Warnhinweis speichern
+    copyText: Teilen-Text kopieren
+    copy: Kopie
+  ranking:
+    title: Branchen-Ersatzrankings
+    red: Hohes Risiko
+    black: Überschaubar
+  compliance:
+    title: Datenhinweise und Haftungsausschluss
+    disclaimer: >-
+      Dieses Ergebnis basiert auf öffentlichen Modellpreisen sowie Ihren eigenen subjektiven Produktivitätsannahmen. Es
+      dient nur dem Verständnis der Hebelwirkung der Agent-Ära, nicht der Karriere-, Rechts- oder Finanzberatung.
+    noCollection: >-
+      Diese Website sammelt, lädt oder speichert keine Daten, die Sie in das Formular eingeben. Alle Berechnungen
+      bleiben auf Ihrer aktuellen Browserseite.
+    dataUpdated: Benchmark-Daten aktualisiert
+    pricingUpdated: Preisdaten aktualisiert
+    referenceTitle: Preisreferenzlinks
+  retry: Laufen Sie noch einmal
+  summary:
+    heading: 'Ich gehe davon aus, dass Ihr Kollege an dem verdient, was Sie tun, also könnte Ihr Kollege:'
+    annualIncome: Ihr Jahresgehalt
+    performanceMultiplier: Ihr geschätzter Produktivitätsmultiplikator
+    dailyTokenUsage: Ihre tägliche Token-Nutzung
+    annualAiCost: Geschätzte jährliche AI Kosten
+    salaryShare: Anteil an den gesamten jährlichen Beschäftigungskosten
+    dangerScale: Bedrohungsskala für Kollegen
+    detailAria: Berechnungsdetails für {{label}} anzeigen
+    costEffectiveness: AI Kosteneffizienz
+    costEffectivenessScale: AI Werteskala
+    affordableWorkflow: Äquivalente Agent Workflows, die Ihr Budget abdecken kann
+    dailyAiCost: Tägliche Kosten von AI
+    peopleEquivalent: Sie + AI Arbeitskräfteäquivalent
+    totalEmploymentCost: Jährliche Gesamtbeschäftigungskosten
+    closeDetail: Schließen
+    detailCollapseLabel: Detaillierte Daten anzeigen (Gehalt, Effizienz, Token, Kosten)
+    detailCollapseAria: >-
+      Erweitern Sie die Ansicht, um detaillierte Gehalts-, Effizienzmultiplikator-, Token-Nutzungs- und Kostendaten
+      anzuzeigen
+  tokenList:
+    title: Vollständige Token Kaufkraftliste
+    subtitle: >-
+      Basierend auf den jährlichen Gesamtbeschäftigungskosten von {{annualTotalCost}} bleibt die ursprüngliche
+      vollständige Token-Aufschlüsselung erhalten.
+  hagicode:
+    heading: Was wäre, wenn Hagicode Ihre Effizienz steigern würde?
+    subtitle: >-
+      Hagicode kann mehrere Agenten parallel steuern und Vorschläge, Implementierungen, Korrekturen und Überprüfungen
+      von seriellen Wartezeiten in parallele Fortschritte umwandeln. Passen Sie den Schieberegler unten an und wir
+      berechnen die Bedrohung durch Kollegen und den AI-Wert unter diesem überarbeiteten Modell sofort neu.
+    multiplierLabel: Parallele Sitzungen
+    sliderLabel: Parallele Sitzungen
+    sliderHint: >-
+      Schieben Sie zwischen 1,5 und 10, um festzulegen, wie viele parallele Sitzungen Hagicode gleichzeitig verwaltet.
+      Mehr parallele Sitzungen bedeuten eine stärkere subjektive Effizienzsteigerung.
+    utilizationLabel: Token Nutzungssteigerung
+    utilizationHint: >-
+      Schieben Sie zwischen 1,1 und 2,0. Eine höhere Auslastung bedeutet, dass OpenSpec Nacharbeit, Missbrauch und
+      Halluzinationen reduziert, sodass die tatsächlichen Token-Ausgaben bei gleicher Zielausgabe verwässert werden.
+    utilizationCompact: Token Auslastung {{value}}
+    currentLabel: Jetzt
+    boostedLabel: Nach Hagicode
+    beforeAfterLabel: Jetzt -> Nach Hagicode
+    afterBoostLabel: Nach dem Hagicode-Boost
+    scaledEfficiency: Produktivität nach paralleler Sitzungsskalierung
+    scaledTokenUsage: Skalierte tägliche Token-Nutzung
+    scaledAnnualAiCost: Skalierte jährliche AI Kosten
+    syncResult: Synchronisierte Schlagzeilenwirkung
+    syncFormula: Bedrohung durch Kollegen {{threatBefore}} -> {{threatAfter}}, AI Wert {{valueBefore}} -> {{valueAfter}}
+    modelLabel: Überarbeitetes Token-Modell
+    modelFormula: >-
+      Neue Token-Ausgaben = Basis {{base}} x Hagicode {{boost}} ÷ Token-Nutzung {{utilization}} = {{final}}. Mit anderen
+      Worten: Es wird zunächst auf {{raw}} ausgeweitet, dann werden durch die standardisierte Workflow-Effizienz die
+      effektiven Ausgaben wieder auf {{final}} gesenkt.
+    scaledAnnualAiCostFormula: '{{tokenUsage}} × Modellstückpreis = {{cost}}'
+    detailCollapseLabel: Detaillierten Vergleich ansehen
+    detailCollapseAria: Erweitern Sie, um detaillierte Effizienz-, Token- und Kostenvergleichsdaten anzuzeigen
+footer:
+  disclaimerTitle: Haftungsausschluss
+  disclaimer: >-
+    Diese Seite hilft zu veranschaulichen, wie Agent-Workflows die individuelle Ausgabe verbessern. Das eigentliche
+    Risiko liegt nicht bei AI allein, sondern bei Kollegen, die es bereits als wiederholbares System nutzen.
+  copyright: HAGICODE AI ANWENDUNGSWEBSITE · 2026
+  extensionNote: >-
+    Die Modellpreise, Formeln und Schlussfolgerungen auf dieser Seite dienen nur dem Verständnis der Workflow-Kosten und
+    der Hebelwirkung von Agent, nicht der Investitions-, Einstellungs- oder Karriereberatung.
+  registrationLabel: Anmeldung
+  registrationAria:
+    icp: Anmeldeinformationen für ICP anzeigen
+    publicSecurity: Informationen zur Einreichung von Dokumenten zur öffentlichen Sicherheit anzeigen
+  linksTitle: Verwandte Links
+  links:
+    website: HagiCode Website
+    docs: Dokumentation
+    github: GitHub-Repository
+    steam: Steam
+    pricing: Preisreferenz
+featureShowcase:
+  section:
+    eyebrow: HAGICODE-FEATURE-SHOWCASE
+    title: Die drei Kernfunktionen von Hagicode
+  smart:
+    badge: SCHLAU
+    title: Schlau
+    subtitle: OpenSpec Workflow, der Ideen schneller in die Umsetzung bringt
+    description: >-
+      Von Ideen und Vorschlägen bis hin zu Überprüfung, Codierung, Tests und Archivierung – Hagicode verwandelt AI
+      Codierung aus einmaligen Chat-Sitzungen in einen nachverfolgten Workflow, den Teams liefern, prüfen und
+      wiederverwenden können.
+    efficiencyLabel: Steigerung der Workflow-Effizienz
+    efficiencyValue: 300 %
+    comparison:
+      traditional: Traditioneller serieller Ablauf
+      hagicode: Hagicode + OpenSpec
+    workflowTitle: Neunstufiger OpenSpec-Workflow
+    workflowHint: Die Reihenfolge entspricht dem Quell-Homepage-Panel von der Idee bis zum Archiv
+    workflow:
+      idea:
+        label: Idee
+        description: Beginnen Sie mit einem klaren Ziel und Umfang
+      proposal:
+        label: Vorschlag
+        description: Lassen Sie AI den Vorschlag und die Auswirkungsskizze entwerfen
+      review:
+        label: Rezension
+        description: Überprüfen Sie den Plan, bevor mit der Umsetzung begonnen wird
+      tasks:
+        label: Aufgaben
+        description: Teilen Sie die Arbeit in ausführbare Schritte auf
+      code:
+        label: Code
+        description: Implementieren Sie mit stabilem Projektkontext
+      test:
+        label: Prüfen
+        description: Überprüfen Sie das Verhalten und die Regressionsabdeckung
+      refactor:
+        label: Umgestalten
+        description: Polieren Sie die Struktur nach der Validierung
+      docs:
+        label: Dokumente
+        description: Veröffentlichen Sie Dokumente und wiederverwendbares Wissen
+      archive:
+        label: Archiv
+        description: Archivieren Sie das Ergebnis zur späteren Wiederverwendung
+  efficient:
+    badge: EFFIZIENT
+    title: Effizient
+    subtitle: Multi-Agent- und Multi-Instanz-Ausführung, die Ihr Kontingent auslastet
+    description: >-
+      Claude Code, Codex und andere CLI-Agenten können mehrere Instanzen gleichzeitig steuern, sodass Vorschläge,
+      Korrekturen, Überprüfungen und Supportaufgaben parallel verschoben werden, anstatt in einer einzigen Warteschlange
+      zu warten.
+    comparison:
+      traditional: Herkömmlicher Einzelagent / Einzelinstanz
+      multiAgent: Parallelmatrix mit mehreren Agenten
+    throughputLabel: Durchsatzsteigerung
+    throughputValue: 10x+ parallel
+    providersTitle: Derzeit unterstützte CLIs
+    supportedProviders:
+      - ClaudeCodeCli
+      - CodexCli
+      - GitHubCopilot
+      - CodebuddyCli
+      - OpenCodeCli
+      - IFlowCli
+    matrix:
+      title: Parallele Ausführungsmatrix
+      badge: Mehrere Agenten / mehrere Instanzen
+      status: Mehrere Agenten steuern derzeit mehrere Instanzen
+      agents:
+        claude:
+          name: Claude Code
+          role: Vorschlag/Rezension
+          instances:
+            - Entwurfsspezifikation
+            - Design prüfen
+            - Archivübersicht
+        codex:
+          name: Codex
+          role: Implementierung/Korrekturen
+          instances:
+            - Erstellen Sie Feature A
+            - Erstellen Sie Feature B
+            - Regressionskorrektur
+        router:
+          name: Qwen · GLM
+          role: Analyse / Support
+          instances:
+            - Trace-Problem
+            - Texte verfeinern
+            - Erfassen Sie Erkenntnisse
+  interesting:
+    badge: INTERESSANT
+    title: Interessant
+    subtitle: Hero Dungeon macht Schulung, Zusammenarbeit und Überprüfung lebendig
+    description: >-
+      Prompt-Workbenches, Proposal-Dungeons, Kapitänslisten und Kampfberichte befinden sich im selben visuellen
+      Workflow, sodass Campus-Labore, Studententeams und Produktteams das Gefühl haben, ein koordiniertes Abenteuer zu
+      durchlaufen und nicht nur „AI zu verwenden“.
+    featurePills:
+      dungeons:
+        label: Hero Dungeons
+        description: Verwandeln Sie Generierungs-, Ausführungs- und Prompt-Workbenches in Dungeon-Läufe
+      captains:
+        label: Kapitänsliste
+        description: Weisen Sie jedem Dungeon den richtigen Heldenkapitän zu
+      battle:
+        label: Kampfberichte
+        description: Überprüfen Sie nach jedem Push XP, Level und Ausführungsergebnisse
+    dungeonCards:
+      proposal:
+        title: Vorschlagsdungeon
+        description: OpenSpec generieren / anwenden / archivieren
+        status: Kapitän bereit
+      autotask:
+        title: AutoTask Dungeon
+        description: Parallele Korrekturen und Batch-Automatisierung
+        status: 2 Instanzen aktiv
+      prompt:
+        title: Prompt Dungeon
+        description: Prompt Vorschau- und Stil-Workbench
+        status: Bereit für die visuelle Synchronisierung
+    battleReport:
+      title: Der heutige Dungeonbericht
+      badge: Hero Schlacht
+      note: >-
+        Wenn sich mehrere Dungeons parallel bewegen, fasst der Bericht Erfahrung, Level und Ausführungsergebnisse in
+        einer gemeinsamen Anzeige zusammen.
+      metrics:
+        dungeons:
+          value: '4'
+          label: Dungeons geschoben
+        level:
+          value: Lv.27
+          label: Kapitänsebene
+        xp:
+          value: 12,8 Millionen
+          label: XP heute
+    roster:
+      title: Aktuelle Kapitänsliste
+      heroes:
+        strategist:
+          name: Spec-Stratege
+          role: Vorschlag Kapitän
+        runner:
+          name: Patch-Runner
+          role: Ausführungskapitän
+        artist:
+          name: Prompt Künstler
+          role: Visuelle Unterstützung
+    gallery:
+      dungeons:
+        title: Dungeon-Kartenkarussell
+        subtitle: >-
+          Zehn kopierte Dungeon-Visuals aus der offiziellen Homepage-Galerie sorgen dafür, dass der Vorschlag, die
+          Ausführung und die Prompt-Map-Stimmung erhalten bleiben.
+      heroes:
+        title: Hero Galeriekarussell
+        subtitle: >-
+          Zehn kopierte Heldenvisualisierungen bewahren die Liste, die Rolle und den Erzählstil aus der
+          Originalpräsentation.
+      images:
+        dungeons:
+          docsEditorialStillLife: Dungeon-Galeriebild eines redaktionellen Stillleben-Arbeitsbereichs
+          proposalFfFuturistPoster: Dungeon-Galeriebild eines futuristischen Vorschlagsplakats
+          annotationNotebookScrapbook: Dungeon-Galeriebild eines Anmerkungsnotizbuchs
+          proposalNameBadgeForge: Dungeon-Galeriebild eines gefälschten Namensschilds für einen Antrag
+          proposalNewFantasySketch: Dungeon-Galeriebild einer neuen Fantasy-Vorschlagsskizze
+          indexBlueprintNetwork: Dungeon-Galeriebild eines Blueprint-Netzwerkindex
+          proposalApplyCyberForge: Dungeon-Galeriebild einer Cyber-Forge-Anwendungsszene
+          descriptionSoftEditorialRoom: Dungeon-Galeriebild eines Soft-Redaktionsraums
+          titleMinimalEditorial: Dungeon-Galeriebild einer minimalen redaktionellen Titelstudie
+          proposalExploreAbstractAtlas: Dungeon-Galeriebild eines abstrakten Atlas-Erkundungsvorschlags
+        heroes:
+          catLine03: Hero Galeriebild eines Katzenkapitäns mit Strichzeichnungen
+          catInk09: Hero Galeriebild eines Tintenkatzenkapitäns
+          catSticker02: Hero Galeriebild eines Aufklebers mit Katzenkapitän A
+          catSticker08: Hero Galeriebild einer Aufkleberkatze Captain B
+          thorn06: Hero Galeriebild eines Helden mit Dornenmotiv
+          catPaper04: Hero Galeriebild eines Katzenhelden aus Papiercollage
+          tide09: Hero Galeriebild eines Helden mit Gezeitenthema
+          royal10: Hero Galeriebild eines Helden mit königlichem Thema
+          catOil09: Hero Galeriebild eines in Öl gemalten Katzenhelden
+          aurora04: Hero Galeriebild eines Helden mit Aurora-Thema
+promotion:
+  sectionLabel: Promotion
+  badgeFallback: Empfohlen
+  closeLabel: Promotion schließen
+seo:
+  home:
+    title: Wird Agent-Era Leverage Sie ersetzen? | HagiCode
+    description: >-
+      Geben Sie Ihr Gehalt, Ihr Lieblingsmodell, Ihren Produktivitätsmultiplikator und die tägliche Token-Nutzung ein,
+      um abzuschätzen, ob Sie plus AI jetzt zwei Personen oder mehr entsprechen.
+    siteName: Wird AI mich ersetzen?
+    keywords:
+      - Agent
+      - AI Produktivität
+      - Token-Kosten
+      - Modellpreise
+      - AI Zusammenarbeit
+      - Karrierehebel
+      - HagiCode
+shareTemplates:
+  verdict: >-
+    Bei meiner derzeitigen Konstellation beläuft sich mein Jahresgrundgehalt auf {{annualIncome}} und die jährlichen
+    Gesamtbeschäftigungskosten auf {{annualTotalCost}}. Wenn ein Kollege {{modelName}} verwendet, könnte er auf etwa
+    {{effectivePeopleEquivalent}} skalieren. {{verdictHeadline}}
+  costImpact: >-
+    Zählen Sie die Zahlen auf: Die jährlichen Gesamtbeschäftigungskosten meines Arbeitgebers belaufen sich auf
+    {{annualTotalCost}}, und die jährlichen Ausgaben in Höhe von AI belaufen sich bei dieser Intensität auf etwa
+    {{annualAiCost}}. Wenn ein Kollege ebenfalls {{modelName}} verwendet, skaliert er auf ungefähr
+    {{effectivePeopleEquivalent}}. {{exchangeRateText}}
+  challenge: >-
+    Wenn ein Kollege dem gleichen {{modelName}}-Workflow folgt, könnte er auf etwa {{effectivePeopleEquivalent}}
+    skalieren. Meine jährlichen Gesamtbeschäftigungskosten belaufen sich auf {{annualTotalCost}}, wobei die jährlichen
+    AI Ausgaben etwa {{annualAiCost}} betragen. Probieren Sie es auch aus. {{exchangeRateText}}
+assessmentAvailability:
+  available: Verfügbar
+  comingSoon: Kommt bald
+  legacyMapped: Legacy-ID zugeordnet

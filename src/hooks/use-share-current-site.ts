@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { useTheme } from "@/contexts/theme-context"
-import type { SupportedLanguage } from "@/i18n/config"
+import { resolveSupportedLanguage } from "@/i18n/config"
 import { buildShareUrl, copyTextToClipboard } from "@/lib/share"
 
 export type ShareState = "idle" | "copied" | "error"
@@ -12,7 +12,7 @@ export function useShareCurrentSite() {
   const { theme } = useTheme()
   const [shareState, setShareState] = useState<ShareState>("idle")
 
-  const language = (i18n.resolvedLanguage || "zh-CN") as SupportedLanguage
+  const language = resolveSupportedLanguage(i18n.resolvedLanguage || i18n.language)
 
   useEffect(() => {
     if (shareState === "idle") {

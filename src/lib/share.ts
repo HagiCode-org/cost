@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "@/i18n/config"
+import { languageQueryParam, type SupportedLanguage } from "@/i18n/config"
 import type { Theme } from "@/contexts/theme-context"
 
 interface BuildShareUrlOptions {
@@ -9,7 +9,7 @@ interface BuildShareUrlOptions {
 
 export function buildShareUrl({ href, language, theme }: BuildShareUrlOptions) {
   const url = new URL(href)
-  url.searchParams.set("lang", language)
+  url.searchParams.set(languageQueryParam, language)
   url.searchParams.set("theme", theme)
   return url.toString()
 }

@@ -4,15 +4,17 @@ import { Provider } from "react-redux"
 
 import App from "./App"
 import { ThemeProvider } from "./contexts/theme-context"
-import "./i18n/config"
+import { getResolvedLanguage } from "./i18n/config"
 import "./index.css"
 import { bootstrapAnalytics } from "./lib/analytics/bootstrap"
 import { injectAllSchemas } from "./lib/seo/schema-generator"
 import { initializeDefaultSEO } from "./lib/seo/utils"
 import { store } from "./lib/store"
 
-initializeDefaultSEO("zh-CN")
-injectAllSchemas("zh-CN")
+const initialLanguage = getResolvedLanguage()
+
+initializeDefaultSEO(initialLanguage)
+injectAllSchemas(initialLanguage)
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

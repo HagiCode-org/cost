@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest"
 
+import { resolveSEOConfig } from "@/config/seo"
 import { injectAllSchemas } from "./schema-generator"
 
 describe("injectAllSchemas", () => {
@@ -29,18 +30,19 @@ describe("injectAllSchemas", () => {
 
   it("updates localized JSON-LD in place when the active locale changes", () => {
     injectAllSchemas("zh-CN")
-    injectAllSchemas("en-US")
+    injectAllSchemas("ja-JP")
 
     const scripts = Array.from(document.head.querySelectorAll('script[type="application/ld+json"]'))
     expect(scripts).toHaveLength(3)
 
     const website = JSON.parse(document.getElementById("json-ld-website")?.textContent ?? "{}")
     const webpage = JSON.parse(document.getElementById("json-ld-webpage")?.textContent ?? "{}")
+    const seo = resolveSEOConfig("ja-JP")
 
-    expect(website.name).toBe("Will AI Replace Me?")
-    expect(website.description).toContain("favorite model")
-    expect(website.inLanguage).toBe("en-US")
-    expect(webpage.url).toBe("https://cost.hagicode.com/?lang=en-US")
-    expect(webpage.inLanguage).toBe("en-US")
+    expect(website.name).toBe(seo.siteName)
+    expect(website.description).toBe(seo.description)
+    expect(website.inLanguage).toBe("ja-JP")
+    expect(webpage.url).toBe("https://cost.hagicode.com/?lang=ja-JP")
+    expect(webpage.inLanguage).toBe("ja-JP")
   })
 })

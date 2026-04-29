@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest"
 
+import { resolveSEOConfig } from "@/config/seo"
+import { getSupportedLanguageMetadata, supportedLanguages } from "@/i18n/config"
 import { initializeDefaultSEO, updateSEO } from "./utils"
 
 describe("SEO runtime updates", () => {
@@ -27,39 +29,47 @@ describe("SEO runtime updates", () => {
     expect(document.head.querySelector('meta[property="og:site_name"]')?.getAttribute("content")).toBe(
       "我会被AI替代吗",
     )
-    expect(document.head.querySelectorAll('link[rel="alternate"]').length).toBe(3)
+    expect(document.head.querySelectorAll('link[rel="alternate"]').length).toBe(supportedLanguages.length + 1)
     expect(document.head.querySelector('link[rel="alternate"][hreflang="x-default"]')?.getAttribute("href")).toBe(
       "https://cost.hagicode.com/",
     )
-    expect(document.head.querySelector('meta[property="og:locale:alternate"]')?.getAttribute("content")).toBe(
-      "en_US",
+    expect(
+      Array.from(document.head.querySelectorAll('meta[property="og:locale:alternate"]')).map((element) =>
+        element.getAttribute("content"),
+      ),
+    ).toEqual(
+      supportedLanguages
+        .filter((language) => language !== "zh-CN")
+        .map((language) => getSupportedLanguageMetadata(language).ogLocale),
     )
   })
 
   it("keeps localized canonical, sharing tags, and alternates synchronized after locale changes", () => {
     initializeDefaultSEO("zh-CN")
-    updateSEO("en-US")
+    updateSEO("fr-FR")
+    const expectedSeo = resolveSEOConfig("fr-FR")
 
-    expect(document.title).toBe("Will Agent-Era Leverage Replace You? | HagiCode")
-    expect(document.documentElement.lang).toBe("en-US")
-    expect(document.head.querySelector('meta[name="description"]')?.getAttribute("content")).toContain(
-      "favorite model",
-    )
-    expect(document.head.querySelector('meta[name="keywords"]')?.getAttribute("content")).toContain(
-      "AI productivity",
+    expect(document.documentElement.lang).toBe("fr-FR")
+    expect(document.head.querySelector('meta[name="description"]')?.getAttribute("content")).toBe(expectedSeo.description)
+    expect(document.head.querySelector('meta[name="keywords"]')?.getAttribute("content")).toBe(
+      expectedSeo.keywords.join(", "),
     )
     expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute("href")).toBe(
-      "https://cost.hagicode.com/?lang=en-US",
+      "https://cost.hagicode.com/?lang=fr-FR",
     )
-    expect(document.head.querySelector('meta[property="og:locale"]')?.getAttribute("content")).toBe("en_US")
-    expect(document.head.querySelector('meta[property="og:locale:alternate"]')?.getAttribute("content")).toBe(
-      "zh_CN",
+    expect(document.head.querySelector('meta[property="og:locale"]')?.getAttribute("content")).toBe("fr_FR")
+    expect(
+      Array.from(document.head.querySelectorAll('meta[property="og:locale:alternate"]')).map((element) =>
+        element.getAttribute("content"),
+      ),
+    ).toEqual(
+      supportedLanguages
+        .filter((language) => language !== "fr-FR")
+        .map((language) => getSupportedLanguageMetadata(language).ogLocale),
     )
-    expect(document.head.querySelector('meta[name="twitter:title"]')?.getAttribute("content")).toContain(
-      "Agent-Era",
-    )
+    expect(document.head.querySelector('meta[name="twitter:title"]')?.getAttribute("content")).toBe(expectedSeo.title)
     expect(document.head.querySelector('meta[name="twitter:url"]')?.getAttribute("content")).toBe(
-      "https://cost.hagicode.com/?lang=en-US",
+      "https://cost.hagicode.com/?lang=fr-FR",
     )
 
     const alternateLinks = Array.from(document.head.querySelectorAll('link[rel="alternate"]')).map((link) => ({
@@ -67,19 +77,14 @@ describe("SEO runtime updates", () => {
       href: link.getAttribute("href"),
     }))
 
-    expect(alternateLinks).toEqual([
-      {
-        hrefLang: "zh-CN",
-        href: "https://cost.hagicode.com/",
-      },
-      {
-        hrefLang: "en-US",
-        href: "https://cost.hagicode.com/?lang=en-US",
-      },
-      {
-        hrefLang: "x-default",
-        href: "https://cost.hagicode.com/",
-      },
-    ])
+    expect(alternateLinks).toHaveLength(supportedLanguages.length + 1)
+    expect(alternateLinks).toContainEqual({
+      hrefLang: "fr-FR",
+      href: "https://cost.hagicode.com/?lang=fr-FR",
+    })
+    expect(alternateLinks.at(-1)).toEqual({
+      hrefLang: "x-default",
+      href: "https://cost.hagicode.com/",
+    })
   })
 })

@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import i18n, { defaultLanguage, resolveSupportedLanguage } from '@/i18n/config';
 import { loadFirstActivePromotion, type ActivePromotion } from '@/lib/promote-loader';
 
 type PromoteCardProps = {
@@ -13,13 +14,9 @@ type PromoteCardProps = {
 const DEFAULT_FOOTER_SELECTOR = 'footer, [data-footer-root], .footer';
 const DISMISSED_PROMOTIONS_STORAGE_KEY = 'hagicode:promote-card:dismissed-signature';
 
-function platformLabel(platform: string | null, locale: string | undefined) {
+function platformLabel(platform: string | null, badgeFallback: string) {
   if (platform) return platform;
-  return locale?.toLowerCase().startsWith('zh') ? '推荐' : 'Promoted';
-}
-
-function closeLabel(locale: string | undefined) {
-  return locale?.toLowerCase().startsWith('zh') ? '关闭推广信息' : 'Dismiss promotion';
+  return badgeFallback;
 }
 
 function readDismissedSignature(): string | null {
@@ -41,12 +38,14 @@ function writeDismissedSignature(signature: string): void {
 }
 
 export function PromoteCard({
-  locale = 'en',
+  locale = defaultLanguage,
   fetchImpl,
   className,
   initialPromotion = null,
   footerSelector = DEFAULT_FOOTER_SELECTOR,
 }: PromoteCardProps) {
+  const language = useMemo(() => resolveSupportedLanguage(locale, defaultLanguage), [locale]);
+  const t = useMemo(() => i18n.getFixedT(language), [language]);
   const [promotion, setPromotion] = useState<ActivePromotion | null>(initialPromotion);
   const [footerVisible, setFooterVisible] = useState(false);
   const [dismissedSignature, setDismissedSignature] = useState<string | null>(() => readDismissedSignature());
@@ -55,14 +54,14 @@ export function PromoteCard({
     if (initialPromotion) return;
     let cancelled = false;
 
-    void loadFirstActivePromotion({ locale, fetchImpl }).then((nextPromotion) => {
+    void loadFirstActivePromotion({ locale: language, fetchImpl }).then((nextPromotion) => {
       if (!cancelled) setPromotion(nextPromotion);
     });
 
     return () => {
       cancelled = true;
     };
-  }, [fetchImpl, initialPromotion, locale]);
+  }, [fetchImpl, initialPromotion, language]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined' || !('IntersectionObserver' in window)) {
@@ -96,9 +95,9 @@ export function PromoteCard({
   };
 
   return (
-    <section className={className} data-promote-card aria-label={locale.toLowerCase().startsWith('zh') ? '推广信息' : 'Promotion'}>
+    <section className={className} data-promote-card aria-label={t('promotion.sectionLabel')}>
       <div className="promote-card__inner">
-        <button type="button" className="promote-card__close" onClick={dismissPromotion} aria-label={closeLabel(locale)}>
+        <button type="button" className="promote-card__close" onClick={dismissPromotion} aria-label={t('promotion.closeLabel')}>
           <span aria-hidden="true">×</span>
         </button>
         <button
@@ -109,7 +108,7 @@ export function PromoteCard({
           aria-label={`${promotion.ctaLabel}: ${promotion.title}`}
         >
           <span className="promote-card__body">
-            <span className="promote-card__badge">{platformLabel(promotion.platform, locale)}</span>
+            <span className="promote-card__badge">{platformLabel(promotion.platform, t('promotion.badgeFallback'))}</span>
             <span className="promote-card__title">{promotion.title}</span>
             <span className="promote-card__description">{promotion.description}</span>
           </span>

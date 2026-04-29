@@ -1,3 +1,5 @@
+import { resolveContentLanguage, type SupportedLanguage } from "@/i18n/config"
+
 export type CityTier = "tier1" | "new-tier1" | "tier2" | "other"
 
 export type JobFamily =
@@ -173,17 +175,18 @@ export const benchmarkData: BenchmarkData = {
 export function getCityTierLabel(
   cityTier: CityTier,
   region: "cn-mainland" | "international",
-  language: "zh-CN" | "en-US",
+  language: SupportedLanguage,
 ) {
   const city = benchmarkData.cityCoefficients.find((item) => item.tier === cityTier)
+  const contentLanguage = resolveContentLanguage(language)
 
   if (!city) {
     return cityTier
   }
 
   if (region === "cn-mainland") {
-    return language === "zh-CN" ? city.label : city.labelEn
+    return contentLanguage === "zh-CN" ? city.label : city.labelEn
   }
 
-  return language === "zh-CN" ? city.internationalLabel : city.internationalLabelEn
+  return contentLanguage === "zh-CN" ? city.internationalLabel : city.internationalLabelEn
 }

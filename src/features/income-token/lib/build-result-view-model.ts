@@ -1,3 +1,4 @@
+import { getModelAvailabilityLabel } from "@/i18n/content-copy"
 import type { SupportedLanguage } from "@/i18n/config"
 import type { SiteRegion } from "@/lib/region"
 
@@ -199,12 +200,6 @@ function formatBudgetByCurrency(currency: "USD" | "CNY", annualCostCny: number):
 
 function getLocalizedModelMeta(modelId: string, language: SupportedLanguage) {
   return getLocalizedModelCopy(getModelById(modelId), language)
-}
-
-function getAvailabilityLabel(status: string, language: SupportedLanguage) {
-  if (status === "coming-soon") return language === "zh-CN" ? "即将开放" : "Coming soon"
-  if (status === "legacy-mapped") return language === "zh-CN" ? "旧 ID 已映射" : "Legacy ID mapped"
-  return language === "zh-CN" ? "可用" : "Available"
 }
 
 function getLocalizedProviderMeta(providerId: string, language: SupportedLanguage) {
@@ -517,7 +512,7 @@ export function buildResultViewModel(
     sourceUrl: selectedModel.sourceUrl,
     sourceNote: selectedModelMeta.sourceNote,
     sourceSyncedAt: selectedModel.sourceSyncedAt,
-    availabilityStatus: getAvailabilityLabel(selectedModel.availabilityStatus, language),
+    availabilityStatus: getModelAvailabilityLabel(selectedModel.availabilityStatus, language),
     inputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken),
     outputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken),
     mixedPriceFormatted: `${formatCurrencyPrice(selectedModel.currency, mixedPriceInModelCurrency)} / 1M`,
@@ -575,7 +570,7 @@ export function buildResultViewModel(
       sourceLabel: modelMeta.sourceLabel,
       sourceUrl: tc.sourceUrl,
       sourceSyncedAt: tc.sourceSyncedAt,
-      availabilityStatus: getAvailabilityLabel(tc.availabilityStatus, language),
+      availabilityStatus: getModelAvailabilityLabel(tc.availabilityStatus, language),
       inputTokensFormatted: formatTokens(tc.inputTokens),
       outputTokensFormatted: formatTokens(tc.outputTokens),
       totalTokensFormatted: formatTokens(tc.totalTokens),

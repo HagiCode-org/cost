@@ -1,3 +1,4 @@
+import { getModelAvailabilityLabel } from "@/i18n/content-copy"
 import type { SupportedLanguage } from "@/i18n/config"
 import type { SiteRegion } from "@/lib/region"
 
@@ -82,17 +83,11 @@ export function getModelOptions(language: SupportedLanguage): ModelOption[] {
       providerName: provider?.name ?? model.providerId,
       label: model.name,
       description: copy.description,
-      pricingContext: [copy.pricingContext, copy.sourceLabel, getAvailabilityLabel(model.availabilityStatus, language)]
+      pricingContext: [copy.pricingContext, copy.sourceLabel, getModelAvailabilityLabel(model.availabilityStatus, language)]
         .filter(Boolean)
         .join(" · "),
       availabilityStatus: model.availabilityStatus,
       sourceLabel: copy.sourceLabel,
     }
   })
-}
-
-function getAvailabilityLabel(status: string, language: SupportedLanguage) {
-  if (status === "coming-soon") return language === "zh-CN" ? "即将开放" : "Coming soon"
-  if (status === "legacy-mapped") return language === "zh-CN" ? "旧 ID 已映射" : "Legacy ID mapped"
-  return undefined
 }

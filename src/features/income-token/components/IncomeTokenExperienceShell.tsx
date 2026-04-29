@@ -15,17 +15,18 @@ import { useHomeSEO } from "@/features/home/hooks/use-home-seo"
 import { useShareCurrentSite } from "@/hooks/use-share-current-site"
 import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 import { Toaster } from "@/components/ui/sonner"
+import { getResolvedLanguage } from "@/i18n/config"
 import { cn } from "@/lib/utils"
 
 export function IncomeTokenExperienceShell() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [result, setResult] = useState<ResultViewModel | null>(null)
 
   useHomeSEO()
 
   const tone = result?.summarySection.verdictTone ?? "neutral"
-  const locale = i18n.resolvedLanguage === "zh-CN" ? "zh-CN" : "en-US"
-  const pageContent = getHomePageContent(t, locale)
+  const language = getResolvedLanguage()
+  const pageContent = getHomePageContent(t, language)
   const { shareCurrentSite } = useShareCurrentSite()
 
   function handleFloatingShare() {
@@ -65,7 +66,7 @@ export function IncomeTokenExperienceShell() {
       <main id="main-content">
         <AssessmentLanding onResultChange={setResult} />
       </main>
-      <PromoteCard locale={i18n.resolvedLanguage} className={promoteCardStyles.promoteCard} />
+      <PromoteCard locale={language} className={promoteCardStyles.promoteCard} />
       <CostFeatureShowcase />
       {result ? <ComplianceFooterSection data={result.dataDisclaimer} /> : null}
       <HomeFooter

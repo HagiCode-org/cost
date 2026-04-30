@@ -1,43 +1,33 @@
-name: Deploy Cost Site
+name: Cost Deploy gh-pages
 
 on:
-  release:
-    types:
-      - published
+  push:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      tag:
-        description: Published release tag to redeploy (for example v1.2.3)
-        required: true
-        type: string
+
+concurrency:
+  group: cost-deploy-gh-pages
+  cancel-in-progress: false
 
 permissions:
   contents: read
 
-concurrency:
-  group: cost-release-deploy-${{ github.event.release.tag_name || inputs.tag }}
-  cancel-in-progress: false
-
 env:
   NODE_VERSION: "20"
+  NODE_ENV: production
   COST_GH_PAGES_PAYLOAD_DIR: .deploy/gh-pages
   COST_SITE_BASE_PATH: ${{ vars.COST_SITE_BASE_PATH || '/' }}
   COST_SITE_URL: ${{ vars.COST_SITE_URL || 'https://cost.hagicode.com/' }}
 
 jobs:
   build:
-    name: Build validated release snapshot
+    name: Build validated site snapshot
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
     steps:
-      - name: Checkout release source
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ env.RELEASE_TAG }}
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -45,28 +35,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
-      - name: Resolve release version
-        id: version
-        shell: bash
-        run: |
-          set -euo pipefail
-          version="${RELEASE_TAG#v}"
-          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?([+][0-9A-Za-z.-]+)?$ ]]; then
-            echo "Invalid release tag: $RELEASE_TAG" >&2
-            exit 1
-          fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-
-      - name: Align package version for release build
-        run: npm version "${{ steps.version.outputs.version }}" --no-git-tag-version --allow-same-version
-
       - name: Install dependencies
         run: npm ci
 
-      - name: Build site
-        run: NODE_ENV=production npm run build
+      - name: Build and verify site
+        run: npm run build
         env:
-          VITE_APP_VERSION: ${{ steps.version.outputs.version }}
           VITE_BASE_PATH: ${{ env.COST_SITE_BASE_PATH }}
           VITE_SITE_URL: ${{ env.COST_SITE_URL }}
 
@@ -85,7 +59,7 @@ jobs:
           if-no-files-found: error
 
   deploy:
-    name: Publish validated release to gh-pages
+    name: Publish validated snapshot to gh-pages
     runs-on: ubuntu-latest
     needs: build
     permissions:
@@ -113,16 +87,10 @@ jobs:
           force_orphan: true
           enable_jekyll: false
 
-      - name: Summarize deployment
-        shell: bash
+      - name: Summarize deployment output
         run: |
-          {
-            echo "## Cost deployment finished"
-            echo
-            echo "- Release tag: ${{ github.event.release.tag_name || inputs.tag }}"
-            echo "- Published branch: gh-pages"
-            echo "- Payload shape: ./esa.jsonc + ./dist/"
-            echo "- Base path: $COST_SITE_BASE_PATH"
-            echo "- Site URL: $COST_SITE_URL"
-            echo "- GitHub environment: cost-production"
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Published the validated gh-pages payload with ./esa.jsonc and ./dist/." >> "$GITHUB_STEP_SUMMARY"
+          echo "Cost production is now sourced from the gh-pages branch artifact, not from manual branch edits." >> "$GITHUB_STEP_SUMMARY"
+          echo "GitHub environment: cost-production" >> "$GITHUB_STEP_SUMMARY"
+          echo "Configured base path: $COST_SITE_BASE_PATH" >> "$GITHUB_STEP_SUMMARY"
+          echo "Expected public URL: $COST_SITE_URL" >> "$GITHUB_STEP_SUMMARY"

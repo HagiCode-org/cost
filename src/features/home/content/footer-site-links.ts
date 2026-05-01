@@ -43,7 +43,7 @@ function resolveLocalizedField(field: LocalizedFooterField, locale: FooterCatalo
   }
 
   for (const candidate of [locale, ...getFooterLocaleFallbackChain(locale)]) {
-    const value = field[candidate]
+    const value = field[candidate as FooterCatalogLocale]
     if (typeof value === "string" && value.trim().length > 0) {
       return value
     }

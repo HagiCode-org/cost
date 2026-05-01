@@ -8,6 +8,16 @@ export interface FooterSiteLink {
   href: string
 }
 
+type FooterCatalogLocale = SupportedLanguage
+type LocalizedFooterField = string | Readonly<Record<FooterCatalogLocale, string>>
+
+type FooterSnapshotEntry = {
+  id: string
+  title: LocalizedFooterField
+  description: LocalizedFooterField
+  url: string
+}
+
 const DEFAULT_RELATED_SITE_ORDER = [
   "hagicode-main",
   "hagicode-docs",
@@ -23,9 +33,35 @@ const DEFAULT_RELATED_SITE_ORDER = [
 
 const CURRENT_SITE_ID = "cost-calculator"
 
+function getFooterLocaleFallbackChain(locale: FooterCatalogLocale): readonly FooterCatalogLocale[] {
+  return locale === "zh-Hant" ? ["zh-CN", "en-US"] : ["en-US"]
+}
+
+function resolveLocalizedField(field: LocalizedFooterField, locale: FooterCatalogLocale): string {
+  if (typeof field === "string") {
+    return field
+  }
+
+  for (const candidate of [locale, ...getFooterLocaleFallbackChain(locale)]) {
+    const value = field[candidate]
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value
+    }
+  }
+
+  for (const value of Object.values(field)) {
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value
+    }
+  }
+
+  return ""
+}
+
 export function resolveCostFooterSiteLinks(locale: SupportedLanguage): FooterSiteLink[] {
-  void locale
-  const snapshotById = new Map(footerSitesSnapshot.entries.map((entry) => [entry.id, entry]))
+  const snapshotById = new Map<string, FooterSnapshotEntry>(
+    footerSitesSnapshot.entries.map((entry) => [entry.id, entry as FooterSnapshotEntry]),
+  )
 
   return DEFAULT_RELATED_SITE_ORDER.flatMap((siteId) => {
     const entry = snapshotById.get(siteId)
@@ -35,8 +71,8 @@ export function resolveCostFooterSiteLinks(locale: SupportedLanguage): FooterSit
 
     return [{
       siteId: entry.id,
-      label: entry.title,
-      description: entry.description,
+      label: resolveLocalizedField(entry.title, locale),
+      description: resolveLocalizedField(entry.description, locale),
       href: entry.url,
     }]
   })

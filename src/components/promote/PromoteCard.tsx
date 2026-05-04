@@ -37,6 +37,10 @@ function writeDismissedSignature(signature: string): void {
   }
 }
 
+function closeText(locale: string | undefined) {
+  return locale?.toLowerCase().startsWith('zh') ? '关闭' : 'Close';
+}
+
 export function PromoteCard({
   locale = defaultLanguage,
   fetchImpl,
@@ -95,10 +99,11 @@ export function PromoteCard({
   };
 
   return (
-    <section className={className} data-promote-card aria-label={t('promotion.sectionLabel')}>
-      <div className="promote-card__inner">
+    <section className={className} data-promote-card data-promote-card-layout="compact" aria-label={t('promotion.sectionLabel')}>
+      <div className="promote-card__inner" data-promote-card-shell="compact">
         <button type="button" className="promote-card__close" onClick={dismissPromotion} aria-label={t('promotion.closeLabel')}>
-          <span aria-hidden="true">×</span>
+          <span className="promote-card__close-icon" aria-hidden="true">×</span>
+          <span className="promote-card__close-label">{closeText(language)}</span>
         </button>
         <button
           type="button"

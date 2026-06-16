@@ -14,11 +14,6 @@ type PromoteCardProps = {
 const DEFAULT_FOOTER_SELECTOR = 'footer, [data-footer-root], .footer';
 const DISMISSED_PROMOTIONS_STORAGE_KEY = 'hagicode:promote-card:dismissed-signature';
 
-function platformLabel(platform: string | null, badgeFallback: string) {
-  if (platform) return platform;
-  return badgeFallback;
-}
-
 function readDismissedSignature(): string | null {
   if (typeof window === 'undefined') return null;
   try {
@@ -113,7 +108,6 @@ export function PromoteCard({
           aria-label={`${promotion.ctaLabel}: ${promotion.title}`}
         >
           <span className="promote-card__body">
-            <span className="promote-card__badge">{platformLabel(promotion.platform, t('promotion.badgeFallback'))}</span>
             <span className="promote-card__title">{promotion.title}</span>
             <span className="promote-card__description">{promotion.description}</span>
           </span>

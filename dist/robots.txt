@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cost.hagicode.com/sitemap.xml

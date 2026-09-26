@@ -1,6 +1,6 @@
 import { benchmarkData } from "../content/benchmark-data"
 import type { CityTier } from "../content/benchmark-data"
-import { pricingData, resolveCanonicalModelId } from "../content/pricing-data"
+import { getModelById, pricingData } from "../content/pricing-data"
 import type { SalaryCurrency } from "./currency"
 import { normalizeIncomeInputToAnnualCny } from "./currency"
 
@@ -87,8 +87,7 @@ export interface TokenCeiling {
 }
 
 function getSelectedModel(modelId: string): SelectedModelMeta {
-  const canonicalModelId = resolveCanonicalModelId(modelId)
-  const model = pricingData.models.find((item) => item.id === canonicalModelId) ?? pricingData.models[0]
+  const model = getModelById(modelId)
   const provider = pricingData.providers.find((item) => item.id === model.providerId)
 
   return {

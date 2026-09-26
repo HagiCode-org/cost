@@ -1,9 +1,10 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react"
+import { fireEvent, screen, waitFor, within } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import i18n from "@/i18n/config"
 import * as regionModule from "@/lib/region"
 import { renderWithProviders } from "@/test/render"
+import { pricingData } from "@/features/income-token/content/pricing-data"
 import { AssessmentLanding } from "./AssessmentLanding"
 
 describe("AssessmentLanding currency flow", () => {
@@ -77,7 +78,7 @@ describe("AssessmentLanding currency flow", () => {
 
     expect(screen.getByRole("radio", { name: "美元 USD" })).toHaveAttribute("aria-checked", "true")
     expect(screen.getByText("$55k")).toBeInTheDocument()
-    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("gpt-5.4-mini")
+    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("gpt-5-mini")
 
     await waitFor(() => {
       expect(window.location.search).toContain("region=international")
@@ -92,26 +93,54 @@ describe("AssessmentLanding currency flow", () => {
     renderWithProviders(<AssessmentLanding />)
 
     expect(
-      screen.getByRole("option", { name: /OpenAI · GPT-5.4 mini · Best-value coding model.*models.dev API/ }),
+      screen.getByRole("option", { name: /OpenAI · GPT-5.4 mini · Previous-generation lightweight coding model.*OpenAI API Pricing/ }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("option", { name: /DeepSeek · DeepSeek-V4-Flash · Mainline coding model · Cache miss · models.dev API/ }),
+      screen.getByRole("option", { name: /DeepSeek · DeepSeek-V4.1-Flash · Off-peak, cache miss.*DeepSeek Models & Pricing/ }),
     ).toBeInTheDocument()
+  })
+
+  it("renders every catalog model in the English selector", async () => {
+    vi.spyOn(regionModule, "detectRegion").mockReturnValue("international")
+    await i18n.changeLanguage("en-US")
+    renderWithProviders(<AssessmentLanding />)
+
+    const modelSelector = screen.getByLabelText(/Which model do you use the most/i)
+    const optionIds = within(modelSelector)
+      .getAllByRole("option")
+      .map((option) => (option as HTMLOptionElement).value)
+    expect(optionIds).toEqual(pricingData.models.map((model) => model.id))
   })
 
   it("canonicalizes legacy model query parameters and writes back canonical IDs", async () => {
     window.history.replaceState(
       {},
       "",
-      "/?region=cn-mainland&currency=CNY&incomePreset=26&income=26&city=tier1&model=deepseek-v3&multiplier=5&dailyTokens=100",
+      "/?region=cn-mainland&currency=CNY&incomePreset=26&income=26&city=tier1&model=deepseek-v4-flash&multiplier=5&dailyTokens=100",
     )
 
     renderWithProviders(<AssessmentLanding />)
 
-    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("deepseek-v4-flash")
+    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("deepseek-flash")
 
     await waitFor(() => {
-      expect(new URLSearchParams(window.location.search).get("model")).toBe("deepseek-v4-flash")
+      expect(new URLSearchParams(window.location.search).get("model")).toBe("deepseek-flash")
+    })
+  })
+
+  it("keeps historical MiniMax links on their matching legacy model", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/?region=cn-mainland&currency=CNY&incomePreset=26&income=26&city=tier1&model=minimax-m2-5&multiplier=5&dailyTokens=100",
+    )
+
+    renderWithProviders(<AssessmentLanding />)
+
+    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("MiniMax-M2.5")
+
+    await waitFor(() => {
+      expect(new URLSearchParams(window.location.search).get("model")).toBe("MiniMax-M2.5")
     })
   })
 })

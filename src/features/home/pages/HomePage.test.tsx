@@ -59,14 +59,14 @@ describe("HomePage", () => {
     window.history.replaceState(
       {},
       "",
-      "/?incomePreset=40&income=40&city=tier2&model=deepseek-v3&multiplier=3&dailyTokens=120"
+      "/?incomePreset=40&income=40&city=tier2&model=deepseek-v4-flash&multiplier=3&dailyTokens=120"
     )
 
     renderWithProviders(<HomePage />)
 
     expect(screen.getByRole("radio", { name: "40 万" })).toHaveAttribute("aria-checked", "true")
     expect(screen.getByLabelText(/你的城市更接近哪座典型城市/)).toHaveValue("tier2")
-    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("deepseek-v4-flash")
+    expect(screen.getByLabelText(/你用的最多的模型是什么/)).toHaveValue("deepseek-flash")
     expect(screen.getByLabelText(/用了这个模型，你的效率是以前的几倍/)).toHaveValue(3)
     expect(screen.getByLabelText(/这个模型你每天大概需要多少 M Token/)).toHaveValue(120)
   })
@@ -102,7 +102,7 @@ describe("HomePage", () => {
     renderWithProviders(<HomePage />)
 
     fireEvent.change(screen.getByLabelText(/你用的最多的模型是什么/), {
-      target: { value: "deepseek-v4-flash" },
+      target: { value: "deepseek-flash" },
     })
     fireEvent.change(screen.getByLabelText(/用了这个模型，你的效率是以前的几倍/), {
       target: { value: "6" },

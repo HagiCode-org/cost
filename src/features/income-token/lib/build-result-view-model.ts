@@ -78,6 +78,8 @@ export interface ModelCostViewModel {
   availabilityStatus: string
   inputPriceFormatted: string
   outputPriceFormatted: string
+  cacheReadPriceFormatted?: string
+  cacheWritePriceFormatted?: string
   mixedPriceFormatted: string
   mixedPriceFormula: string
   mixedPriceExplanation: string
@@ -515,6 +517,14 @@ export function buildResultViewModel(
     availabilityStatus: getModelAvailabilityLabel(selectedModel.availabilityStatus, language),
     inputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken),
     outputPriceFormatted: formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken),
+    cacheReadPriceFormatted:
+      selectedModel.cacheReadCostPer1mToken !== undefined
+        ? formatCurrencyPrice(selectedModel.currency, selectedModel.cacheReadCostPer1mToken)
+        : undefined,
+    cacheWritePriceFormatted:
+      selectedModel.cacheWriteCostPer1mToken !== undefined
+        ? formatCurrencyPrice(selectedModel.currency, selectedModel.cacheWriteCostPer1mToken)
+        : undefined,
     mixedPriceFormatted: `${formatCurrencyPrice(selectedModel.currency, mixedPriceInModelCurrency)} / 1M`,
     mixedPriceFormula:
       `(${ratio} × ${formatCurrencyPrice(selectedModel.currency, selectedModel.inputCostPer1mToken)} + ${formatCurrencyPrice(selectedModel.currency, selectedModel.outputCostPer1mToken)}) ÷ ${ratio + 1} = ${formatCurrencyPrice(selectedModel.currency, mixedPriceInModelCurrency)} / 1M`,

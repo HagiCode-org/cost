@@ -106,17 +106,17 @@ export function TokenCeilingListSection({ data }: TokenCeilingListSectionProps) 
                         <span>{t("results.cost.unitOutputPrice")}</span>
                         <span className="font-mono text-foreground">{model.outputPriceFormatted}</span>
                       </div>
-                      {model.cacheReadPriceFormatted && model.cacheWritePriceFormatted ? (
-                        <>
-                          <div className="flex justify-between gap-3">
-                            <span>{t("results.cost.cacheReadPrice")}</span>
-                            <span className="font-mono text-foreground">{model.cacheReadPriceFormatted}</span>
-                          </div>
-                          <div className="flex justify-between gap-3">
-                            <span>{t("results.cost.cacheWritePrice")}</span>
-                            <span className="font-mono text-foreground">{model.cacheWritePriceFormatted}</span>
-                          </div>
-                        </>
+                      {model.cacheReadPriceFormatted ? (
+                        <div className="flex justify-between gap-3">
+                          <span>{t("results.cost.cacheReadPrice")}</span>
+                          <span className="font-mono text-foreground">{model.cacheReadPriceFormatted}</span>
+                        </div>
+                      ) : null}
+                      {model.cacheWritePriceFormatted ? (
+                        <div className="flex justify-between gap-3">
+                          <span>{t("results.cost.cacheWritePrice")}</span>
+                          <span className="font-mono text-foreground">{model.cacheWritePriceFormatted}</span>
+                        </div>
                       ) : null}
                       {model.pricingNote ? (
                         <p className="border-t pt-2 text-xs md:text-[11px] leading-relaxed">

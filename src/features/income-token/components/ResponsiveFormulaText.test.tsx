@@ -4,6 +4,9 @@ import { describe, expect, it } from "vitest"
 import { CostImpactSection } from "./CostImpactSection"
 import { TokenCeilingListSection } from "./TokenCeilingListSection"
 import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
+import { buildResultViewModel } from "@/features/income-token/lib/build-result-view-model"
+import { evaluate } from "@/features/income-token/lib/calculate-ai-risk"
+import { pricingData } from "@/features/income-token/content/pricing-data"
 import i18n from "@/i18n/config"
 import { renderWithProviders } from "@/test/render"
 
@@ -19,6 +22,7 @@ const costSectionData = {
   sourceNote: "Updated today",
   inputPriceFormatted: "$3",
   outputPriceFormatted: "$15",
+  cacheReadPriceFormatted: "$0.003",
   mixedPriceFormatted: "$6",
   mixedPriceFormula: "mixed-price-formula",
   mixedPriceExplanation: "mixed-price-explanation",
@@ -59,6 +63,7 @@ const tokenListData = {
           mixOutputFormula: "mix-output-formula",
           inputPriceFormatted: "$3",
           outputPriceFormatted: "$15",
+          cacheReadPriceFormatted: "$0.003",
           pricingContext: "Standard pricing",
           pricingNote: "No cache discount",
           sourceLabel: "Anthropic Pricing",
@@ -88,6 +93,17 @@ describe("responsive formula copy", () => {
     expect(screen.getByText("workday-average-formula")).toHaveClass("md:text-[11px]")
   })
 
+  it("shows a standalone cache-read rate without requiring a cache-write price", async () => {
+    await i18n.changeLanguage("en-US")
+    renderWithProviders(<CostImpactSection data={costSectionData} />)
+
+    fireEvent.click(screen.getByRole("button", { name: /Expand to view model cost and token budget details/i }))
+
+    expect(screen.getByText("Cache read / 1M tokens")).toBeInTheDocument()
+    expect(screen.getByText("$0.003")).toBeInTheDocument()
+    expect(screen.queryByText("Cache write / 1M tokens")).not.toBeInTheDocument()
+  })
+
   it("upgrades token ceiling copy to text-xs on mobile while preserving desktop sizes", async () => {
     await i18n.changeLanguage("en-US")
     renderWithProviders(<TokenCeilingListSection data={tokenListData} />)
@@ -99,8 +115,29 @@ describe("responsive formula copy", () => {
     expect(screen.getByText(/Standard pricing/)).toHaveClass("text-xs")
     expect(screen.getByText(/Standard pricing/)).toHaveClass("md:text-[11px]")
     expect(screen.getByText(/Average across 240 workdays/)).toHaveClass("md:text-[11px]")
+    expect(screen.getByText("Cache read / 1M tokens")).toBeInTheDocument()
+    expect(screen.getByText("$0.003")).toBeInTheDocument()
+    expect(screen.queryByText("Cache write / 1M tokens")).not.toBeInTheDocument()
     expect(screen.getByText("mix-input-formula")).toHaveClass("text-xs")
     expect(screen.getByText("mix-input-formula")).toHaveClass("md:text-[10px]")
     expect(screen.getByText("mix-output-formula")).toHaveClass("md:text-[10px]")
+  })
+
+  it("renders one token-disclosure card for every configured model tier", async () => {
+    await i18n.changeLanguage("en-US")
+    const result = evaluate({
+      annualIncomeCny: 300_000,
+      cityTier: "tier1",
+      modelId: "gpt-6-sol",
+      performanceMultiplier: 2.5,
+      dailyTokenUsageM: 10,
+    })
+    const viewModel = buildResultViewModel(result, "en-US", "USD", "international")
+
+    renderWithProviders(<TokenCeilingListSection data={viewModel.tokenListSection} />)
+    fireEvent.click(screen.getByRole("button", { name: /Full Token Purchasing Power List/i }))
+
+    const cards = document.querySelectorAll("#token-ceiling-list-content > div > div.grid > div")
+    expect(cards).toHaveLength(pricingData.models.length)
   })
 })

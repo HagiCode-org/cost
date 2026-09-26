@@ -77,6 +77,18 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
               <p className="mono-label text-muted-foreground">{t("results.cost.unitOutputPrice")}</p>
               <p className="mt-1 font-mono text-lg font-semibold">{data.outputPriceFormatted}</p>
             </div>
+            {data.cacheReadPriceFormatted ? (
+              <div className="rounded-[1.25rem] bg-muted/45 p-4">
+                <p className="mono-label text-muted-foreground">{t("results.cost.cacheReadPrice")}</p>
+                <p className="mt-1 font-mono text-lg font-semibold">{data.cacheReadPriceFormatted}</p>
+              </div>
+            ) : null}
+            {data.cacheWritePriceFormatted ? (
+              <div className="rounded-[1.25rem] bg-muted/45 p-4">
+                <p className="mono-label text-muted-foreground">{t("results.cost.cacheWritePrice")}</p>
+                <p className="mt-1 font-mono text-lg font-semibold">{data.cacheWritePriceFormatted}</p>
+              </div>
+            ) : null}
             <div className="rounded-[1.25rem] bg-muted/45 p-4">
               <p className="mono-label text-muted-foreground">{t("results.cost.mixedPrice")}</p>
               <p className="mt-1 font-mono text-lg font-semibold">{data.mixedPriceFormatted}</p>

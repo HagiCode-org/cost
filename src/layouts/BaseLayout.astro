@@ -1,19 +1,76 @@
 ---
 import "@/index.css"
-import { defaultLanguage } from "@/i18n/config"
+import i18n, {
+  defaultLanguage,
+  supportedLanguages,
+  type SupportedLanguage,
+} from "@/i18n/config"
 import { buildAllSchemas } from "@/lib/seo/schema-generator"
 import { resolveSEOConfig, siteConfig } from "@/config/seo"
 import IncomeTokenExperienceIsland from "@/components/IncomeTokenExperienceIsland"
+import Footer from "@hagicode/hagilight-core/Footer"
+import PromotoBanner from "@hagicode/hagilight-core/PromotoBanner"
+import { getHomePageContent } from "@/features/home/content/home-content"
 
 const metadata = resolveSEOConfig(defaultLanguage)
 const schemas = buildAllSchemas(defaultLanguage)
 const faviconUrl = new URL(`${siteConfig.basePath}favicon.ico`, siteConfig.origin).toString()
 const faviconSvgUrl = new URL(`${siteConfig.basePath}favicon.svg`, siteConfig.origin).toString()
 const sitemapUrl = new URL(`${siteConfig.basePath}sitemap.xml`, siteConfig.origin).toString()
+
+const costSiteId = "cost-calculator"
+const costSiteUrl = new URL(siteConfig.basePath || "/", siteConfig.origin).toString()
+
+function buildCostFooterLinks(language: SupportedLanguage) {
+  const t = i18n.getFixedT(language)
+  const content = getHomePageContent(t, language)
+  return {
+    siteId: costSiteId,
+    siteUrl: costSiteUrl,
+    overrides: {
+      icpFiling: {
+        href: content.footer.registrationItems[0]?.href ?? "https://beian.miit.gov.cn/",
+        label: content.footer.registrationItems[0]?.label,
+        external: true,
+      },
+      publicSecurityFiling: {
+        href: content.footer.registrationItems[1]?.href ?? "http://www.beian.gov.cn/portal/registerSystemInfo",
+        label: content.footer.registrationItems[1]?.label,
+        external: true,
+      },
+    },
+    extraLinks: {
+      quick: [
+        {
+          id: "cost-github",
+          label: t("footer.links.github"),
+          href: "https://github.com/HagiCode-org/site",
+          external: true,
+        },
+        {
+          id: "cost-steam",
+          label: t("footer.links.steam"),
+          href: "https://store.steampowered.com/app/4625540/Hagicode/",
+          external: true,
+        },
+        {
+          id: "cost-pricing",
+          label: t("footer.links.pricing"),
+          href: "https://openai.com/api/pricing/",
+          external: true,
+        },
+      ],
+    },
+  }
+}
+
+const initialLanguage = defaultLanguage
+const initialFooterLinks = buildCostFooterLinks(initialLanguage)
+const secondaryLanguages = supportedLanguages.filter((language) => language !== initialLanguage)
 ---
 
 <!doctype html>
-<html lang={defaultLanguage}>
+<html lang={initialLanguage}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -75,5 +132,41 @@ const sitemapUrl = new URL(`${siteConfig.basePath}sitemap.xml`, siteConfig.origi
   </head>
   <body>
     <IncomeTokenExperienceIsland client:load />
+
+    <PromotoBanner locale={initialLanguage} />
+    <Footer locale={initialLanguage} links={initialFooterLinks} />
+
+    {secondaryLanguages.map((language) => (
+      <template data-locale={language}>
+        <Footer locale={language} links={buildCostFooterLinks(language)} />
+      </template>
+    ))}
+
+    <script is:inline define:vars={{ defaultLanguage }}>
+      (() => {
+        const root = document.documentElement;
+        const footer = document.querySelector('footer.hagilight-footer');
+        const banner = document.querySelector('hagilight-promoto-banner');
+        const footerForLocale = (locale) =>
+          document.querySelector(`template[data-locale="${locale}"]`)?.content.querySelector('footer');
+        const applyLocale = (locale) => {
+          if (!locale) return;
+          if (footer) {
+            const replacement = footerForLocale(locale) || footerForLocale(defaultLanguage);
+            if (replacement) footer.innerHTML = replacement.innerHTML;
+            footer.dataset.locale = locale;
+          }
+          if (banner) {
+            banner.dataset.locale = locale;
+            document.dispatchEvent(new Event('astro:page-load'));
+          }
+        };
+        applyLocale(root.lang || defaultLanguage);
+        new MutationObserver(() => applyLocale(root.lang || defaultLanguage)).observe(root, {
+          attributes: true,
+          attributeFilter: ['lang'],
+        });
+      })();
+    </script>
   </body>
 </html>

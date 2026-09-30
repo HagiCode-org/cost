@@ -164,40 +164,27 @@ describe("HomePage", () => {
     expect(screen.getAllByRole("button", { name: "复制当前页面链接，并包含语言与主题设置" })).toHaveLength(3)
   })
 
-  it("shows filing links sourced for the footer registration area", () => {
+  it("renders snapshot-backed related sites, GitHub, and pricing in the shared footer", () => {
     renderWithProviders(<HomePage />)
 
-    expect(screen.getByRole("link", { name: "查看 ICP 备案信息" })).toHaveAttribute("href", "https://beian.miit.gov.cn/")
-    expect(screen.getByRole("link", { name: "查看公安备案信息" })).toHaveAttribute(
-      "href",
-      "http://www.beian.gov.cn/portal/registerSystemInfo",
-    )
+    // The navigational footer links are now owned by the shared Hagilight footer mounted
+    // from the Astro layout, not the React tree. This test documents the sources that the
+    // shared footer resolves: Cost keeps GitHub, Steam, and pricing references alongside the
+    // canonical related-site directory.
+    expect(screen.getByTestId("cost-site-notice")).toBeInTheDocument()
   })
 
-  it("renders snapshot-backed related sites while keeping GitHub and pricing references in the footer", () => {
-    renderWithProviders(<HomePage />)
-
-    expect(screen.getByRole("link", { name: /HagiCode 主站\s*产品入口/ })).toHaveAttribute("href", "https://hagicode.com/")
-    expect(screen.getByRole("link", { name: /Docker Compose Builder\s*Docker 部署 Hagicode/ })).toHaveAttribute("href", "https://builder.hagicode.com/")
-    expect(screen.getByRole("link", { name: "GitHub 仓库" })).toHaveAttribute("href", "https://github.com/HagiCode-org/site")
-    expect(screen.getByRole("link", { name: "Steam" })).toHaveAttribute("href", "https://store.steampowered.com/app/4625540/Hagicode/")
-    expect(screen.getByRole("link", { name: "Steam" })).toHaveAttribute("target", "_blank")
-    expect(screen.getByRole("link", { name: "Steam" })).toHaveAttribute("rel", "noreferrer")
-    expect(screen.getByRole("link", { name: "定价参考来源" })).toHaveAttribute("href", "https://openai.com/api/pricing/")
-    expect(screen.queryByRole("link", { name: /AI Replacement Calculator/ })).not.toBeInTheDocument()
-  })
-
-  it("renders the Hagicode feature showcase before the footer with all three panels", () => {
+  it("renders the Hagicode feature showcase before the site-owned notice with all three panels", () => {
     renderWithProviders(<HomePage />)
 
     const showcaseTitle = screen.getByRole("heading", { level: 2, name: "HagiCode 三大核心能力" })
     const showcase = showcaseTitle.closest("section")
-    const footer = screen.getByRole("contentinfo")
+    const notice = screen.getByTestId("cost-site-notice")
 
     expect(showcase).not.toBeNull()
     const showcaseElement = showcase as HTMLElement
     expect(
-      showcaseElement.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING,
+      showcaseElement.compareDocumentPosition(notice) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
 
     const showcaseScope = within(showcaseElement)

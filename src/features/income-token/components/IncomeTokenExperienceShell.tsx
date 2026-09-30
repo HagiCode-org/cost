@@ -6,9 +6,7 @@ import { toast } from "sonner"
 import { AssessmentLanding } from "@/features/income-token/components/AssessmentLanding"
 import { CostFeatureShowcase } from "@/features/home/components/CostFeatureShowcase"
 import { HomeHeader } from "@/features/home/components/HomeHeader"
-import { HomeFooter } from "@/features/home/components/HomeFooter"
-import { PromoteCard } from "@/components/promote/PromoteCard"
-import promoteCardStyles from "@/components/promote/PromoteCard.module.css"
+import { CostSiteNotice } from "@/features/home/components/CostSiteNotice"
 import { ComplianceFooterSection } from "@/features/income-token/components/ComplianceFooterSection"
 import { getHomePageContent } from "@/features/home/content/home-content"
 import { useHomeSEO } from "@/features/home/hooks/use-home-seo"
@@ -66,17 +64,12 @@ export function IncomeTokenExperienceShell() {
       <main id="main-content">
         <AssessmentLanding onResultChange={setResult} />
       </main>
-      <PromoteCard locale={language} className={promoteCardStyles.promoteCard} />
       <CostFeatureShowcase />
       {result ? <ComplianceFooterSection data={result.dataDisclaimer} /> : null}
-      <HomeFooter
+      <CostSiteNotice
         disclaimerTitle={pageContent.footer.disclaimerTitle}
         disclaimer={pageContent.footer.disclaimer}
         extensionNote={pageContent.footer.extensionNote}
-        registrationLabel={pageContent.footer.registrationLabel}
-        registrationItems={pageContent.footer.registrationItems}
-        linksTitle={pageContent.footer.linksTitle}
-        links={pageContent.footer.links}
         copyright={pageContent.footer.copyright}
       />
       </div>

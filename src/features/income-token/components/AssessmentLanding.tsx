@@ -30,10 +30,10 @@ import { mergeEarnedTitleIds, readEarnedTitleIds, writeEarnedTitleIds } from "@/
 import { getResolvedExperienceContext, getResolvedLanguage } from "@/i18n/config"
 import {
   getDefaultCityTierForRegion,
-  syncRegionPreferenceFromUrl,
   type SiteRegion,
 } from "@/lib/region"
 import { cn } from "@/lib/utils"
+import { useHydrated } from "@/hooks/use-hydrated"
 import { ResultSections } from "./ResultSections"
 
 const defaultModelId = pricingData.models[0]?.id ?? "gpt-5"
@@ -41,6 +41,17 @@ const questionOrder = ["01", "02", "03", "04", "05", "06"] as const
 const CUSTOM_INCOME_VALUE = "custom"
 const validCityValues = new Set(benchmarkData.cityCoefficients.map((option) => option.tier))
 const validModelValues = new Set(pricingData.models.map((option) => option.id))
+
+interface AssessmentInitialState {
+  region: SiteRegion
+  selectedCurrency: SalaryCurrency
+  incomePreset: string
+  incomeAmount: string
+  cityTier: CityTier
+  modelId: string
+  performanceMultiplier: string
+  dailyTokenUsage: string
+}
 
 function getSearchParams() {
   if (typeof window === "undefined") return new URLSearchParams()
@@ -121,9 +132,7 @@ function getInitialDailyTokens() {
   return parseNumberString(getSearchParams().get("dailyTokens"), 0) ?? "100"
 }
 
-function getInitialAssessmentState() {
-  syncRegionPreferenceFromUrl()
-
+function getPreferredAssessmentState(): AssessmentInitialState {
   const params = getSearchParams()
   const { region } = getResolvedExperienceContext()
   const selectedCurrency = getInitialSelectedCurrency(params, region)
@@ -141,13 +150,49 @@ function getInitialAssessmentState() {
   }
 }
 
+function getDefaultAssessmentState(): AssessmentInitialState {
+  const selectedCurrency: SalaryCurrency = "USD"
+  const incomePreset = defaultIncomePresetByCurrency[selectedCurrency]
+
+  return {
+    region: "international" as SiteRegion,
+    selectedCurrency,
+    incomePreset,
+    incomeAmount: incomePreset,
+    cityTier: getDefaultCityTierForRegion("international"),
+    modelId: defaultModelId,
+    performanceMultiplier: "5",
+    dailyTokenUsage: "100",
+  }
+}
+
 interface AssessmentLandingProps {
   onResultChange?: (result: ResultViewModel | null) => void
 }
 
 export function AssessmentLanding({ onResultChange }: AssessmentLandingProps) {
+  const isHydrated = useHydrated()
+  const initialState = useMemo(
+    () => (isHydrated ? getPreferredAssessmentState() : getDefaultAssessmentState()),
+    [isHydrated],
+  )
+
+  return (
+    <AssessmentLandingForm
+      key={isHydrated ? "hydrated" : "server"}
+      initialState={initialState}
+      onResultChange={onResultChange}
+    />
+  )
+}
+
+function AssessmentLandingForm({
+  initialState,
+  onResultChange,
+}: AssessmentLandingProps & {
+  initialState: AssessmentInitialState
+}) {
   const { t } = useTranslation()
-  const initialState = useMemo(() => getInitialAssessmentState(), [])
   const [region] = useState<SiteRegion>(initialState.region)
   const [selectedCurrency, setSelectedCurrency] = useState<SalaryCurrency>(initialState.selectedCurrency)
   const [incomePreset, setIncomePreset] = useState(initialState.incomePreset)

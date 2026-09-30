@@ -57,6 +57,12 @@ const supportedCliIds: SupportCliId[] = [
 const dungeonCardIds: DungeonCardId[] = ["proposal", "autotask", "prompt"]
 const rosterHeroIds: RosterHeroId[] = ["strategist", "runner", "artist"]
 const battleMetricIds: BattleMetricId[] = ["dungeons", "level", "xp"]
+const baseUrl = import.meta.env.BASE_URL || "/"
+
+function resolvePublicAssetUrl(assetPath: string) {
+  const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`
+  return `${normalizedBase}${assetPath.replace(/^\/+/u, "")}`
+}
 
 export const costFeatureShowcaseGalleryManifest: Record<CostFeatureGalleryGroup, readonly GalleryManifestEntry[]> = {
   dungeons: [
@@ -90,7 +96,7 @@ function buildLoopedGallery(
   t: TFunction,
 ) {
   const assets = costFeatureShowcaseGalleryManifest[group].map((entry) => ({
-    src: `/img/home/interesting/${group}/${entry.fileName}`,
+    src: resolvePublicAssetUrl(`/img/home/interesting/${group}/${entry.fileName}`),
     alt: t(entry.altKey),
   }))
 

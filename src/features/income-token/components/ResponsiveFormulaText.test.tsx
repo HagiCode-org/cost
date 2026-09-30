@@ -80,7 +80,8 @@ const tokenListData = {
 } as ResultViewModel["tokenListSection"]
 
 describe("responsive formula copy", () => {
-  it("keeps cost formulas at text-xs on mobile with desktop overrides", () => {
+  it("keeps cost formulas at text-xs on mobile with desktop overrides", async () => {
+    await i18n.changeLanguage("en-US")
     renderWithProviders(<CostImpactSection data={costSectionData} />)
 
     fireEvent.click(screen.getByRole("button", { name: /Expand to view model cost and token budget details/i }))

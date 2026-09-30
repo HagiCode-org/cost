@@ -1,7 +1,7 @@
 import { configureStore, createSlice, type PayloadAction } from "@reduxjs/toolkit"
 import { useDispatch, useSelector, type TypedUseSelectorHook } from "react-redux"
 
-import { resolveInitialLanguage, type SupportedLanguage } from "@/i18n/config"
+import { defaultLanguage, type SupportedLanguage } from "@/i18n/config"
 
 export type FutureFeatureId = "job-profile" | "task-breakdown" | "result-brief" | "action-path"
 
@@ -20,7 +20,7 @@ interface SiteState {
 }
 
 const initialState: SiteState = {
-  locale: resolveInitialLanguage(),
+  locale: defaultLanguage,
   foundationStatus: "baseline-ready",
   futureFeatures: [
     { id: "job-profile", status: "ready-for-ui" },

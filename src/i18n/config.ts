@@ -1,8 +1,7 @@
 import i18n from "i18next"
-import LanguageDetector from "i18next-browser-languagedetector"
 import { initReactI18next } from "react-i18next"
 
-import { detectRegion, syncRegionPreferenceFromUrl, type SiteRegion } from "@/lib/region"
+import { detectRegion, type SiteRegion } from "@/lib/region"
 
 export const baseSourceLanguage = "en-US"
 export const defaultLanguage = "zh-CN"
@@ -213,26 +212,17 @@ export function syncLanguageQueryParam(
   history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`)
 }
 
-syncRegionPreferenceFromUrl()
-
 i18n
-  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources,
     fallbackLng: defaultLanguage,
     supportedLngs: [...supportedLanguages],
-    lng: resolveInitialLanguage(),
+    lng: defaultLanguage,
     defaultNS: defaultNamespace,
     ns: [...supportedNamespaces],
     interpolation: {
       escapeValue: false,
-    },
-    detection: {
-      order: ["querystring", "localStorage", "navigator"],
-      caches: ["localStorage"],
-      lookupQuerystring: languageQueryParam,
-      lookupLocalStorage: languagePreferenceStorageKey,
     },
   })
 

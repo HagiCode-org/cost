@@ -11,7 +11,7 @@ function resolveSchemaId(fragment: string) {
   return `${siteConfig.origin.replace(/\/+$/, "")}/#${fragment}`
 }
 
-export function injectAllSchemas(language: SupportedLanguage = "zh-CN") {
+export function buildAllSchemas(language: SupportedLanguage = "zh-CN") {
   const seo = resolveSEOConfig(language)
   const organizationId = resolveSchemaId("organization")
   const websiteId = resolveSchemaId("website")
@@ -85,7 +85,11 @@ export function injectAllSchemas(language: SupportedLanguage = "zh-CN") {
     },
   ]
 
-  payloads.forEach(({ id, value }) => {
+  return payloads
+}
+
+export function injectAllSchemas(language: SupportedLanguage = "zh-CN") {
+  buildAllSchemas(language).forEach(({ id, value }) => {
     const scriptId = `json-ld-${id}`
     let script = document.getElementById(scriptId) as HTMLScriptElement | null
 

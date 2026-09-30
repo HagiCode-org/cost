@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 env:
-  NODE_VERSION: "20"
+  NODE_VERSION: "22"
   NODE_ENV: production
   COST_GH_PAGES_PAYLOAD_DIR: .deploy/gh-pages
   COST_SITE_BASE_PATH: ${{ vars.COST_SITE_BASE_PATH || '/' }}

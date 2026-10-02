@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises"
+import { readdir, readFile } from "node:fs/promises"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -9,6 +9,7 @@ const [html, robots, sitemap] = await Promise.all([
   readFile(path.join(outputDirectory, "robots.txt"), "utf-8"),
   readFile(path.join(outputDirectory, "sitemap.xml"), "utf-8"),
 ])
+const publishedFiles = await readdir(outputDirectory)
 const origin = (process.env.VITE_SITE_URL || "https://cost.hagicode.com").replace(/\/+$/u, "")
 const configuredBasePath = process.env.VITE_BASE_PATH || "/"
 const trimmedBasePath = configuredBasePath.replace(/^\/+|\/+$/gu, "")
@@ -36,6 +37,11 @@ for (const value of requiredHtml) {
 
 if (html.includes('<div id="root"></div>')) {
   throw new Error("Built homepage still contains an empty client-only root")
+}
+
+if (publishedFiles.some((file) => /^rss(?:\..+)?\.xml$/u.test(file))
+  || /application\/rss\+xml|\/rss(?:\.xml|\.en\.xml)/u.test(html)) {
+  throw new Error("Core-only Cost build must not publish RSS routes or integration-provided feed links")
 }
 
 if (!html.includes(`href="${expectedCanonical}"`)) {

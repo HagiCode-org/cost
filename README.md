@@ -9,6 +9,7 @@
 - `src/components/IncomeTokenExperienceIsland.tsx` 将计算器体验作为单个 React island 执行服务端渲染并在客户端 hydration。语言相关的页头、表单、结果、展示区和页脚保持在一起，避免语言切换失效或重复翻译内容。
 - 浏览器语言、地区、主题和计算器 URL 偏好在 hydration 后应用；服务端及客户端初始渲染使用默认语言和确定性默认值。
 - 部署目标仍为静态托管，无需应用服务器。
+- `@hagicode/hagilight-core` 0.4.1 supplies shared components only; Cost does not enable an RSS-generating integration or publish RSS routes.
 
 ## 本地启动
 

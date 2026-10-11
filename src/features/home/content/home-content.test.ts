@@ -25,13 +25,20 @@ describe("getHomePageContent", () => {
         ariaLabel: "footer.registrationAria.publicSecurity",
       },
     ])
-    expect(content.footer.links[0]).toEqual({
-      siteId: "hagicode-main",
-      label: "HagiCode 主站",
-      description: "产品入口",
-      href: "https://hagicode.com/",
-    })
-    expect(content.footer.links.some((link) => link.href === "https://cost.hagicode.com/")).toBe(false)
+    expect(content.footer.links).toEqual([
+      {
+        label: "footer.links.github",
+        href: "https://github.com/HagiCode-org/site",
+      },
+      {
+        label: "footer.links.steam",
+        href: "https://store.steampowered.com/app/4625540/Hagicode/",
+      },
+      {
+        label: "footer.links.pricing",
+        href: "https://openai.com/api/pricing/",
+      },
+    ])
     expect(content.footer.links).toContainEqual({
       label: "footer.links.steam",
       href: "https://store.steampowered.com/app/4625540/Hagicode/",

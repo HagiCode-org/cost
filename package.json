@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "npm run prepare:i18n && astro dev --host 0.0.0.0 --port 36291",
-    "build": "export NODE_ENV=\"${NODE_ENV:-production}\"; npm run prepare:i18n && npm run sync:footer-sites && npm run typecheck && astro build && node ./scripts/sync-seo-assets.mjs && node ./scripts/check-built-site.mjs",
+    "build": "export NODE_ENV=\"${NODE_ENV:-production}\"; npm run prepare:i18n && npm run typecheck && astro build && node ./scripts/sync-seo-assets.mjs && node ./scripts/check-built-site.mjs",
     "lint": "eslint .",
     "preview": "astro preview --host 0.0.0.0",
     "typecheck": "astro check && tsc -p tsconfig.build.json",
@@ -24,8 +24,7 @@
     "i18n:prune:write": "hagi18n prune --config hagi18n.yaml --write",
     "i18n:generate": "node ./scripts/generate-i18n-resources.mjs",
     "prepare:i18n": "npm run i18n:generate",
-    "i18n:check": "npm run i18n:doctor && npm run i18n:generate -- --check",
-    "sync:footer-sites": "node ./scripts/fetch-sites-snapshot.mjs"
+    "i18n:check": "npm run i18n:doctor && npm run i18n:generate -- --check"
   },
   "dependencies": {
     "@astrojs/react": "^7.0.0",

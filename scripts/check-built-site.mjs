@@ -1,4 +1,4 @@
-import { readdir, readFile } from "node:fs/promises"
+import { readFile, stat } from "node:fs/promises"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -79,6 +79,67 @@ if (!rss.includes("<rss") || !rss.includes(`<link>${expectedCanonical}</link>`))
 
 if (!llms.trim().startsWith("#")) {
   throw new Error("Built llms.txt is empty or does not start with a Markdown heading")
+}
+
+const countOccurrences = (source, pattern) => source.split(pattern).length - 1
+const countMatches = (source, regex) => [...source.matchAll(regex)].length
+
+// Locale footers are pre-rendered inside <template data-locale>; they are not visible on the page.
+const localeTemplatePattern = /<template\s+data-locale="([^"]+)"[^>]*>([\s\S]*?)<\/template>/gu
+const localeTemplates = [...html.matchAll(localeTemplatePattern)]
+const visibleHtml = html.replace(localeTemplatePattern, "")
+
+const expectOne = (count, label) => {
+  if (count !== 1) {
+    throw new Error(`Built homepage must contain exactly one ${label}, found ${count}`)
+  }
+}
+
+expectOne(countOccurrences(html, "https://www.googletagmanager.com/gtag/js?id=G-EN03FMT2Q4"), "Google Analytics loader")
+expectOne(countOccurrences(html, `gtag('config', "G-EN03FMT2Q4")`), "Google Analytics gtag('config') initialization")
+expectOne(
+  countMatches(html, /<script[^>]*GoogleAnalytics\.astro_astro_type_script[^>]*>/gu),
+  "click-listener script",
+)
+expectOne(countOccurrences(html, "sdk.51.la/js-sdk-pro.min.js"), "51LA SDK loader")
+expectOne(countOccurrences(html, "LA.init("), "51LA initialization")
+expectOne(countOccurrences(visibleHtml, "<hagilight-promoto-banner"), "promotion banner")
+expectOne(countOccurrences(visibleHtml, "<footer"), "visible footer outside <template>")
+
+const footerSegment = visibleHtml.match(/<footer[\s\S]*?<\/footer>/u)?.[0] ?? ""
+const footerLabels = ["Powered By hagilight@", "Branch:", "Commit:", "Built:"]
+for (const label of footerLabels) {
+  if (!footerSegment.includes(label)) {
+    throw new Error(`Visible footer is missing the build or attribution label: ${label}`)
+  }
+}
+if (localeTemplates.length === 0) {
+  throw new Error("Built homepage has no locale footer templates to check")
+}
+for (const [, locale, template] of localeTemplates) {
+  for (const label of footerLabels) {
+    if (!template.includes(label)) {
+      throw new Error(`Locale footer template ${locale} is missing the build or attribution label: ${label}`)
+    }
+  }
+}
+
+// Every RSS link in every footer (visible and locale templates) must resolve to a published feed file.
+const footerSegments = [...html.matchAll(/<footer[\s\S]*?<\/footer>/gu)].map(([segment]) => segment)
+const rssHrefs = new Set(
+  footerSegments.flatMap((segment) => [...segment.matchAll(/href="([^"]*rss[^"]*\.xml)"/gu)].map(([, href]) => href)),
+)
+if (rssHrefs.size === 0) {
+  throw new Error("Built footers link to no RSS feed")
+}
+for (const href of rssHrefs) {
+  const pathname = decodeURIComponent(new URL(href, expectedCanonical).pathname)
+  const relativePath = basePath !== "/" && pathname.startsWith(basePath) ? pathname.slice(basePath.length) : pathname.replace(/^\//u, "")
+  try {
+    await stat(path.join(outputDirectory, relativePath))
+  } catch {
+    throw new Error(`Footer RSS link does not resolve to a published file: ${href}`)
+  }
 }
 
 const localAssetUrls = html.matchAll(/(?:src|href)="(\/[^"#?]*)"/gu)

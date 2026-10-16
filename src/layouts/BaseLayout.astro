@@ -8,6 +8,7 @@ import i18n, {
 import { buildAllSchemas } from "@/lib/seo/schema-generator"
 import { resolveSEOConfig, siteConfig } from "@/config/seo"
 import IncomeTokenExperienceIsland from "@/components/IncomeTokenExperienceIsland"
+import GoogleAnalytics from "@hagicode/hagilight-core/GoogleAnalytics"
 import Footer from "@hagicode/hagilight-core/Footer"
 import PromotoBanner from "@hagicode/hagilight-core/PromotoBanner"
 import { getHomePageContent } from "@/features/home/content/home-content"
@@ -122,13 +123,7 @@ const secondaryLanguages = supportedLanguages.filter((language) => language !== 
     }
 
     <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EN03FMT2Q4"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-EN03FMT2Q4');
-    </script>
+    <GoogleAnalytics measurementId="G-EN03FMT2Q4" />
   </head>
   <body>
     <IncomeTokenExperienceIsland client:load />

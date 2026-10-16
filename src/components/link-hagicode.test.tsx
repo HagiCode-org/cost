@@ -41,6 +41,14 @@ describe("LinkHagicode click tracking", () => {
     expect(labels).toEqual(["hagicode_brand", "hagicode_brand"])
   })
 
+  it("renders the first-party brand link with opener protection and without noreferrer", () => {
+    const { getByRole } = render(<LinkHagicode>Powered by HagiCode</LinkHagicode>)
+
+    const link = getByRole("link", { name: "HagiCode" })
+    expect(link.getAttribute("target")).toBe("_blank")
+    expect(link.getAttribute("rel")).toBe("noopener")
+  })
+
   it("does not throw when gtag is absent", () => {
     removeGtag()
     const { getByRole } = render(<LinkHagicode>HagiCode</LinkHagicode>)

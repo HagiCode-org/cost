@@ -1,9 +1,11 @@
 import { gaEventAttributes } from "@hagicode/hagilight-core/analytics-events"
+import { getExternalLinkRel } from "@/lib/link-policy"
 
+const HAGICODE_HREF = "https://hagicode.com"
 const HAGICODE_LINK_PROPS = {
-  href: "https://hagicode.com",
+  href: HAGICODE_HREF,
   target: "_blank",
-  rel: "noopener noreferrer",
+  rel: getExternalLinkRel(HAGICODE_HREF),
 } as const
 
 const HAGICODE_PATTERN = /(HagiCode|HAGICODE)/g

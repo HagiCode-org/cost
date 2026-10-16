@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/contexts/theme-context"
 import i18n, { defaultLanguage, persistLanguagePreference, resolveInitialLanguage } from "@/i18n/config"
 import { setLocale, store } from "@/lib/store"
 import { syncRegionPreferenceFromUrl } from "@/lib/region"
-import { bootstrapAnalytics } from "@/lib/analytics/bootstrap"
 
 function ClientPreferences() {
   useEffect(() => {
@@ -18,10 +17,6 @@ function ClientPreferences() {
     if (language !== defaultLanguage) {
       void i18n.changeLanguage(language)
     }
-
-    void bootstrapAnalytics().catch((error) => {
-      console.warn("[51LA Analytics] Bootstrap failed", error)
-    })
   }, [])
 
   return <App />

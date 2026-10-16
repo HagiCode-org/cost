@@ -1,3 +1,5 @@
+import { gaEventAttributes } from "@hagicode/hagilight-core/analytics-events"
+
 const HAGICODE_LINK_PROPS = {
   href: "https://hagicode.com",
   target: "_blank",
@@ -18,6 +20,7 @@ export function LinkHagicode({ children }: { children: React.ReactNode }) {
           <a
             key={i}
             {...HAGICODE_LINK_PROPS}
+            {...gaEventAttributes({ category: "navigation", label: "hagicode_brand", location: "cost_body" })}
             className="underline decoration-primary/40 underline-offset-2 hover:decoration-primary transition-colors"
           >
             {part}

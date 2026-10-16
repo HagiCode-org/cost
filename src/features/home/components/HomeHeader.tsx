@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { LinkHagicode } from "@/components/link-hagicode"
+import { gaEventAttributes } from "@hagicode/hagilight-core/analytics-events"
 import { useTheme } from "@/contexts/theme-context"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useShareCurrentSite, type ShareState } from "@/hooks/use-share-current-site"
@@ -25,7 +26,9 @@ import {
 import { useAppDispatch } from "@/lib/store"
 import { formatAppVersion, getAppVersion } from "@/lib/version"
 
+// `id` is the stable analytics label; `label` is localized and must not be used for tracking.
 type ProductLink = {
+  id: "official" | "docs" | "builder"
   label: string
   href: string
 }
@@ -187,6 +190,7 @@ function MobileHomeHeader({
                         href={link.href}
                         target="_blank"
                         rel="noreferrer"
+                        {...gaEventAttributes({ category: "navigation", label: link.id, location: "cost_mobile_menu" })}
                         className="flex items-center justify-between rounded-2xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground shadow-[var(--shadow-soft)] transition-colors hover:text-primary"
                       >
                         <span>{link.label}</span>
@@ -231,14 +235,17 @@ export const HomeHeader = forwardRef<HTMLElement>(function HomeHeader(_, ref) {
   const productLinks = useMemo<ProductLink[]>(
     () => [
       {
+        id: "official",
         label: t("header.links.official"),
         href: "https://hagicode.com/",
       },
       {
+        id: "docs",
         label: t("header.links.docs"),
         href: "https://docs.hagicode.com/",
       },
       {
+        id: "builder",
         label: t("header.links.builder"),
         href: "https://builder.hagicode.com/",
       },
@@ -301,6 +308,7 @@ export const HomeHeader = forwardRef<HTMLElement>(function HomeHeader(_, ref) {
               href={link.href}
               target="_blank"
               rel="noreferrer"
+              {...gaEventAttributes({ category: "navigation", label: link.id, location: "cost_header" })}
               className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background px-4 py-2 text-sm text-muted-foreground shadow-[var(--shadow-button)] transition-colors hover:text-primary"
             >
               <span>{link.label}</span>

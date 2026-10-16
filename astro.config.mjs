@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url"
 import path from "node:path"
 import tailwindcss from "@tailwindcss/vite"
 import react from "@astrojs/react"
+import { hagilight, hagilightFavicon } from "@hagicode/hagilight/integration"
 import { defineConfig } from "astro/config"
 
 const packageJson = JSON.parse(
@@ -18,7 +19,7 @@ export default defineConfig({
   site: process.env.VITE_SITE_URL || "https://cost.hagicode.com",
   base: process.env.VITE_BASE_PATH || "/",
   output: "static",
-  integrations: [react()],
+  integrations: [react(), hagilightFavicon(), hagilight()],
   vite: {
     plugins: [tailwindcss()],
     define: {

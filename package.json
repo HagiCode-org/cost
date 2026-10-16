@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "npm run prepare:i18n && astro dev --host 0.0.0.0 --port 36291",
-    "build": "export NODE_ENV=\"${NODE_ENV:-production}\"; npm run prepare:i18n && npm run typecheck && astro build && node ./scripts/sync-seo-assets.mjs && node ./scripts/check-built-site.mjs",
+    "build": "export NODE_ENV=\"${NODE_ENV:-production}\"; npm run prepare:i18n && npm run typecheck && astro build && node ./scripts/check-built-site.mjs",
     "lint": "eslint .",
     "preview": "astro preview --host 0.0.0.0",
     "typecheck": "astro check && tsc -p tsconfig.build.json",
@@ -78,6 +78,7 @@
     "@astrojs/check": "^0.9.10",
     "@eslint/js": "^9.39.1",
     "@hagicode/hagi18n": "^0.1.1",
+    "@hagicode/hagilight": "0.9.5",
     "@hagicode/hagilight-core": "0.9.5",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
+import { getExternalLinkRel } from "@/lib/link-policy"
 import { cn } from "@/lib/utils"
 
 interface CostImpactSectionProps {
@@ -110,7 +111,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
               <a
                 href={data.sourceUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel={getExternalLinkRel(data.sourceUrl)}
                 className="font-medium text-primary underline-offset-4 hover:underline"
               >
                 {data.sourceLabel}
@@ -170,7 +171,7 @@ export function CostImpactSection({ data }: CostImpactSectionProps) {
             <a
               href={data.sourceUrl}
               target="_blank"
-              rel="noreferrer"
+              rel={getExternalLinkRel(data.sourceUrl)}
               className="font-medium text-primary underline-offset-4 hover:underline"
             >
               {t("results.cost.officialSource")}: {data.sourceLabel}

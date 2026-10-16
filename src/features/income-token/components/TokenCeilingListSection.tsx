@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
+import { getExternalLinkRel } from "@/lib/link-policy"
 
 interface TokenCeilingListSectionProps {
   data: ResultViewModel["tokenListSection"]
@@ -62,7 +63,7 @@ export function TokenCeilingListSection({ data }: TokenCeilingListSectionProps) 
                 <a
                   href={provider.sourceUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel={getExternalLinkRel(provider.sourceUrl)}
                   className="text-xs font-medium text-primary underline-offset-4 hover:underline"
                 >
                   {t("results.cost.officialSource")}: {provider.sourceLabel}

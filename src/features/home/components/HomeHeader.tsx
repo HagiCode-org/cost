@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet"
 import { LinkHagicode } from "@/components/link-hagicode"
 import { gaEventAttributes } from "@hagicode/hagilight-core/analytics-events"
+import { getExternalLinkRel } from "@/lib/link-policy"
 import { useTheme } from "@/contexts/theme-context"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useShareCurrentSite, type ShareState } from "@/hooks/use-share-current-site"
@@ -189,7 +190,7 @@ function MobileHomeHeader({
                         key={link.href}
                         href={link.href}
                         target="_blank"
-                        rel="noreferrer"
+                        rel={getExternalLinkRel(link.href)}
                         {...gaEventAttributes({ category: "navigation", label: link.id, location: "cost_mobile_menu" })}
                         className="flex items-center justify-between rounded-2xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground shadow-[var(--shadow-soft)] transition-colors hover:text-primary"
                       >
@@ -307,7 +308,7 @@ export const HomeHeader = forwardRef<HTMLElement>(function HomeHeader(_, ref) {
               key={link.href}
               href={link.href}
               target="_blank"
-              rel="noreferrer"
+              rel={getExternalLinkRel(link.href)}
               {...gaEventAttributes({ category: "navigation", label: link.id, location: "cost_header" })}
               className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background px-4 py-2 text-sm text-muted-foreground shadow-[var(--shadow-button)] transition-colors hover:text-primary"
             >

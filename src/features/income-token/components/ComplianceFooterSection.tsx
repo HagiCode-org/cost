@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 import { ShieldCheck } from "lucide-react"
+import { getExternalLinkRel } from "@/lib/link-policy"
 
 interface ComplianceFooterSectionProps {
   data: ResultViewModel["dataDisclaimer"]
@@ -30,7 +31,7 @@ export function ComplianceFooterSection({ data }: ComplianceFooterSectionProps) 
               <a
                 href={reference.sourceUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel={getExternalLinkRel(reference.sourceUrl)}
                 className="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
               >
                 {reference.providerName}: {reference.sourceLabel}

@@ -3,12 +3,14 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const layoutPath = resolve(process.cwd(), 'src/layouts/BaseLayout.astro');
+const configPath = resolve(process.cwd(), 'astro.config.mjs');
+const islandPath = resolve(process.cwd(), 'src/components/IncomeTokenExperienceIsland.tsx');
 
 describe('Cost BaseLayout Hagilight integration', () => {
   it('mounts the shared footer and banner around the React island', async () => {
     const source = await readFile(layoutPath, 'utf8');
 
-    expect(source).toContain('import Footer from "@hagicode/hagilight-core/Footer"');
+    expect(source).toContain('import Footer from "@hagicode/hagilight/Footer"');
     expect(source).toContain('import PromotoBanner from "@hagicode/hagilight-core/PromotoBanner"');
     expect(source).toContain('<IncomeTokenExperienceIsland client:load />');
     expect(source.indexOf('<IncomeTokenExperienceIsland')).toBeLessThan(source.indexOf('<PromotoBanner'));
@@ -38,5 +40,39 @@ describe('Cost BaseLayout Hagilight integration', () => {
     const source = await readFile(layoutPath, 'utf8');
 
     expect(source).not.toMatch(/PromoteCard|promote-loader|HomeFooter|data-promote-card/u);
+  });
+
+  it('renders the static head through the Hagilight SEO component', async () => {
+    const source = await readFile(layoutPath, 'utf8');
+
+    expect(source).toContain('import SEOHead from "@hagicode/hagilight/SEOHead"');
+    expect(source).toContain('<SEOHead');
+    expect(source).toContain('head={seoHeadEntries}');
+    expect(source).toContain('resolveSEOConfig(defaultLanguage)');
+    expect(source).toContain('buildAllSchemas(defaultLanguage)');
+    expect(source).toContain('json-ld-${id}');
+    expect(source).not.toMatch(/["'](\/)?favicon\.(ico|svg)["']|sitemap\.xml/u);
+  });
+
+  it('loads 51LA through the shared component with the VITE_51LA_ID override and default ID', async () => {
+    const source = await readFile(layoutPath, 'utf8');
+
+    expect(source).toContain('import Analytics51LA from "@hagicode/hagilight-core/Analytics51LA"');
+    expect(source).toContain('<Analytics51LA siteId={import.meta.env.VITE_51LA_ID || "L6b88a5yK4h2Xnci"} />');
+    expect(source).not.toContain('bootstrapAnalytics');
+  });
+
+  it('keeps the island free of the local 51LA bootstrap', async () => {
+    const source = await readFile(islandPath, 'utf8');
+
+    expect(source).not.toContain('bootstrapAnalytics');
+    expect(source).not.toContain('@/lib/analytics');
+  });
+
+  it('registers the Hagilight integration and favicon in the Astro config', async () => {
+    const source = await readFile(configPath, 'utf8');
+
+    expect(source).toMatch(/import \{ hagilight, hagilightFavicon \} from "@hagicode\/hagilight\/integration"/u);
+    expect(source).toMatch(/integrations:\s*\[react\(\),\s*hagilightFavicon\(\),\s*hagilight\(\)\]/u);
   });
 });

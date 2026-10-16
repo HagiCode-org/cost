@@ -9,15 +9,15 @@ import { buildAllSchemas } from "@/lib/seo/schema-generator"
 import { resolveSEOConfig, siteConfig } from "@/config/seo"
 import IncomeTokenExperienceIsland from "@/components/IncomeTokenExperienceIsland"
 import GoogleAnalytics from "@hagicode/hagilight-core/GoogleAnalytics"
-import Footer from "@hagicode/hagilight-core/Footer"
+import Analytics51LA from "@hagicode/hagilight-core/Analytics51LA"
+import SEOHead from "@hagicode/hagilight/SEOHead"
+import { resolveFaviconHeadEntry } from "@hagicode/hagilight-core/favicon"
+import Footer from "@hagicode/hagilight/Footer"
 import PromotoBanner from "@hagicode/hagilight-core/PromotoBanner"
 import { getHomePageContent } from "@/features/home/content/home-content"
 
 const metadata = resolveSEOConfig(defaultLanguage)
 const schemas = buildAllSchemas(defaultLanguage)
-const faviconUrl = new URL(`${siteConfig.basePath}favicon.ico`, siteConfig.origin).toString()
-const faviconSvgUrl = new URL(`${siteConfig.basePath}favicon.svg`, siteConfig.origin).toString()
-const sitemapUrl = new URL(`${siteConfig.basePath}sitemap.xml`, siteConfig.origin).toString()
 
 const costSiteId = "cost-calculator"
 const costSiteUrl = new URL(siteConfig.basePath || "/", siteConfig.origin).toString()
@@ -65,6 +65,37 @@ function buildCostFooterLinks(language: SupportedLanguage) {
   }
 }
 
+// The bundled HagiCode icon as an inline data URI. hagilightFavicon() writes to the Astro config head,
+// which this layout does not render, so the same entry is supplied here.
+const faviconEntry = resolveFaviconHeadEntry()
+
+const seoHeadEntries = [
+  ...(faviconEntry ? [faviconEntry] : []),
+  { tag: "meta", attrs: { name: "robots", content: "index,follow" } },
+  { tag: "meta", attrs: { name: "keywords", content: metadata.keywords.join(", ") } },
+  { tag: "meta", attrs: { property: "og:type", content: "website" } },
+  { tag: "meta", attrs: { property: "og:url", content: metadata.url } },
+  { tag: "meta", attrs: { property: "og:site_name", content: metadata.siteName } },
+  { tag: "meta", attrs: { property: "og:locale", content: metadata.locale } },
+  ...metadata.ogLocaleAlternates.map((locale) => ({
+    tag: "meta",
+    attrs: { property: "og:locale:alternate", content: locale, "data-generated": "og:locale:alternate" },
+  })),
+  { tag: "meta", attrs: { name: "twitter:card", content: "summary_large_image" } },
+  { tag: "meta", attrs: { name: "twitter:url", content: metadata.url } },
+  ...metadata.alternates.map((alternate) => ({
+    tag: "link",
+    attrs: { rel: "alternate", hreflang: alternate.hrefLang, href: alternate.url, "data-generated": "alternate-language" },
+  })),
+  // JSON-LD goes through the head prop so each script keeps its json-ld-<id> element id, which the
+  // runtime injectAllSchemas() uses to update the scripts after a language switch.
+  ...schemas.map(({ id, value }) => ({
+    tag: "script",
+    attrs: { type: "application/ld+json", id: `json-ld-${id}` },
+    content: JSON.stringify(value),
+  })),
+]
+
 const initialLanguage = defaultLanguage
 const initialFooterLinks = buildCostFooterLinks(initialLanguage)
 const secondaryLanguages = supportedLanguages.filter((language) => language !== initialLanguage)
@@ -76,54 +107,20 @@ const secondaryLanguages = supportedLanguages.filter((language) => language !== 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="robots" content="index,follow" />
     <title>{metadata.title}</title>
-    <meta name="description" content={metadata.description} />
-    <meta name="keywords" content={metadata.keywords.join(", ")} />
-    <link rel="icon" type="image/x-icon" href={faviconUrl} />
-    <link rel="icon" type="image/svg+xml" href={faviconSvgUrl} />
-    <link rel="sitemap" href={sitemapUrl} />
-    <link rel="canonical" href={metadata.url} />
-    {
-      metadata.alternates.map((alternate) => (
-        <link
-          rel="alternate"
-          hreflang={alternate.hrefLang}
-          href={alternate.url}
-          data-generated="alternate-language"
-        />
-      ))
-    }
-    <meta property="og:title" content={metadata.title} />
-    <meta property="og:description" content={metadata.description} />
-    <meta property="og:image" content={metadata.image} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={metadata.url} />
-    <meta property="og:site_name" content={metadata.siteName} />
-    <meta property="og:locale" content={metadata.locale} />
-    {
-      metadata.ogLocaleAlternates.map((locale) => (
-        <meta property="og:locale:alternate" content={locale} data-generated="og:locale:alternate" />
-      ))
-    }
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={metadata.title} />
-    <meta name="twitter:description" content={metadata.description} />
-    <meta name="twitter:image" content={metadata.image} />
-    <meta name="twitter:url" content={metadata.url} />
-    {
-      schemas.map(({ id, value }) => (
-        <script
-          is:inline
-          type="application/ld+json"
-          id={`json-ld-${id}`}
-          set:html={JSON.stringify(value)}
-        />
-      ))
-    }
+    <SEOHead
+      page={{
+        url: metadata.url,
+        title: metadata.title,
+        description: metadata.description,
+        image: metadata.image,
+      }}
+      head={seoHeadEntries}
+    />
 
     <!-- Google Analytics 4 -->
     <GoogleAnalytics measurementId="G-EN03FMT2Q4" />
+    <Analytics51LA siteId={import.meta.env.VITE_51LA_ID || "L6b88a5yK4h2Xnci"} />
   </head>
   <body>
     <IncomeTokenExperienceIsland client:load />

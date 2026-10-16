@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest"
 
 import { resolveSEOConfig } from "@/config/seo"
 import { getSupportedLanguageMetadata, supportedLanguages } from "@/i18n/config"
-import { initializeDefaultSEO, updateSEO } from "./utils"
+import { updateSEO } from "./utils"
 
 describe("SEO runtime updates", () => {
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe("SEO runtime updates", () => {
   })
 
   it("initializes Cost-domain metadata for the default locale", () => {
-    initializeDefaultSEO("zh-CN")
+    updateSEO("zh-CN")
 
     expect(document.title).toBe("Agent 时代，你会不会被淘汰？ | HagiCode")
     expect(document.documentElement.lang).toBe("zh-CN")
@@ -45,7 +45,7 @@ describe("SEO runtime updates", () => {
   })
 
   it("keeps localized canonical, sharing tags, and alternates synchronized after locale changes", () => {
-    initializeDefaultSEO("zh-CN")
+    updateSEO("zh-CN")
     updateSEO("fr-FR")
     const expectedSeo = resolveSEOConfig("fr-FR")
 

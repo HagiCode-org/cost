@@ -50,10 +50,6 @@ function replaceAlternateLinks(language: SupportedLanguage) {
   })
 }
 
-export function initializeDefaultSEO(language: SupportedLanguage = "zh-CN") {
-  updateSEO(language)
-}
-
 export function updateSEO(language: SupportedLanguage) {
   const config = resolveSEOConfig(language)
 

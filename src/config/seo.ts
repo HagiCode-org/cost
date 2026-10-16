@@ -6,13 +6,13 @@ import {
   type SupportedLanguage,
 } from "@/i18n/config"
 
-export interface AlternateLink {
+interface AlternateLink {
   locale: SupportedLanguage
   hrefLang: string
   url: string
 }
 
-export interface SEOConfig {
+interface SEOConfig {
   title: string
   description: string
   keywords: string[]

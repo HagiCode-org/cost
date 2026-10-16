@@ -1,10 +1,7 @@
-import { LinkHagicode } from "@/components/link-hagicode"
-
 interface CostSiteNoticeProps {
   disclaimerTitle: string
   disclaimer: string
   extensionNote: string
-  copyright: string
 }
 
 /**
@@ -16,7 +13,6 @@ export function CostSiteNotice({
   disclaimerTitle,
   disclaimer,
   extensionNote,
-  copyright,
 }: CostSiteNoticeProps) {
   return (
     <section
@@ -28,9 +24,6 @@ export function CostSiteNotice({
         <p className="mono-label text-primary">{disclaimerTitle}</p>
         <p className="mt-2 max-w-3xl text-xs leading-6 text-muted-foreground">{disclaimer}</p>
         <p className="mt-1 max-w-3xl text-xs leading-6 text-muted-foreground">{extensionNote}</p>
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-          <LinkHagicode>{copyright}</LinkHagicode>
-        </p>
       </div>
     </section>
   )

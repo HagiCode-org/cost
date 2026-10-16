@@ -12,7 +12,6 @@ describe("getHomePageContent", () => {
 
     expect(content.footer.disclaimerTitle).toBe("footer.disclaimerTitle")
     expect(content.footer.disclaimer).toBe("footer.disclaimer")
-    expect(content.footer.copyright).toBe("footer.copyright")
     expect(content.footer.registrationItems).toEqual([
       {
         label: hagicodeCompliance.icp.label,

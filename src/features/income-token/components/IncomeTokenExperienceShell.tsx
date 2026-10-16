@@ -70,7 +70,6 @@ export function IncomeTokenExperienceShell() {
         disclaimerTitle={pageContent.footer.disclaimerTitle}
         disclaimer={pageContent.footer.disclaimer}
         extensionNote={pageContent.footer.extensionNote}
-        copyright={pageContent.footer.copyright}
       />
       </div>
       <button

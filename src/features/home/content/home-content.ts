@@ -37,7 +37,6 @@ export function getHomePageContent(t: TFunction, _locale: SupportedLanguage) {
           href: "https://openai.com/api/pricing/",
         },
       ],
-      copyright: t("footer.copyright"),
     },
   }
 }

@@ -13,7 +13,7 @@
 
 ## 本地启动
 
-需要 Node.js 22.12 或更高版本。
+需要 Node.js 24 或更高版本。
 
 ```bash
 cd repos/cost

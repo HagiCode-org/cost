@@ -37,7 +37,7 @@ npm run preview
 
 ## Agent Guidelines
 
-- Astro 7 and Vite 8 require Node.js 22.12 or later.
+- Astro 7 and Vite 8 require Node.js 22.12 or later; this repository standardizes on Node.js 24 or later.
 - Astro owns routes, document structure, build-time metadata, and static output. Keep browser interactions in the React island.
 - Keep the React island's initial render deterministic: default locale, light theme, and default form values. Apply URL, stored, browser language, theme, and region preferences after hydration.
 - Keep locale-sensitive content together when extracting a section would break client-side language switching or duplicate copy.

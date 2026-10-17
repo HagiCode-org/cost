@@ -13,7 +13,6 @@ import { useHomeSEO } from "@/features/home/hooks/use-home-seo"
 import { useShareCurrentSite } from "@/hooks/use-share-current-site"
 import type { ResultViewModel } from "@/features/income-token/lib/build-result-view-model"
 import { Toaster } from "@/components/ui/sonner"
-import { getResolvedLanguage } from "@/i18n/config"
 import { cn } from "@/lib/utils"
 
 export function IncomeTokenExperienceShell() {
@@ -23,8 +22,7 @@ export function IncomeTokenExperienceShell() {
   useHomeSEO()
 
   const tone = result?.summarySection.verdictTone ?? "neutral"
-  const language = getResolvedLanguage()
-  const pageContent = getHomePageContent(t, language)
+  const pageContent = getHomePageContent(t)
   const { shareCurrentSite } = useShareCurrentSite()
 
   function handleFloatingShare() {

@@ -8,7 +8,7 @@ const t = ((key: string) => key) as unknown as TFunction
 
 describe("getHomePageContent", () => {
   it("maps footer content from i18n keys", () => {
-    const content = getHomePageContent(t, "zh-CN")
+    const content = getHomePageContent(t)
 
     expect(content.footer.disclaimerTitle).toBe("footer.disclaimerTitle")
     expect(content.footer.disclaimer).toBe("footer.disclaimer")

@@ -25,7 +25,7 @@ const costSiteUrl = new URL(siteConfig.basePath || "/", siteConfig.origin).toStr
 
 function buildCostFooterLinks(language: SupportedLanguage) {
   const t = i18n.getFixedT(language)
-  const content = getHomePageContent(t, language)
+  const content = getHomePageContent(t)
   return {
     siteId: costSiteId,
     siteUrl: costSiteUrl,

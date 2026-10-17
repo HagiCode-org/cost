@@ -1,9 +1,8 @@
 import type { TFunction } from "i18next"
 
-import type { SupportedLanguage } from "@/i18n/config"
 import { hagicodeCompliance } from "@/config/compliance"
 
-export function getHomePageContent(t: TFunction, _locale: SupportedLanguage) {
+export function getHomePageContent(t: TFunction) {
   return {
     footer: {
       disclaimerTitle: t("footer.disclaimerTitle"),

@@ -394,44 +394,44 @@ featureShowcase:
   interesting:
     badge: INTÉRESSANT
     title: Intéressant
-    subtitle: Hero Dungeon donne vie à la formation, à la collaboration et aux révisions
+    subtitle: Les scénarios Hero donnent vie à la formation, à la collaboration et aux révisions
     description: >-
-      Les établis Prompt, les donjons de propositions, les listes de capitaines et les rapports de bataille vivent dans
+      Les établis Prompt, les scénarios de propositions, les listes de capitaines et les rapports de bataille vivent dans
       le même flux de travail visuel, de sorte que les laboratoires du campus, les équipes d'étudiants et les équipes de
       produits ont l'impression de progresser dans une aventure coordonnée plutôt que de simplement « utiliser AI ».
     featurePills:
       dungeons:
-        label: Hero Donjons
-        description: Transformez les ateliers de génération, d'exécution et d'invite en exécutions de donjon
+        label: Hero Scénarios
+        description: Transformez les ateliers de génération, d'exécution et d'invite en exécutions de scénario
       captains:
         label: Liste des capitaines
-        description: Attribuez le bon capitaine de héros à chaque donjon
+        description: Attribuez le bon capitaine de héros à chaque scénario
       battle:
         label: Rapports de bataille
         description: Examinez l'XP, les niveaux et les résultats d'exécution après chaque poussée
     dungeonCards:
       proposal:
-        title: Donjon de proposition
+        title: Scénario de proposition
         description: OpenSpec générer/appliquer/archiver
         status: Capitaine prêt
       autotask:
-        title: Donjon AutoTask
+        title: Scénario AutoTask
         description: Correctifs parallèles et automatisation par lots
         status: 2 instances actives
       prompt:
-        title: Donjon Prompt
+        title: Scénario Prompt
         description: Prompt atelier de prévisualisation et de style
         status: Synchronisation visuelle prête
     battleReport:
-      title: Le rapport du donjon d'aujourd'hui
+      title: Le rapport du scénario d'aujourd'hui
       badge: Hero Bataille
       note: >-
-        Lorsque plusieurs donjons se déplacent en parallèle, le rapport regroupe l'expérience, les niveaux et les
+        Lorsque plusieurs scénarios se déplacent en parallèle, le rapport regroupe l'expérience, les niveaux et les
         résultats d'exécution dans une seule lecture partagée.
       metrics:
         dungeons:
           value: '4'
-          label: Donjons poussés
+          label: Scénarios avancés
         level:
           value: Niv.27
           label: Niveau de capitaine
@@ -452,25 +452,25 @@ featureShowcase:
           role: Support visuel
     gallery:
       dungeons:
-        title: Carrousel de cartes de donjon
+        title: Carrousel de cartes de scénario
         subtitle: >-
-          Dix visuels de donjon copiés à partir de la galerie officielle de la page d'accueil conservent intactes la
+          Dix visuels de scénario copiés à partir de la galerie officielle de la page d'accueil conservent intactes la
           proposition, l'exécution et l'ambiance de la carte d'invite.
       heroes:
         title: Carrousel de galerie Hero
         subtitle: Dix visuels de héros copiés préservent la narration de la liste, du rôle et du style de la vitrine source.
       images:
         dungeons:
-          docsEditorialStillLife: Image de la galerie de donjon d'un espace de travail éditorial de nature morte
-          proposalFfFuturistPoster: Image de la galerie de donjon d'une affiche de proposition futuriste
-          annotationNotebookScrapbook: Image de la galerie de donjon d'un album de carnet d'annotations
-          proposalNameBadgeForge: Image de la galerie de donjon d'un faux badge nominatif de proposition
-          proposalNewFantasySketch: Image de la galerie de donjon d'un nouveau croquis de proposition fantastique
-          indexBlueprintNetwork: Image de la galerie de donjon d'un index de réseau de plans
-          proposalApplyCyberForge: Image de la galerie de donjon d'une scène d'application de cyberforge
-          descriptionSoftEditorialRoom: Image de la galerie de donjon d'une salle de rédaction soft
-          titleMinimalEditorial: Image de la galerie de donjon d'une étude de titre éditoriale minimale
-          proposalExploreAbstractAtlas: Image de la galerie de donjon d'une proposition d'exploration abstraite d'un atlas
+          docsEditorialStillLife: Image de la galerie de scénario d'un espace de travail éditorial de nature morte
+          proposalFfFuturistPoster: Image de la galerie de scénario d'une affiche de proposition futuriste
+          annotationNotebookScrapbook: Image de la galerie de scénario d'un album de carnet d'annotations
+          proposalNameBadgeForge: Image de la galerie de scénario d'un faux badge nominatif de proposition
+          proposalNewFantasySketch: Image de la galerie de scénario d'un nouveau croquis de proposition fantastique
+          indexBlueprintNetwork: Image de la galerie de scénario d'un index de réseau de plans
+          proposalApplyCyberForge: Image de la galerie de scénario d'une scène d'application de cyberforge
+          descriptionSoftEditorialRoom: Image de la galerie de scénario d'une salle de rédaction soft
+          titleMinimalEditorial: Image de la galerie de scénario d'une étude de titre éditoriale minimale
+          proposalExploreAbstractAtlas: Image de la galerie de scénario d'une proposition d'exploration abstraite d'un atlas
         heroes:
           catLine03: Image de la galerie Hero d'un capitaine de chat en dessin au trait
           catInk09: Hero image de la galerie d'un capitaine de chat à encre

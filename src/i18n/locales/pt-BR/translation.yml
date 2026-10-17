@@ -390,44 +390,44 @@ featureShowcase:
   interesting:
     badge: INTERESSANTE
     title: Interessante
-    subtitle: Hero Dungeon dá vida ao treinamento, à colaboração e à revisão
+    subtitle: Os cenários Hero dão vida ao treinamento, à colaboração e à revisão
     description: >-
-      Bancadas de trabalho Prompt, masmorras de propostas, escalações de capitães e relatórios de batalha vivem dentro
+      Bancadas de trabalho Prompt, cenários de propostas, escalações de capitães e relatórios de batalha vivem dentro
       do mesmo fluxo de trabalho visual, de modo que os laboratórios do campus, as equipes de estudantes e os esquadrões
       de produtos sentem que estão progredindo em uma aventura coordenada, em vez de apenas “usar AI”.
     featurePills:
       dungeons:
-        label: Hero Masmorras
-        description: Transforme ambientes de trabalho de geração, execução e prompt em execuções de masmorras
+        label: Hero Cenários
+        description: Transforme ambientes de trabalho de geração, execução e prompt em execuções de cenários
       captains:
         label: Lista de Capitão
-        description: Atribua o capitão herói certo para cada masmorra
+        description: Atribua o capitão herói certo para cada cenário
       battle:
         label: Relatórios de batalha
         description: Revise XP, níveis e resultados de execução após cada push
     dungeonCards:
       proposal:
-        title: Masmorra da Proposta
+        title: Cenário da Proposta
         description: OpenSpec gerar/aplicar/arquivar
         status: Capitão pronto
       autotask:
-        title: AutoTask Masmorra
+        title: AutoTask Cenário
         description: Correções paralelas e automação em lote
         status: 2 instâncias ativas
       prompt:
-        title: Prompt Masmorra
+        title: Prompt Cenário
         description: Prompt ambiente de trabalho de visualização e estilo
         status: Pronto para sincronização visual
     battleReport:
-      title: Relatório da masmorra de hoje
+      title: Relatório do cenário de hoje
       badge: Hero Batalha
       note: >-
-        Quando várias masmorras se movem em paralelo, o relatório reúne experiência, níveis e resultados de execução em
+        Quando várias cenários se movem em paralelo, o relatório reúne experiência, níveis e resultados de execução em
         uma leitura compartilhada.
       metrics:
         dungeons:
           value: '4'
-          label: Masmorras empurradas
+          label: Cenários avançados
         level:
           value: Nv.27
           label: Nível de capitão
@@ -448,25 +448,25 @@ featureShowcase:
           role: Suporte visual
     gallery:
       dungeons:
-        title: Carrossel de mapas de masmorras
+        title: Carrossel de mapas de cenários
         subtitle: >-
-          Dez visuais de masmorras copiados da galeria da página inicial oficial mantêm intactas a proposta, a execução
+          Dez visuais de cenários copiados da galeria da página inicial oficial mantêm intactas a proposta, a execução
           e o clima do mapa imediato.
       heroes:
         title: Hero carrossel de galerias
         subtitle: Dez visuais copiados dos heróis preservam a escalação, o papel e o estilo da narrativa da exibição original.
       images:
         dungeons:
-          docsEditorialStillLife: Imagem da galeria Dungeon de um espaço de trabalho editorial de natureza morta
-          proposalFfFuturistPoster: Imagem da galeria Dungeon de um pôster de proposta futurista
-          annotationNotebookScrapbook: Imagem da galeria Dungeon de um álbum de recortes de caderno de anotações
-          proposalNameBadgeForge: Imagem da galeria Dungeon de um crachá de proposta forjado
-          proposalNewFantasySketch: Imagem da galeria Dungeon de um novo esboço de proposta de fantasia
-          indexBlueprintNetwork: Imagem da galeria Dungeon de um índice de rede de projeto
-          proposalApplyCyberForge: Imagem da galeria Dungeon de uma cena de aplicação de forja cibernética
-          descriptionSoftEditorialRoom: Imagem da galeria Dungeon de uma sala editorial suave
-          titleMinimalEditorial: Imagem da galeria Dungeon de um estudo mínimo de título editorial
-          proposalExploreAbstractAtlas: Imagem da galeria de masmorras de uma proposta de exploração de atlas abstrato
+          docsEditorialStillLife: Imagem da galeria de cenários de um espaço de trabalho editorial de natureza morta
+          proposalFfFuturistPoster: Imagem da galeria de cenários de um pôster de proposta futurista
+          annotationNotebookScrapbook: Imagem da galeria de cenários de um álbum de recortes de caderno de anotações
+          proposalNameBadgeForge: Imagem da galeria de cenários de um crachá de proposta forjado
+          proposalNewFantasySketch: Imagem da galeria de cenários de um novo esboço de proposta de fantasia
+          indexBlueprintNetwork: Imagem da galeria de cenários de um índice de rede de projeto
+          proposalApplyCyberForge: Imagem da galeria de cenários de uma cena de aplicação de forja cibernética
+          descriptionSoftEditorialRoom: Imagem da galeria de cenários de uma sala editorial suave
+          titleMinimalEditorial: Imagem da galeria de cenários de um estudo mínimo de título editorial
+          proposalExploreAbstractAtlas: Imagem da galeria de cenários de uma proposta de exploração de atlas abstrato
         heroes:
           catLine03: Hero imagem da galeria de um capitão gato em arte linear
           catInk09: Hero imagem da galeria de um capitão gato de tinta

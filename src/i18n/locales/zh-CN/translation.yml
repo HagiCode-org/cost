@@ -346,39 +346,39 @@ featureShowcase:
   interesting:
     badge: INTERESTING
     title: 有趣
-    subtitle: Hero Dungeon 让训练、协作与复盘更像一次可推进的冒险
-    description: 把 Prompt 工作台、提案副本、队长编组和战报反馈放进同一个可视化流程里，让高校实验室、学生团队和产品协作场景不只是在“用 AI”，而是在经营一套能持续升级的工作流。
+    subtitle: Hero 场景让训练、协作与复盘更像一次可推进的冒险
+    description: 把 Prompt 工作台、提案场景、队长编组和战报反馈放进同一个可视化流程里，让高校实验室、学生团队和产品协作场景不只是在“用 AI”，而是在经营一套能持续升级的工作流。
     featurePills:
       dungeons:
-        label: 英雄副本
-        description: 把生成、执行和 Prompt 工作台都编成副本
+        label: 英雄场景
+        description: 把生成、执行和 Prompt 工作台都编成场景
       captains:
         label: 队长编组
-        description: 为不同副本指定最合适的 Hero 队长
+        description: 为不同场景指定最合适的 Hero 队长
       battle:
         label: 战报反馈
         description: 用 XP、等级与执行数据回看推进结果
     dungeonCards:
       proposal:
-        title: 提案副本
+        title: 提案场景
         description: OpenSpec 生成 / 执行 / 归档
         status: 队长就绪
       autotask:
-        title: AutoTask 副本
+        title: AutoTask 场景
         description: 并行修复与批量自动任务
         status: 2 个实例运行中
       prompt:
-        title: Prompt 副本
+        title: Prompt 场景
         description: Prompt 预览与风格工作台
         status: 视觉预览已同步
     battleReport:
-      title: 今日副本战报
+      title: 今日场景战报
       badge: Hero Battle
-      note: 当多个副本并行推进时，战报会把经验、等级与执行结果聚合到一个统一读数里。
+      note: 当多个场景并行推进时，战报会把经验、等级与执行结果聚合到一个统一读数里。
       metrics:
         dungeons:
           value: '4'
-          label: 副本推进
+          label: 场景推进
         level:
           value: Lv.27
           label: 队长等级
@@ -399,23 +399,23 @@ featureShowcase:
           role: 视觉支援
     gallery:
       dungeons:
-        title: 副本地图轮播
-        subtitle: 10 张官网同源副本视觉，继续展示提案、执行和 Prompt 工作台的地图感画面。
+        title: 场景地图轮播
+        subtitle: 10 张官网同源场景视觉，继续展示提案、执行和 Prompt 工作台的地图感画面。
       heroes:
         title: 英雄图鉴轮播
         subtitle: 10 张官网同源 Hero 视觉，用来补齐队长、职业和风格层次。
       images:
         dungeons:
-          docsEditorialStillLife: 副本画廊：文档静物风格场景
-          proposalFfFuturistPoster: 副本画廊：未来主义提案海报
-          annotationNotebookScrapbook: 副本画廊：批注笔记剪贴板
-          proposalNameBadgeForge: 副本画廊：提案铭牌锻造场景
-          proposalNewFantasySketch: 副本画廊：新幻想风提案草图
-          indexBlueprintNetwork: 副本画廊：蓝图网络索引场景
-          proposalApplyCyberForge: 副本画廊：赛博锻造执行场景
-          descriptionSoftEditorialRoom: 副本画廊：柔和编辑室视觉
-          titleMinimalEditorial: 副本画廊：极简标题编辑视觉
-          proposalExploreAbstractAtlas: 副本画廊：抽象地图探索提案
+          docsEditorialStillLife: 场景画廊：文档静物风格场景
+          proposalFfFuturistPoster: 场景画廊：未来主义提案海报
+          annotationNotebookScrapbook: 场景画廊：批注笔记剪贴板
+          proposalNameBadgeForge: 场景画廊：提案铭牌锻造场景
+          proposalNewFantasySketch: 场景画廊：新幻想风提案草图
+          indexBlueprintNetwork: 场景画廊：蓝图网络索引场景
+          proposalApplyCyberForge: 场景画廊：赛博锻造执行场景
+          descriptionSoftEditorialRoom: 场景画廊：柔和编辑室视觉
+          titleMinimalEditorial: 场景画廊：极简标题编辑视觉
+          proposalExploreAbstractAtlas: 场景画廊：抽象地图探索提案
         heroes:
           catLine03: 英雄图鉴：线稿风猫系英雄
           catInk09: 英雄图鉴：墨色猫系英雄

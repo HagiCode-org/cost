@@ -386,44 +386,44 @@ featureShowcase:
   interesting:
     badge: INTERESTING
     title: Interesting
-    subtitle: Hero Dungeon makes training, collaboration, and review feel alive
+    subtitle: Hero scenarios make training, collaboration, and review feel alive
     description: >-
-      Prompt workbenches, proposal dungeons, captain rosters, and battle reports live inside the same visual workflow,
+      Prompt workbenches, proposal scenarios, captain rosters, and battle reports live inside the same visual workflow,
       so campus labs, student teams, and product squads feel like they are progressing through a coordinated adventure
       rather than just “using AI”.
     featurePills:
       dungeons:
-        label: Hero Dungeons
-        description: Turn generation, execution, and prompt workbenches into dungeon runs
+        label: Hero Scenarios
+        description: Turn generation, execution, and prompt workbenches into scenario runs
       captains:
         label: Captain Roster
-        description: Assign the right hero captain to each dungeon
+        description: Assign the right hero captain to each scenario
       battle:
         label: Battle Reports
         description: Review XP, levels, and execution outcomes after each push
     dungeonCards:
       proposal:
-        title: Proposal Dungeon
+        title: Proposal Scenario
         description: OpenSpec generate / apply / archive
         status: Captain ready
       autotask:
-        title: AutoTask Dungeon
+        title: AutoTask Scenario
         description: Parallel fixes and batch automation
         status: 2 instances active
       prompt:
-        title: Prompt Dungeon
+        title: Prompt Scenario
         description: Prompt preview and style workbench
         status: Visual sync ready
     battleReport:
-      title: Today's dungeon report
+      title: Today's scenario report
       badge: Hero Battle
       note: >-
-        When several dungeons move in parallel, the report rolls experience, levels, and execution outcomes into one
+        When several scenarios move in parallel, the report rolls experience, levels, and execution outcomes into one
         shared readout.
       metrics:
         dungeons:
           value: '4'
-          label: Dungeons pushed
+          label: Scenarios pushed
         level:
           value: Lv.27
           label: Captain level
@@ -444,25 +444,25 @@ featureShowcase:
           role: Visual support
     gallery:
       dungeons:
-        title: Dungeon map carousel
+        title: Scenario map carousel
         subtitle: >-
-          Ten copied dungeon visuals from the official homepage gallery keep the proposal, execution, and prompt-map
+          Ten copied scenario visuals from the official homepage gallery keep the proposal, execution, and prompt-map
           mood intact.
       heroes:
         title: Hero gallery carousel
         subtitle: Ten copied hero visuals preserve the roster, role, and style storytelling from the source showcase.
       images:
         dungeons:
-          docsEditorialStillLife: Dungeon gallery image of an editorial still-life workspace
-          proposalFfFuturistPoster: Dungeon gallery image of a futurist proposal poster
-          annotationNotebookScrapbook: Dungeon gallery image of an annotation notebook scrapbook
-          proposalNameBadgeForge: Dungeon gallery image of a forged proposal name badge
-          proposalNewFantasySketch: Dungeon gallery image of a new fantasy proposal sketch
-          indexBlueprintNetwork: Dungeon gallery image of a blueprint network index
-          proposalApplyCyberForge: Dungeon gallery image of a cyber forge apply scene
-          descriptionSoftEditorialRoom: Dungeon gallery image of a soft editorial room
-          titleMinimalEditorial: Dungeon gallery image of a minimal editorial title study
-          proposalExploreAbstractAtlas: Dungeon gallery image of an abstract atlas exploration proposal
+          docsEditorialStillLife: Scenario gallery image of an editorial still-life workspace
+          proposalFfFuturistPoster: Scenario gallery image of a futurist proposal poster
+          annotationNotebookScrapbook: Scenario gallery image of an annotation notebook scrapbook
+          proposalNameBadgeForge: Scenario gallery image of a forged proposal name badge
+          proposalNewFantasySketch: Scenario gallery image of a new fantasy proposal sketch
+          indexBlueprintNetwork: Scenario gallery image of a blueprint network index
+          proposalApplyCyberForge: Scenario gallery image of a cyber forge apply scene
+          descriptionSoftEditorialRoom: Scenario gallery image of a soft editorial room
+          titleMinimalEditorial: Scenario gallery image of a minimal editorial title study
+          proposalExploreAbstractAtlas: Scenario gallery image of an abstract atlas exploration proposal
         heroes:
           catLine03: Hero gallery image of a line-art cat captain
           catInk09: Hero gallery image of an ink cat captain

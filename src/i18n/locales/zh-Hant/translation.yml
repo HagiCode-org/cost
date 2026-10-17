@@ -346,39 +346,39 @@ featureShowcase:
   interesting:
     badge: INTERESTING
     title: 有趣
-    subtitle: Hero Dungeon 讓訓練、協作與複盤更像可推進的冒險
-    description: 把 Prompt 工作台、提案副本、隊長編組和戰報反饋放進同一個可視化流程裡，讓高校實驗室、學生團隊和產品協作場景不只是在“用 AI”，而是在經營一套能持續升級的工作流程。
+    subtitle: Hero 場景讓訓練、協作與複盤更像可推進的冒險
+    description: 把 Prompt 工作台、提案場景、隊長編組和戰報反饋放進同一個可視化流程裡，讓高校實驗室、學生團隊和產品協作場景不只是在“用 AI”，而是在經營一套能持續升級的工作流程。
     featurePills:
       dungeons:
-        label: 英雄副本
-        description: 把生成、執行和 Prompt 工作台都編成副本
+        label: 英雄場景
+        description: 把生成、執行和 Prompt 工作台都編成場景
       captains:
         label: 隊長編組
-        description: 為不同副本指定最適合的 Hero 隊長
+        description: 為不同場景指定最適合的 Hero 隊長
       battle:
         label: 戰報反饋
         description: 用 XP、等級與執行資料回看推進結果
     dungeonCards:
       proposal:
-        title: 提案副本
+        title: 提案場景
         description: OpenSpec 產生 / 執行 / 歸檔
         status: 隊長就緒
       autotask:
-        title: AutoTask 副本
+        title: AutoTask 場景
         description: 並行修復與批次自動任務
         status: 2 個執行個體運行中
       prompt:
-        title: Prompt 副本
+        title: Prompt 場景
         description: Prompt 預覽與風格工作台
         status: 視覺預覽已同步
     battleReport:
-      title: 今日副本戰報
+      title: 今日場景戰報
       badge: Hero Battle
-      note: 當多個副本並行推進時，戰報會把經驗、等級與執行結果聚合到一個統一讀數裡。
+      note: 當多個場景並行推進時，戰報會把經驗、等級與執行結果聚合到一個統一讀數裡。
       metrics:
         dungeons:
           value: '4'
-          label: 副本推進
+          label: 場景推進
         level:
           value: Lv.27
           label: 隊長等級
@@ -399,23 +399,23 @@ featureShowcase:
           role: 視覺支援
     gallery:
       dungeons:
-        title: 副本地圖輪播
-        subtitle: 10 張官網同源副本視覺，繼續展示提案、執行和 Prompt 工作台的地圖感畫面。
+        title: 場景地圖輪播
+        subtitle: 10 張官網同源場景視覺，繼續展示提案、執行和 Prompt 工作台的地圖感畫面。
       heroes:
         title: 英雄圖鑑輪播
         subtitle: 10 張官網同源 Hero 視覺，用來補齊隊長、職業和風格層次。
       images:
         dungeons:
-          docsEditorialStillLife: 副本圖庫：文件靜物風格場景
-          proposalFfFuturistPoster: 副本畫廊：未來主義提案海報
-          annotationNotebookScrapbook: 副本畫廊：批註筆記剪貼簿
-          proposalNameBadgeForge: 副本畫廊：提案銘牌鍛造場景
-          proposalNewFantasySketch: 副本畫廊：新幻想風提案草圖
-          indexBlueprintNetwork: 副本畫廊：藍圖網路索引場景
-          proposalApplyCyberForge: 副本畫廊：賽博鍛造執行場景
-          descriptionSoftEditorialRoom: 副本畫廊：柔和編輯室視覺
-          titleMinimalEditorial: 副本圖庫：極簡標題編輯視覺
-          proposalExploreAbstractAtlas: 副本圖庫：抽象地圖探索提案
+          docsEditorialStillLife: 場景圖庫：文件靜物風格場景
+          proposalFfFuturistPoster: 場景畫廊：未來主義提案海報
+          annotationNotebookScrapbook: 場景畫廊：批註筆記剪貼簿
+          proposalNameBadgeForge: 場景畫廊：提案銘牌鍛造場景
+          proposalNewFantasySketch: 場景畫廊：新幻想風提案草圖
+          indexBlueprintNetwork: 場景畫廊：藍圖網路索引場景
+          proposalApplyCyberForge: 場景畫廊：賽博鍛造執行場景
+          descriptionSoftEditorialRoom: 場景畫廊：柔和編輯室視覺
+          titleMinimalEditorial: 場景圖庫：極簡標題編輯視覺
+          proposalExploreAbstractAtlas: 場景圖庫：抽象地圖探索提案
         heroes:
           catLine03: 英雄圖鑑：線稿風貓系英雄
           catInk09: 英雄圖鑑：墨色貓系英雄

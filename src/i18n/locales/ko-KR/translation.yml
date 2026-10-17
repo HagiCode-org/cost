@@ -348,41 +348,41 @@ featureShowcase:
   interesting:
     badge: 흥미로운
     title: 흥미로운
-    subtitle: Hero 던전은 훈련, 협업, 검토가 살아있는 느낌을 줍니다
+    subtitle: Hero 시나리오는 훈련, 협업, 검토가 살아있는 느낌을 줍니다
     description: >-
-      Prompt 작업대, 제안서 던전, 대장 명단 및 전투 보고서가 동일한 시각적 작업 흐름 내에 있으므로 캠퍼스 연구실, 학생 팀 및 제품 팀은 단순히 "AI을 사용"하는 것이 아니라 조화로운 모험을 통해
+      Prompt 작업대, 제안서 시나리오, 대장 명단 및 전투 보고서가 동일한 시각적 작업 흐름 내에 있으므로 캠퍼스 연구실, 학생 팀 및 제품 팀은 단순히 "AI을 사용"하는 것이 아니라 조화로운 모험을 통해
       진행되는 것처럼 느낍니다.
     featurePills:
       dungeons:
-        label: Hero 던전
-        description: 생성, 실행, 프롬프트 작업대를 던전 실행으로 전환
+        label: Hero 시나리오
+        description: 생성, 실행, 프롬프트 작업대를 시나리오 실행으로 전환
       captains:
         label: 캡틴 로스터
-        description: 각 던전에 적합한 영웅 대장을 배정하세요
+        description: 각 시나리오에 적합한 영웅 대장을 배정하세요
       battle:
         label: 전투 보고서
         description: 푸시할 때마다 XP, 레벨, 실행 결과를 검토하세요.
     dungeonCards:
       proposal:
-        title: Proposal 던전
+        title: Proposal 시나리오
         description: OpenSpec 생성/적용/보관
         status: 대장 준비 완료
       autotask:
-        title: AutoTask 던전
+        title: AutoTask 시나리오
         description: 병렬 수정 및 일괄 자동화
         status: 활성 인스턴스 2개
       prompt:
-        title: Prompt 던전
+        title: Prompt 시나리오
         description: Prompt 미리보기 및 스타일 워크벤치
         status: 시각적 동기화 준비됨
     battleReport:
-      title: 오늘의 던전 보고
+      title: 오늘의 시나리오 보고
       badge: Hero 전투
-      note: 여러 던전이 동시에 이동하면 보고서는 경험치, 레벨, 실행 결과를 하나의 공유 판독값으로 통합합니다.
+      note: 여러 시나리오가 동시에 이동하면 보고서는 경험치, 레벨, 실행 결과를 하나의 공유 판독값으로 통합합니다.
       metrics:
         dungeons:
           value: '4'
-          label: 진행한 던전
+          label: 진행한 시나리오
         level:
           value: Lv.27
           label: 캡틴 레벨
@@ -403,23 +403,23 @@ featureShowcase:
           role: 시각적 지원
     gallery:
       dungeons:
-        title: 던전 맵 캐러셀
-        subtitle: 공식 홈페이지 갤러리에서 복사한 10개의 던전 비주얼은 제안, 실행, 프롬프트 맵 분위기를 그대로 유지합니다.
+        title: 시나리오 맵 캐러셀
+        subtitle: 공식 홈페이지 갤러리에서 복사한 10개의 시나리오 비주얼은 제안, 실행, 프롬프트 맵 분위기를 그대로 유지합니다.
       heroes:
         title: Hero 갤러리 캐러셀
         subtitle: 10개의 복사된 영웅 비주얼은 소스 쇼케이스의 명단, 역할 및 스타일 스토리텔링을 그대로 유지합니다.
       images:
         dungeons:
-          docsEditorialStillLife: 편집 정물 작업 공간의 던전 갤러리 이미지
-          proposalFfFuturistPoster: 미래파 제안 포스터의 던전 갤러리 이미지
-          annotationNotebookScrapbook: 주석 노트 스크랩북의 던전 갤러리 이미지
-          proposalNameBadgeForge: 위조된 제안서 명찰의 던전 갤러리 이미지
-          proposalNewFantasySketch: 새로운 판타지 제안 스케치의 던전 갤러리 이미지
-          indexBlueprintNetwork: 청사진 네트워크 인덱스의 던전 갤러리 이미지
-          proposalApplyCyberForge: 사이버 포지 적용 장면의 던전 갤러리 이미지
-          descriptionSoftEditorialRoom: 소프트 편집실의 던전갤러리 이미지
-          titleMinimalEditorial: 미니멀 사설 제목 연구의 던전 갤러리 이미지
-          proposalExploreAbstractAtlas: 추상 아틀라스 탐색 제안의 던전 갤러리 이미지
+          docsEditorialStillLife: 편집 정물 작업 공간의 시나리오 갤러리 이미지
+          proposalFfFuturistPoster: 미래파 제안 포스터의 시나리오 갤러리 이미지
+          annotationNotebookScrapbook: 주석 노트 스크랩북의 시나리오 갤러리 이미지
+          proposalNameBadgeForge: 위조된 제안서 명찰의 시나리오 갤러리 이미지
+          proposalNewFantasySketch: 새로운 판타지 제안 스케치의 시나리오 갤러리 이미지
+          indexBlueprintNetwork: 청사진 네트워크 인덱스의 시나리오 갤러리 이미지
+          proposalApplyCyberForge: 사이버 포지 적용 장면의 시나리오 갤러리 이미지
+          descriptionSoftEditorialRoom: 소프트 편집실의 시나리오갤러리 이미지
+          titleMinimalEditorial: 미니멀 사설 제목 연구의 시나리오 갤러리 이미지
+          proposalExploreAbstractAtlas: 추상 아틀라스 탐색 제안의 시나리오 갤러리 이미지
         heroes:
           catLine03: 라인아트 고양이 선장의 Hero 갤러리 이미지
           catInk09: Hero 갤러리 이미지 잉크고양이 선장

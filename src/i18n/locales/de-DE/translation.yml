@@ -400,44 +400,44 @@ featureShowcase:
   interesting:
     badge: INTERESSANT
     title: Interessant
-    subtitle: Hero Dungeon macht Schulung, Zusammenarbeit und Überprüfung lebendig
+    subtitle: Hero-Szenarien machen Schulung, Zusammenarbeit und Überprüfung lebendig
     description: >-
-      Prompt-Workbenches, Proposal-Dungeons, Kapitänslisten und Kampfberichte befinden sich im selben visuellen
+      Prompt-Workbenches, Proposal-Szenarien, Kapitänslisten und Kampfberichte befinden sich im selben visuellen
       Workflow, sodass Campus-Labore, Studententeams und Produktteams das Gefühl haben, ein koordiniertes Abenteuer zu
       durchlaufen und nicht nur „AI zu verwenden“.
     featurePills:
       dungeons:
-        label: Hero Dungeons
-        description: Verwandeln Sie Generierungs-, Ausführungs- und Prompt-Workbenches in Dungeon-Läufe
+        label: Hero-Szenarien
+        description: Verwandeln Sie Generierungs-, Ausführungs- und Prompt-Workbenches in Szenario-Läufe
       captains:
         label: Kapitänsliste
-        description: Weisen Sie jedem Dungeon den richtigen Heldenkapitän zu
+        description: Weisen Sie jedem Szenario den richtigen Heldenkapitän zu
       battle:
         label: Kampfberichte
         description: Überprüfen Sie nach jedem Push XP, Level und Ausführungsergebnisse
     dungeonCards:
       proposal:
-        title: Vorschlagsdungeon
+        title: Vorschlagsszenario
         description: OpenSpec generieren / anwenden / archivieren
         status: Kapitän bereit
       autotask:
-        title: AutoTask Dungeon
+        title: AutoTask Szenario
         description: Parallele Korrekturen und Batch-Automatisierung
         status: 2 Instanzen aktiv
       prompt:
-        title: Prompt Dungeon
+        title: Prompt Szenario
         description: Prompt Vorschau- und Stil-Workbench
         status: Bereit für die visuelle Synchronisierung
     battleReport:
-      title: Der heutige Dungeonbericht
+      title: Der heutige Szenariobericht
       badge: Hero Schlacht
       note: >-
-        Wenn sich mehrere Dungeons parallel bewegen, fasst der Bericht Erfahrung, Level und Ausführungsergebnisse in
+        Wenn sich mehrere Szenarien parallel bewegen, fasst der Bericht Erfahrung, Level und Ausführungsergebnisse in
         einer gemeinsamen Anzeige zusammen.
       metrics:
         dungeons:
           value: '4'
-          label: Dungeons geschoben
+          label: Szenarien vorangebracht
         level:
           value: Lv.27
           label: Kapitänsebene
@@ -458,9 +458,9 @@ featureShowcase:
           role: Visuelle Unterstützung
     gallery:
       dungeons:
-        title: Dungeon-Kartenkarussell
+        title: Szenario-Kartenkarussell
         subtitle: >-
-          Zehn kopierte Dungeon-Visuals aus der offiziellen Homepage-Galerie sorgen dafür, dass der Vorschlag, die
+          Zehn kopierte Szenario-Visuals aus der offiziellen Homepage-Galerie sorgen dafür, dass der Vorschlag, die
           Ausführung und die Prompt-Map-Stimmung erhalten bleiben.
       heroes:
         title: Hero Galeriekarussell
@@ -469,16 +469,16 @@ featureShowcase:
           Originalpräsentation.
       images:
         dungeons:
-          docsEditorialStillLife: Dungeon-Galeriebild eines redaktionellen Stillleben-Arbeitsbereichs
-          proposalFfFuturistPoster: Dungeon-Galeriebild eines futuristischen Vorschlagsplakats
-          annotationNotebookScrapbook: Dungeon-Galeriebild eines Anmerkungsnotizbuchs
-          proposalNameBadgeForge: Dungeon-Galeriebild eines gefälschten Namensschilds für einen Antrag
-          proposalNewFantasySketch: Dungeon-Galeriebild einer neuen Fantasy-Vorschlagsskizze
-          indexBlueprintNetwork: Dungeon-Galeriebild eines Blueprint-Netzwerkindex
-          proposalApplyCyberForge: Dungeon-Galeriebild einer Cyber-Forge-Anwendungsszene
-          descriptionSoftEditorialRoom: Dungeon-Galeriebild eines Soft-Redaktionsraums
-          titleMinimalEditorial: Dungeon-Galeriebild einer minimalen redaktionellen Titelstudie
-          proposalExploreAbstractAtlas: Dungeon-Galeriebild eines abstrakten Atlas-Erkundungsvorschlags
+          docsEditorialStillLife: Szenario-Galeriebild eines redaktionellen Stillleben-Arbeitsbereichs
+          proposalFfFuturistPoster: Szenario-Galeriebild eines futuristischen Vorschlagsplakats
+          annotationNotebookScrapbook: Szenario-Galeriebild eines Anmerkungsnotizbuchs
+          proposalNameBadgeForge: Szenario-Galeriebild eines gefälschten Namensschilds für einen Antrag
+          proposalNewFantasySketch: Szenario-Galeriebild einer neuen Fantasy-Vorschlagsskizze
+          indexBlueprintNetwork: Szenario-Galeriebild eines Blueprint-Netzwerkindex
+          proposalApplyCyberForge: Szenario-Galeriebild einer Cyber-Forge-Anwendungsszene
+          descriptionSoftEditorialRoom: Szenario-Galeriebild eines Soft-Redaktionsraums
+          titleMinimalEditorial: Szenario-Galeriebild einer minimalen redaktionellen Titelstudie
+          proposalExploreAbstractAtlas: Szenario-Galeriebild eines abstrakten Atlas-Erkundungsvorschlags
         heroes:
           catLine03: Hero Galeriebild eines Katzenkapitäns mit Strichzeichnungen
           catInk09: Hero Galeriebild eines Tintenkatzenkapitäns

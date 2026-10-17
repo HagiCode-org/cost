@@ -346,41 +346,41 @@ featureShowcase:
   interesting:
     badge: 面白い
     title: 面白い
-    subtitle: Hero Dungeon が学習、協業、レビューを“進行する冒険”に変えます
+    subtitle: Hero シナリオ が学習、協業、レビューを“進行する冒険”に変えます
     description: >-
-      Prompt ワークベンチ、提案ダンジョン、キャプテン名簿、戦闘レポートは同じビジュアル ワークフロー内に存在するため、キャンパスの研究室、学生チーム、製品チームは、単に「AI
+      Prompt ワークベンチ、提案シナリオ、キャプテン名簿、戦闘レポートは同じビジュアル ワークフロー内に存在するため、キャンパスの研究室、学生チーム、製品チームは、単に「AI
       を使用する」というよりも、調整された冒険を進めているように感じられます。
     featurePills:
       dungeons:
-        label: Hero ダンジョン
-        description: 生成、実行、プロンプトのワークベンチをダンジョンの実行に変える
+        label: Hero シナリオ
+        description: 生成、実行、プロンプトのワークベンチをシナリオの実行に変える
       captains:
         label: キャプテン名簿
-        description: 各ダンジョンに適切なヒーローキャプテンを割り当てます
+        description: 各シナリオに適切なヒーローキャプテンを割り当てます
       battle:
         label: バトルレポート
         description: 各プッシュ後に XP、レベル、実行結果を確認する
     dungeonCards:
       proposal:
-        title: Proposal ダンジョン
+        title: Proposal シナリオ
         description: OpenSpec の generate / apply / archive
         status: キャプテン準備完了
       autotask:
-        title: AutoTask ダンジョン
+        title: AutoTask シナリオ
         description: 並行修正とバッチ自動化
         status: 2 つのインスタンスがアクティブです
       prompt:
-        title: Prompt ダンジョン
+        title: Prompt シナリオ
         description: Prompt プレビューおよびスタイル ワークベンチ
         status: ビジュアル同期の準備完了
     battleReport:
-      title: 今日のダンジョンレポート
+      title: 今日のシナリオレポート
       badge: Hero 戦闘
-      note: 複数のダンジョンが並行して進むと、レポートには経験値、レベル、実行結果がひとつの共通表示として集約されます。
+      note: 複数のシナリオが並行して進むと、レポートには経験値、レベル、実行結果がひとつの共通表示として集約されます。
       metrics:
         dungeons:
           value: '4'
-          label: 進行したダンジョン
+          label: 進行したシナリオ
         level:
           value: Lv.27
           label: キャプテンレベル
@@ -401,23 +401,23 @@ featureShowcase:
           role: ビジュアル支援
     gallery:
       dungeons:
-        title: ダンジョンマップカルーセル
-        subtitle: 公式ホームページのギャラリーからコピーされた 10 枚のダンジョン ビジュアルは、提案、実行、プロンプト マップの雰囲気をそのままにしています。
+        title: シナリオマップカルーセル
+        subtitle: 公式ホームページのギャラリーからコピーされた 10 枚のシナリオ ビジュアルは、提案、実行、プロンプト マップの雰囲気をそのままにしています。
       heroes:
         title: Hero ギャラリー カルーセル
         subtitle: コピーされた 10 個のヒーローのビジュアルは、ソース ショーケースの名簿、役割、ストーリーテリングのスタイルを保持しています。
       images:
         dungeons:
-          docsEditorialStillLife: 編集用静物ワークスペースのダンジョン ギャラリー画像
-          proposalFfFuturistPoster: ダンジョンギャラリーの未来派プロポーズポスターのイメージ
-          annotationNotebookScrapbook: ダンジョンギャラリー注釈ノートスクラップブックのイメージ
-          proposalNameBadgeForge: ダンジョンギャラリー 偽造プロポーズ名札イメージ
-          proposalNewFantasySketch: ダンジョンギャラリーの新しいファンタジープロポーズスケッチのイメージ
-          indexBlueprintNetwork: ダンジョンギャラリーの青写真ネットワークインデックスのイメージ
-          proposalApplyCyberForge: サイバーフォージ適用シーンのダンジョンギャラリー画像
-          descriptionSoftEditorialRoom: ソフト編集室のダンジョンギャラリーイメージ
-          titleMinimalEditorial: 最小限の編集タイトル研究のダンジョン ギャラリー画像
-          proposalExploreAbstractAtlas: 抽象的なアトラス探索提案のダンジョン ギャラリー画像
+          docsEditorialStillLife: 編集用静物ワークスペースのシナリオ ギャラリー画像
+          proposalFfFuturistPoster: シナリオギャラリーの未来派プロポーズポスターのイメージ
+          annotationNotebookScrapbook: シナリオギャラリー注釈ノートスクラップブックのイメージ
+          proposalNameBadgeForge: シナリオギャラリー 偽造プロポーズ名札イメージ
+          proposalNewFantasySketch: シナリオギャラリーの新しいファンタジープロポーズスケッチのイメージ
+          indexBlueprintNetwork: シナリオギャラリーの青写真ネットワークインデックスのイメージ
+          proposalApplyCyberForge: サイバーフォージ適用シーンのシナリオギャラリー画像
+          descriptionSoftEditorialRoom: ソフト編集室のシナリオギャラリーイメージ
+          titleMinimalEditorial: 最小限の編集タイトル研究のシナリオ ギャラリー画像
+          proposalExploreAbstractAtlas: 抽象的なアトラス探索提案のシナリオ ギャラリー画像
         heroes:
           catLine03: Hero ラインアートの猫キャプテンのギャラリー画像
           catInk09: Hero 墨猫船長のギャラリー画像

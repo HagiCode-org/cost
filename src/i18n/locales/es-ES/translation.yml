@@ -397,44 +397,44 @@ featureShowcase:
   interesting:
     badge: INTERESANTE
     title: Interesante
-    subtitle: Hero Dungeon hace que la capacitación, la colaboración y la revisión se sientan vivas
+    subtitle: Los escenarios de Hero hacen que la capacitación, la colaboración y la revisión se sientan vivas
     description: >-
-      Prompt bancos de trabajo, mazmorras de propuestas, listas de capitanes e informes de batalla viven dentro del
+      Prompt bancos de trabajo, escenarios de propuestas, listas de capitanes e informes de batalla viven dentro del
       mismo flujo de trabajo visual, por lo que los laboratorios del campus, los equipos de estudiantes y los equipos de
       productos sienten que están progresando a través de una aventura coordinada en lugar de simplemente "usar AI".
     featurePills:
       dungeons:
-        label: Hero Mazmorras
-        description: Convierta los bancos de trabajo de generación, ejecución y avisos en mazmorras
+        label: Hero Escenarios
+        description: Convierta los bancos de trabajo de generación, ejecución y avisos en escenarios
       captains:
         label: Lista de capitanes
-        description: Asigna el héroe capitán adecuado a cada mazmorra.
+        description: Asigna el héroe capitán adecuado a cada escenario.
       battle:
         label: Informes de batalla
         description: Revise XP, niveles y resultados de ejecución después de cada impulso
     dungeonCards:
       proposal:
-        title: Mazmorra de propuesta
+        title: Escenario de propuesta
         description: OpenSpec generar/aplicar/archivar
         status: Capitán listo
       autotask:
-        title: AutoTask Mazmorra
+        title: AutoTask Escenario
         description: Correcciones paralelas y automatización por lotes
         status: 2 instancias activas
       prompt:
-        title: Prompt Mazmorra
+        title: Prompt Escenario
         description: Prompt banco de trabajo de vista previa y estilo
         status: Sincronización visual lista
     battleReport:
-      title: Informe de mazmorra de hoy
+      title: Informe de escenario de hoy
       badge: Hero Batalla
       note: >-
-        Cuando varias mazmorras se mueven en paralelo, el informe agrupa la experiencia, los niveles y los resultados de
+        Cuando varias escenarios se mueven en paralelo, el informe agrupa la experiencia, los niveles y los resultados de
         la ejecución en una lectura compartida.
       metrics:
         dungeons:
           value: '4'
-          label: Mazmorras empujadas
+          label: Escenarios avanzados
         level:
           value: Lv.27
           label: Nivel de capitán
@@ -455,9 +455,9 @@ featureShowcase:
           role: Soporte visual
     gallery:
       dungeons:
-        title: Carrusel de mapas de mazmorras
+        title: Carrusel de mapas de escenarios
         subtitle: >-
-          Diez imágenes de mazmorras copiadas de la galería de la página de inicio oficial mantienen intactas la
+          Diez imágenes de escenarios copiadas de la galería de la página de inicio oficial mantienen intactas la
           propuesta, la ejecución y el ambiente del mapa de indicaciones.
       heroes:
         title: Hero carrusel de galería
@@ -466,16 +466,16 @@ featureShowcase:
           original.
       images:
         dungeons:
-          docsEditorialStillLife: Imagen de la galería de mazmorras de un espacio de trabajo editorial de naturaleza muerta
-          proposalFfFuturistPoster: Imagen de la galería de mazmorras de un cartel de propuesta futurista.
-          annotationNotebookScrapbook: Imagen de la galería de mazmorras de un álbum de recortes de cuaderno de anotaciones
-          proposalNameBadgeForge: Imagen de la galería de mazmorras de una placa con el nombre de una propuesta falsificada
-          proposalNewFantasySketch: Imagen de la galería de mazmorras de un nuevo boceto de propuesta de fantasía.
-          indexBlueprintNetwork: Imagen de la galería de mazmorras de un índice de red de planos
-          proposalApplyCyberForge: Imagen de la galería de mazmorras de una escena de aplicación de Cyber ​​Forge.
-          descriptionSoftEditorialRoom: Imagen de la galería de mazmorras de una sala editorial suave
-          titleMinimalEditorial: Imagen de la galería de mazmorras de un estudio de título editorial mínimo
-          proposalExploreAbstractAtlas: Imagen de la galería de mazmorras de una propuesta de exploración de atlas abstracto
+          docsEditorialStillLife: Imagen de la galería de escenarios de un espacio de trabajo editorial de naturaleza muerta
+          proposalFfFuturistPoster: Imagen de la galería de escenarios de un cartel de propuesta futurista.
+          annotationNotebookScrapbook: Imagen de la galería de escenarios de un álbum de recortes de cuaderno de anotaciones
+          proposalNameBadgeForge: Imagen de la galería de escenarios de una placa con el nombre de una propuesta falsificada
+          proposalNewFantasySketch: Imagen de la galería de escenarios de un nuevo boceto de propuesta de fantasía.
+          indexBlueprintNetwork: Imagen de la galería de escenarios de un índice de red de planos
+          proposalApplyCyberForge: Imagen de la galería de escenarios de una escena de aplicación de Cyber ​​Forge.
+          descriptionSoftEditorialRoom: Imagen de la galería de escenarios de una sala editorial suave
+          titleMinimalEditorial: Imagen de la galería de escenarios de un estudio de título editorial mínimo
+          proposalExploreAbstractAtlas: Imagen de la galería de escenarios de una propuesta de exploración de atlas abstracto
         heroes:
           catLine03: Hero imagen de la galería de un capitán gato con arte lineal
           catInk09: Hero imagen de la galería de un capitán gato de tinta

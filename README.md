@@ -1,5 +1,9 @@
 # AI 应用成本评估
 
+[![license](https://img.shields.io/badge/license-MIT-ffd43b)](./LICENSE)
+[![last commit](https://img.shields.io/github/last-commit/HagiCode-org/cost)](https://github.com/HagiCode-org/cost/commits/main)
+[![website](https://img.shields.io/website?url=https%3A%2F%2Fcost.hagicode.com%2F&label=website)](https://cost.hagicode.com/)
+
 站点地址：[cost.hagicode.com](https://cost.hagicode.com)
 
 ## 技术结构

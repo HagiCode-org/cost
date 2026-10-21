@@ -37,6 +37,7 @@ npm run preview
 - `src/i18n/locales/`: i18n locale files (managed via `hagi18n`)
 - `src/i18n/generated-locales/`: runtime JSON generated from the YAML locales by `scripts/generate-i18n-resources.mjs`; git-ignored, never edit by hand
 - `hagi18n.yaml`: i18n configuration
+- `DESIGN.md`: design-system reference for UI work
 - `docs/i18n-hagi18n.md`: i18n maintenance guide
 - `public/llms.txt`: hand-written; the only SEO file kept in `public/`
 - `scripts/check-built-site.mjs`: post-build verification run by `npm run build`

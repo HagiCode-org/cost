@@ -74,15 +74,10 @@ const seoHeadEntries = [
   ...(faviconEntry ? [faviconEntry] : []),
   { tag: "meta", attrs: { name: "robots", content: "index,follow" } },
   { tag: "meta", attrs: { name: "keywords", content: metadata.keywords.join(", ") } },
-  { tag: "meta", attrs: { property: "og:type", content: "website" } },
-  { tag: "meta", attrs: { property: "og:url", content: metadata.url } },
-  { tag: "meta", attrs: { property: "og:site_name", content: metadata.siteName } },
-  { tag: "meta", attrs: { property: "og:locale", content: metadata.locale } },
   ...metadata.ogLocaleAlternates.map((locale) => ({
     tag: "meta",
     attrs: { property: "og:locale:alternate", content: locale, "data-generated": "og:locale:alternate" },
   })),
-  { tag: "meta", attrs: { name: "twitter:card", content: "summary_large_image" } },
   { tag: "meta", attrs: { name: "twitter:url", content: metadata.url } },
   ...metadata.alternates.map((alternate) => ({
     tag: "link",
@@ -116,6 +111,8 @@ const secondaryLanguages = supportedLanguages.filter((language) => language !== 
         description: metadata.description,
         image: metadata.image,
       }}
+      siteSeo={{ title: metadata.siteName }}
+      locale={metadata.locale}
       head={seoHeadEntries}
     />
 

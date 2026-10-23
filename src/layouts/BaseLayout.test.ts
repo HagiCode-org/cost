@@ -54,6 +54,14 @@ describe('Cost BaseLayout Hagilight integration', () => {
     expect(source).not.toMatch(/["'](\/)?favicon\.(ico|svg)["']|sitemap\.xml/u);
   });
 
+  it('leaves og:url, og:type, og:site_name, og:locale and twitter:card to the Hagilight SEO component', async () => {
+    const source = await readFile(layoutPath, 'utf8');
+
+    expect(source).toContain('siteSeo={{ title: metadata.siteName }}');
+    expect(source).toContain('locale={metadata.locale}');
+    expect(source).not.toMatch(/property: "og:(url|type|site_name|locale)"|name: "twitter:card"/u);
+  });
+
   it('loads 51LA through the shared component with the VITE_51LA_ID override and default ID', async () => {
     const source = await readFile(layoutPath, 'utf8');
 

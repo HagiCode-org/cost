@@ -8,10 +8,10 @@
   },
   "scripts": {
     "dev": "npm run prepare:i18n && astro dev --host 0.0.0.0 --port 36291",
-    "build": "export NODE_ENV=\"${NODE_ENV:-production}\"; npm run prepare:i18n && npm run typecheck && astro build && node ./scripts/check-built-site.mjs",
+    "build": "export NODE_OPTIONS=\"${NODE_OPTIONS:-} --max-old-space-size=8192\"; export NODE_ENV=\"${NODE_ENV:-production}\"; npm run prepare:i18n && npm run typecheck && astro build && node ./scripts/check-built-site.mjs",
     "lint": "eslint .",
     "preview": "astro preview --host 0.0.0.0",
-    "typecheck": "astro check && tsc -p tsconfig.build.json",
+    "typecheck": "export NODE_OPTIONS=\"${NODE_OPTIONS:-} --max-old-space-size=8192\"; astro check && tsc -p tsconfig.build.json",
     "test": "npm run prepare:i18n && vitest run",
     "test:watch": "npm run prepare:i18n && vitest",
     "test:ui": "npm run prepare:i18n && vitest --ui",
@@ -86,13 +86,13 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "@vitest/ui": "^5.0.2",
+    "@vitest/ui": "^5.0.5",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "jsdom": "^30.1.1",
     "typescript-eslint": "^8.71.2",
-    "vitest": "^5.0.2"
+    "vitest": "^5.0.5"
   }
 }

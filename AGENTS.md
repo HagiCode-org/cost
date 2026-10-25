@@ -36,6 +36,7 @@ npm run preview
 - `src/components/IncomeTokenExperienceIsland.tsx`: server-rendered and hydrated calculator experience
 - `src/i18n/locales/`: i18n locale files (managed via `hagi18n`)
 - `src/i18n/generated-locales/`: runtime JSON generated from the YAML locales by `scripts/generate-i18n-resources.mjs`; git-ignored, never edit by hand
+- `src/test/`, `vitest.config.ts`: Vitest (jsdom) setup and render helpers; tests sit next to the code as `*.test.ts(x)`
 - `hagi18n.yaml`: i18n configuration
 - `DESIGN.md`: design-system reference for UI work
 - `docs/i18n-hagi18n.md`: i18n maintenance guide

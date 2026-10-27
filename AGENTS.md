@@ -59,6 +59,20 @@ npm run preview
 - `npm run build` runs `typecheck`, `astro build`, then `check-built-site.mjs`.
 - Treat this as a static site; do not add an application server. Keep `VITE_BASE_PATH`, `VITE_SITE_URL`, `VITE_APP_VERSION`, and `dist/` compatible with publication.
 
+## PostHog Events
+
+Three site-level events go through `captureSiteEvent` in `src/lib/posthog-events.ts`. The table in that file is the source of truth; keep this section in sync with it. The wrapper sends nothing when `window.posthog` is missing, when the visitor has opted out, or when sending throws.
+
+| Event | Sent when | Properties |
+|-------|-----------|------------|
+| `assessment_completed` | The first produced result shown after the visitor changes an input in this page session (`AssessmentLanding`). At most once per page session, tracked in memory only. Not on initial render, re-render, later result changes or a returning mount. | `currency`: `CNY` or `USD`. `income_preset`: `starter`, `growth`, `senior`, `staff`, `principal` or `custom`. `verdict_tone`: `safe`, `warning` or `danger`. |
+| `assessment_shared` | The clipboard write of a share succeeds (`use-share-current-site`). A failed share sends nothing. | `has_result`: boolean, true when a result existed when the share ran. |
+| `boost_cta_clicked` | The share button in the Hagicode boost section (`HagicodeBoostSection`) is activated, before the copy. | None. |
+
+Income preset keys map to the preset rows in `form-options.ts`: CNY 13, 26, 40, 60 and 100 (万) and USD 18, 36, 55, 83 and 138 (k) map in that order to `starter`, `growth`, `senior`, `staff` and `principal`. Any typed amount is `custom`. No income amount, URL, free text or token count is ever sent.
+
+Deduplication: a business event is the canonical record of its action. If a control also reports `cta_click`, dashboards must not add the business event to `cta_click` counts. The boost share button can send `boost_cta_clicked` and, on a successful copy, `assessment_shared`; these are two distinct actions and both are counted.
+
 ## References
 
 - `README.md`

@@ -19,7 +19,7 @@ const verdictToneStyles = {
 
 export function FloatingAgentStatusBar({ data, topOffset }: FloatingAgentStatusBarProps) {
   const { t } = useTranslation()
-  const { shareState, shareCurrentSite } = useShareCurrentSite()
+  const { shareState, shareCurrentSite } = useShareCurrentSite({ hasResult: true })
 
   const shareLabel =
     shareState === "copied"

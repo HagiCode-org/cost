@@ -223,13 +223,13 @@ function MobileHomeHeader({
   )
 }
 
-export const HomeHeader = forwardRef<HTMLElement>(function HomeHeader(_, ref) {
+export const HomeHeader = forwardRef<HTMLElement, { hasResult?: boolean }>(function HomeHeader({ hasResult = false }, ref) {
   const { i18n, t } = useTranslation()
   const { theme, setTheme } = useTheme()
   const dispatch = useAppDispatch()
   const isMobile = useIsMobile()
   const appVersion = formatAppVersion(getAppVersion())
-  const { shareState, shareCurrentSite } = useShareCurrentSite()
+  const { shareState, shareCurrentSite } = useShareCurrentSite({ hasResult })
   const [isApplyingLanguage, setIsApplyingLanguage] = useState(false)
 
   const currentLanguage = resolveSupportedLanguage(i18n.resolvedLanguage || i18n.language || getResolvedLanguage())

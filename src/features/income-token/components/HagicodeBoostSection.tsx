@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Slider } from "@/components/ui/slider"
 import { useShareCurrentSite } from "@/hooks/use-share-current-site"
+import { captureSiteEvent } from "@/lib/posthog-events"
 import { LinkHagicode } from "@/components/link-hagicode"
 import { AgentScaleIndicator } from "./AgentScaleIndicator"
 import { buildResultViewModel } from "@/features/income-token/lib/build-result-view-model"
@@ -142,7 +143,7 @@ export function HagicodeBoostSection({ baseInput, selectedCurrency, region }: Ha
   const [tokenEfficiencyBoost, setTokenEfficiencyBoost] = useState([DEFAULT_TOKEN_EFFICIENCY])
   const [detailOpen, setDetailOpen] = useState(false)
   const language = (i18n.resolvedLanguage || "zh-CN") as SupportedLanguage
-  const { shareState, shareCurrentSite } = useShareCurrentSite()
+  const { shareState, shareCurrentSite } = useShareCurrentSite({ hasResult: true })
 
   const boostFactor = hagicodeBoost[0] ?? DEFAULT_BOOST
   const tokenEfficiencyFactor = tokenEfficiencyBoost[0] ?? DEFAULT_TOKEN_EFFICIENCY
@@ -225,6 +226,7 @@ export function HagicodeBoostSection({ baseInput, selectedCurrency, region }: Ha
               variant={shareState === "error" ? "destructive" : "outline"}
               className="w-full rounded-full sm:w-auto"
               onClick={() => {
+                captureSiteEvent("boost_cta_clicked")
                 void shareCurrentSite(boostedSummary.shareCopy).then(() => toast.success(t("share.copied")))
               }}
               aria-label={t("share.currentSiteAria")}

@@ -23,7 +23,7 @@ export function IncomeTokenExperienceShell() {
 
   const tone = result?.summarySection.verdictTone ?? "neutral"
   const pageContent = getHomePageContent(t)
-  const { shareCurrentSite } = useShareCurrentSite()
+  const { shareCurrentSite } = useShareCurrentSite({ hasResult: result !== null })
 
   function handleFloatingShare() {
     const summary = result?.summarySection
@@ -58,7 +58,7 @@ export function IncomeTokenExperienceShell() {
       >
         {t("accessibility.skipToContent")}
       </a>
-      <HomeHeader />
+      <HomeHeader hasResult={result !== null} />
       <main id="main-content">
         <AssessmentLanding onResultChange={setResult} />
       </main>

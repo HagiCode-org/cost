@@ -3,11 +3,17 @@ import { useTranslation } from "react-i18next"
 
 import { useTheme } from "@/contexts/theme-context"
 import { resolveSupportedLanguage } from "@/i18n/config"
+import { captureSiteEvent } from "@/lib/posthog-events"
 import { buildShareUrl, copyTextToClipboard } from "@/lib/share"
 
 export type ShareState = "idle" | "copied" | "error"
 
-export function useShareCurrentSite() {
+interface UseShareCurrentSiteOptions {
+  /** True when an assessment result exists at the time the caller shares. */
+  hasResult: boolean
+}
+
+export function useShareCurrentSite({ hasResult }: UseShareCurrentSiteOptions) {
   const { i18n } = useTranslation()
   const { theme } = useTheme()
   const [shareState, setShareState] = useState<ShareState>("idle")
@@ -41,11 +47,12 @@ export function useShareCurrentSite() {
         : shareUrl
 
       await copyTextToClipboard(content)
+      captureSiteEvent("assessment_shared", { has_result: hasResult })
       setShareState("copied")
     } catch {
       setShareState("error")
     }
-  }, [language, theme])
+  }, [hasResult, language, theme])
 
   return {
     shareState,

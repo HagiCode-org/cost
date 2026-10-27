@@ -25,7 +25,9 @@ import {
   type SalaryCurrency,
 } from "@/features/income-token/lib/currency"
 import { evaluate, normalizeAnnualIncomeCny, type EvaluationInput } from "@/features/income-token/lib/calculate-ai-risk"
+import { buildAssessmentCompletedProperties } from "@/features/income-token/lib/analytics-properties"
 import { evaluateSpecialTitles } from "@/features/income-token/lib/evaluate-special-titles"
+import { captureSiteEvent } from "@/lib/posthog-events"
 import { mergeEarnedTitleIds, readEarnedTitleIds, writeEarnedTitleIds } from "@/features/income-token/lib/title-storage"
 import { getResolvedExperienceContext, getResolvedLanguage } from "@/i18n/config"
 import {
@@ -282,6 +284,24 @@ function AssessmentLandingForm({
   useEffect(() => {
     onResultChange?.(result)
   }, [onResultChange, result])
+
+  // assessment_completed: at most once per page session, on the first produced result shown after the
+  // visitor changed an input. The default page state already shows a result, so it is not the trigger.
+  // Initial render, re-renders and later result changes send nothing.
+  const assessmentCompletedSentRef = useRef(false)
+  useEffect(() => {
+    if (!result || !hasInteracted || assessmentCompletedSentRef.current) return
+
+    const properties = buildAssessmentCompletedProperties({
+      currency: selectedCurrency,
+      incomePreset,
+      verdictTone: result.summarySection.verdictTone,
+    })
+    if (!properties) return
+
+    assessmentCompletedSentRef.current = true
+    captureSiteEvent("assessment_completed", properties)
+  }, [hasInteracted, incomePreset, result, selectedCurrency])
 
   useEffect(() => {
     if (!hasInteracted) {

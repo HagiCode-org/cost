@@ -125,7 +125,7 @@ function MetricValue({ label, value, formula, explanation, className }: MetricVa
 
 export function AgentVerdictSection({ data }: AgentVerdictSectionProps) {
   const { t } = useTranslation()
-  const { shareState, shareCurrentSite } = useShareCurrentSite()
+  const { shareState, shareCurrentSite } = useShareCurrentSite({ hasResult: true })
   const [detailOpen, setDetailOpen] = useState(false)
 
   const shareLabel =

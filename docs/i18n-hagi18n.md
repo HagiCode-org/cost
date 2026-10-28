@@ -39,34 +39,34 @@ That means key parity is checked against `en-US`, while the site still opens in 
 ## Standard workflow
 
 1. Edit the YAML source files under `src/i18n/locales/<locale>/`.
-2. Regenerate runtime JSON with `npm run i18n:generate`.
-3. Validate hagi18n health and stale artifacts with `npm run i18n:check`.
-4. Run `npm run test`.
-5. Run `npm run build`.
+2. Regenerate runtime JSON with `pnpm run i18n:generate`.
+3. Validate hagi18n health and stale artifacts with `pnpm run i18n:check`.
+4. Run `pnpm run test`.
+5. Run `pnpm run build`.
 
-If you only changed runtime code and want the usual local setup, `npm run dev`, `npm run test`, and `npm run build` already call `prepare:i18n` first.
+If you only changed runtime code and want the usual local setup, `pnpm run dev`, `pnpm run test`, and `pnpm run build` already call `prepare:i18n` first.
 
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
-| `npm run i18n:audit` | Check locale parity from the hagi18n source tree |
-| `npm run i18n:report` | Print hagi18n findings in report form |
-| `npm run i18n:doctor` | Scan for legacy or problematic i18n usage |
-| `npm run i18n:sync` | Preview key synchronization changes |
-| `npm run i18n:sync:write` | Apply synchronization changes |
-| `npm run i18n:prune` | Preview removal of obsolete keys |
-| `npm run i18n:prune:write` | Apply pruning changes |
-| `npm run i18n:generate` | Generate `src/i18n/generated-locales/**` from YAML |
-| `npm run prepare:i18n` | Alias used before dev, test, and build flows |
-| `npm run i18n:check` | Run `doctor` plus generated-resource stale checks |
+| `pnpm run i18n:audit` | Check locale parity from the hagi18n source tree |
+| `pnpm run i18n:report` | Print hagi18n findings in report form |
+| `pnpm run i18n:doctor` | Scan for legacy or problematic i18n usage |
+| `pnpm run i18n:sync` | Preview key synchronization changes |
+| `pnpm run i18n:sync:write` | Apply synchronization changes |
+| `pnpm run i18n:prune` | Preview removal of obsolete keys |
+| `pnpm run i18n:prune:write` | Apply pruning changes |
+| `pnpm run i18n:generate` | Generate `src/i18n/generated-locales/**` from YAML |
+| `pnpm run prepare:i18n` | Alias used before dev, test, and build flows |
+| `pnpm run i18n:check` | Run `doctor` plus generated-resource stale checks |
 
 ## Generated artifact policy
 
 Cost keeps YAML source files in Git and treats `src/i18n/generated-locales/**` as disposable runtime output.
 
 - Do regenerate the JSON when YAML changes.
-- Do let `npm run dev`, `npm run test`, and `npm run build` regenerate it through `prepare:i18n`.
+- Do let `pnpm run dev`, `pnpm run test`, and `pnpm run build` regenerate it through `prepare:i18n`.
 - Do not hand-edit generated JSON.
 - Do not commit generated JSON.
 
@@ -92,6 +92,6 @@ When a language changes, Cost updates:
 
 - Editing `src/i18n/generated-locales/**` instead of YAML source files
 - Adding a key to one locale without adding it to every supported locale
-- Forgetting to rerun `npm run i18n:generate`
-- Changing locale files without rerunning `npm run i18n:check`
+- Forgetting to rerun `pnpm run i18n:generate`
+- Changing locale files without rerunning `pnpm run i18n:check`
 - Assuming `en-US` as hagi18n base locale also means the site should default to English at runtime

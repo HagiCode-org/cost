@@ -37,14 +37,15 @@ const FORBIDDEN_KEYS: ReadonlySet<string> = new Set([
 // Keys are snake_case event names (object before action). Enumerations are the only
 // values this site may send for income or tone; amounts are never allowlisted.
 export const SITE_POSTHOG_EVENTS: SiteEventTable = Object.freeze({
+  // `as const` keeps `kind` a literal; Object.freeze alone widens it to string and breaks SitePropertySpec.
   assessment_completed: Object.freeze({
     currency: { kind: 'enum', values: ['CNY', 'USD'] },
     income_preset: { kind: 'enum', values: ['starter', 'growth', 'senior', 'staff', 'principal', 'custom'] },
     verdict_tone: { kind: 'enum', values: ['safe', 'warning', 'danger'] },
-  }),
+  } as const),
   assessment_shared: Object.freeze({
     has_result: { kind: 'boolean' },
-  }),
+  } as const),
   boost_cta_clicked: Object.freeze({}),
 });
 

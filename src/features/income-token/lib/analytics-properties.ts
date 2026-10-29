@@ -6,7 +6,8 @@ export const INCOME_PRESET_CUSTOM = "custom"
 export type IncomePresetKey = "starter" | "growth" | "senior" | "staff" | "principal" | "custom"
 export type VerdictTone = "safe" | "warning" | "danger"
 
-export interface AssessmentCompletedProperties {
+// A type alias, not an interface: only an alias is assignable to the `Record<string, unknown>` that captureSiteEvent takes.
+export type AssessmentCompletedProperties = {
   currency: SalaryCurrency
   income_preset: IncomePresetKey
   verdict_tone: VerdictTone

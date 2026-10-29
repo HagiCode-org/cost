@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest"
 
 import {
   captureSiteEvent,
@@ -8,17 +8,19 @@ import {
   type SitePropertySpec,
 } from "./posthog-events"
 
+type CaptureFn = (event: string, properties?: Record<string, unknown>) => unknown
+
 type FakePostHog = {
   __loaded?: boolean
-  capture: ReturnType<typeof vi.fn>
-  has_opted_out_capturing?: ReturnType<typeof vi.fn>
+  capture: Mock<CaptureFn>
+  has_opted_out_capturing?: Mock<() => boolean>
 }
 
 function fakePostHog(overrides: Partial<FakePostHog> = {}): FakePostHog {
   return {
     __loaded: true,
-    capture: vi.fn(),
-    has_opted_out_capturing: vi.fn(() => false),
+    capture: vi.fn<CaptureFn>(),
+    has_opted_out_capturing: vi.fn<() => boolean>(() => false),
     ...overrides,
   }
 }

@@ -318,8 +318,8 @@ importers:
         specifier: ^9.39.1
         version: 9.39.4
       '@hagicode/hagi18n':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       '@hagicode/hagilight':
         specifier: 0.20.0
         version: 0.20.0(astro@7.3.8(@types/node@24.12.0)(jiti@2.7.0)(yaml@2.9.1))
@@ -911,8 +911,8 @@ packages:
   '@fontsource/newsreader@5.2.10':
     resolution: {integrity: sha512-TFaYzoFhDqarUyV2yYjgZZEwT4bpaj6sGBnXSnFknQ/QB8/9LzfY6IO9+inHOX4zzPp87Z7/KuG1OI5gr91Q3A==}
 
-  '@hagicode/hagi18n@0.2.0':
-    resolution: {integrity: sha512-IGSUQiSoaQukr2v/2uibWBhV2EQCtLrMmO7aELOaTpGMkEVkBq0b3upEd2DQJuurqxJFiC6PHElj7giJkred+g==}
+  '@hagicode/hagi18n@0.3.0':
+    resolution: {integrity: sha512-b3Adlxire3/IRulQJRobDzAGvGYXtR2Pw/Gbrzg+tFptgawWInqstIWNk2a4gp19FYrEbS+qjEz7MmDBfEEEtQ==}
     engines: {node: '>=24.0.0'}
     hasBin: true
 
@@ -5907,7 +5907,7 @@ snapshots:
 
   '@fontsource/newsreader@5.2.10': {}
 
-  '@hagicode/hagi18n@0.2.0':
+  '@hagicode/hagi18n@0.3.0':
     dependencies:
       '@types/js-yaml': 4.0.9
       commander: 14.0.3

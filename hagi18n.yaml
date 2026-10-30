@@ -11,6 +11,46 @@ targetLocales:
   - es-ES
   - pt-BR
   - ru-RU
+# 与英文基线相同、且在各语言里本就应当相同的值(品牌名、URL、技术标识、通用借词等),按「文件 → 键」逐条精确列出,每条写理由。
+# 名单对所有目标语言生效:只有在所有仍与英文相同的语言里英文写法都正确时才加入;其余一律翻译。
+auditIdenticalAllowlist:
+  translation.yml:
+    - header.links.builder # 产品名
+    - footer.links.steam # 品牌名
+    - featureShowcase.smart.efficiencyValue # 数字
+    - featureShowcase.smart.workflow.idea.label # es 通用词
+    - featureShowcase.smart.workflow.code.label # de/fr 通用借词
+    - featureShowcase.smart.workflow.test.label # fr 通用词
+    - featureShowcase.smart.workflow.archive.label # fr 通用词
+    - featureShowcase.efficient.supportedProviders.0 # 技术标识
+    - featureShowcase.efficient.supportedProviders.1 # 技术标识
+    - featureShowcase.efficient.supportedProviders.2 # 技术标识
+    - featureShowcase.efficient.supportedProviders.3 # 技术标识
+    - featureShowcase.efficient.supportedProviders.4 # 技术标识
+    - featureShowcase.efficient.supportedProviders.5 # 技术标识
+    - featureShowcase.efficient.matrix.agents.claude.name # 产品名
+    - featureShowcase.efficient.matrix.agents.codex.name # 产品名
+    - featureShowcase.efficient.matrix.agents.router.name # 产品名
+    - featureShowcase.interesting.battleReport.metrics.dungeons.value # 数字
+    - featureShowcase.interesting.battleReport.metrics.level.value # 游戏等级缩写
+    - seo.home.keywords.0 # 技术通用词
+    - seo.home.keywords.6 # 品牌名
+    - header.versionLabel # de/fr 通用借词
+    - assessment.form.units.usd # es/fr 单位
+    - assessment.form.units.cny # es 单位
+    - assessment.regions.international # de/fr 同形词
+    - assessment.cities.new-tier1 # 地名拉丁转写
+    - assessment.cities.tier2 # 地名拉丁转写
+    - assessment.cities.other # 地名拉丁转写
+    - assessment.jobs.backend # de 通用借词
+    - assessment.jobs.frontend # de 通用借词
+    - assessment.jobs.admin # de 通用借词
+    - results.share.countdown # de 通用借词
+    - featureShowcase.smart.comparison.hagicode # 品牌名
+    - featureShowcase.efficient.throughputValue # de 同形词
+    - promotion.sectionLabel # fr 通用词
+    - results.cost.priceNote # fr 通用词
+    - footer.links.docs # fr 通用词
 doctor:
   excludedDirectories:
     - .git

@@ -244,7 +244,7 @@ results:
 footer:
   disclaimerTitle: 면책조항
   disclaimer: 이 페이지는 Agent 작업 흐름이 개별 출력을 증폭시키는 방법을 설명하는 데 도움이 됩니다. 실제 위험은 AI 혼자가 아니라 이미 이를 반복 가능한 시스템으로 사용하고 있는 동료입니다.
-  copyright: HAGICODE AI APPLICATION SITE · 2026
+  copyright: HAGICODE AI 애플리케이션 사이트 · 2026
   extensionNote: 이 페이지의 모델 가격, 공식 및 결론은 Agent 작업 흐름 비용을 이해하고 활용하기 위한 것일 뿐 투자, 고용 또는 경력 조언이 아닙니다.
   registrationLabel: 등록
   registrationAria:
@@ -387,7 +387,7 @@ featureShowcase:
           value: Lv.27
           label: 캡틴 레벨
         xp:
-          value: 12.8M
+          value: 1280만
           label: 오늘 XP
     roster:
       title: 현재 캡틴 로스터

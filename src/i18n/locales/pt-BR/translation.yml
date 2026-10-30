@@ -42,7 +42,7 @@ assessment:
     presetHint: 'Botões predefinidos e entrada personalizada usam a mesma unidade: {{unit}}.'
     units:
       cny: 10 mil CNY
-      usd: k USD
+      usd: mil USD
     city: Qual cidade típica é mais próxima da sua?
     job: Cargo
     selectPlaceholder: Selecione...
@@ -386,7 +386,7 @@ featureShowcase:
           instances:
             - Problema de rastreamento
             - Polir textos
-            - Capture insights
+            - Registre insights
   interesting:
     badge: INTERESSANTE
     title: Interessante

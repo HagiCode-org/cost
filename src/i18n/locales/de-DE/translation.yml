@@ -44,7 +44,7 @@ assessment:
     presetHint: 'Voreingestellte Tasten und benutzerdefinierte Eingaben verwenden dieselbe Einheit: {{unit}}.'
     units:
       cny: 10.000 CNY
-      usd: k USD
+      usd: Tsd. USD
     city: Welche typische Stadt ist Ihrer am nächsten?
     job: Jobrolle
     selectPlaceholder: Auswählen
@@ -100,7 +100,7 @@ assessment:
           Tägliche Token = 0, während Gehalt, Stadt, Modell und Multiplikator alle gültig sind. Sie verfeinern den
           Arbeitsablauf, bevor Sie sich entscheiden, Token auszugeben.
       promptAlchemist:
-        name: Prompt Alchemist
+        name: Prompt-Alchemist
         description: >-
           Leistungsmultiplikator >= 6 und 0 < tägliche Token <= 20. Sie quetschen einen erheblichen Hebel aus einem
           immer noch disziplinierten Token-Budget heraus.
@@ -491,7 +491,7 @@ featureShowcase:
           catOil09: Hero Galeriebild eines in Öl gemalten Katzenhelden
           aurora04: Hero Galeriebild eines Helden mit Aurora-Thema
 promotion:
-  sectionLabel: Promotion
+  sectionLabel: Werbung
   badgeFallback: Empfohlen
   closeLabel: Promotion schließen
 seo:

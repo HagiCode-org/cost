@@ -200,7 +200,7 @@ results:
     headcountDesc: Reducción esperada en la plantilla de este puesto.
   share:
     title: Aviso de advertencia y uso compartido
-    job: Role
+    job: Rol
     cost: Costo Anual
     countdown: Cuenta atrás
     risk: Nivel de riesgo

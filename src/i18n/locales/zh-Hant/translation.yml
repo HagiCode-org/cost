@@ -70,7 +70,7 @@ assessment:
     admin: 行政
     other: 其他
   titles:
-    eyebrow: SPECIAL TITLES
+    eyebrow: 特殊稱號
     title: 特殊稱號面板
     subtitle: 輸入側與結果側規則會一起評估，告訴你這套 Agent 用法更像哪一種玩家畫像。
     zeroTokenHint: 你沒有消耗任何 Token，本次不執行常規測算，但我們還是會根據當前輸入判斷你觸發了哪些稱號。
@@ -144,7 +144,7 @@ results:
     mixDetail: 總計（輸入:輸出 {{ratio}}:1）
     mixInput: 其中輸入 Token
     mixOutput: 其中輸出 Token
-    tokens: tokens
+    tokens: Token
     officialSource: 官方來源
     pricingContext: 計價口徑
     unitInputPrice: 輸入價 / 百萬 Token
@@ -242,7 +242,7 @@ results:
 footer:
   disclaimerTitle: 免責聲明
   disclaimer: 本頁用來幫助你理解 Agent 對個人產能的放大效應。真正危險的不是 AI 本身，而是別人已經開始把 AI 變成穩定工作流程。
-  copyright: HAGICODE AI APPLICATION SITE · 2026
+  copyright: HAGICODE AI 應用站點 · 2026
   extensionNote: 本頁所示的模型價格、公式和結論，僅用於幫助理解 Agent 工作流程的成本與槓桿，不構成任何投資、用工或職涯決策建議。
   registrationLabel: 備案資訊
   registrationAria:
@@ -260,7 +260,7 @@ featureShowcase:
     eyebrow: HAGICODE 功能展示
     title: HagiCode 三大核心能力
   smart:
-    badge: SMART
+    badge: 智慧
     title: 智慧
     subtitle: OpenSpec 工作流程，讓想法更快進入執行
     description: 從想法、提案、審查到程式碼、測試與歸檔，HagiCode 用完整的 9 階段 OpenSpec 流程幫你減少返工，把 AI 編程從一次性聊天變成可追踪、可交付、可複盤的持續協作。
@@ -273,34 +273,34 @@ featureShowcase:
     workflowHint: 從 Idea 到 Archive，步驟順序與官網特性區保持一致
     workflow:
       idea:
-        label: Idea
+        label: 想法
         description: 從想法開始，先定義目標與範圍
       proposal:
-        label: Proposal
+        label: 提案
         description: AI 產生提案與影響分析
       review:
-        label: Review
+        label: 審查
         description: 在實現前完成評審校對
       tasks:
-        label: Tasks
+        label: 任務
         description: 將需求切成可執行任務
       code:
-        label: Code
+        label: 程式碼
         description: 進入實作並保持上下文連續
       test:
-        label: Test
+        label: 測試
         description: 補齊驗證與迴歸檢查
       refactor:
-        label: Refactor
+        label: 重構
         description: 在通過驗證後繼續整理結構
       docs:
-        label: Docs
+        label: 文件
         description: 同步輸出說明與知識沉澱
       archive:
-        label: Archive
+        label: 歸檔
         description: 歸檔結果，形成團隊可重複使用資產
   efficient:
-    badge: EFFICIENT
+    badge: 高效
     title: 高效率
     subtitle: 多 Agent、多實例並行，真正把額度跑滿
     description: Claude Code、Codex 等 CLI Agent 可以同時驅動多個實例，把提案、實作、修復與評審從串列等待改成並行推進，讓團隊吞吐不再被單執行緒協作方式限制。
@@ -344,7 +344,7 @@ featureShowcase:
             - 文案優化
             - 知識提煉
   interesting:
-    badge: INTERESTING
+    badge: 有趣
     title: 有趣
     subtitle: Hero 場景讓訓練、協作與複盤更像可推進的冒險
     description: 把 Prompt 工作台、提案場景、隊長編組和戰報反饋放進同一個可視化流程裡，讓高校實驗室、學生團隊和產品協作場景不只是在“用 AI”，而是在經營一套能持續升級的工作流程。
@@ -373,7 +373,7 @@ featureShowcase:
         status: 視覺預覽已同步
     battleReport:
       title: 今日場景戰報
-      badge: Hero Battle
+      badge: Hero 戰鬥
       note: 當多個場景並行推進時，戰報會把經驗、等級與執行結果聚合到一個統一讀數裡。
       metrics:
         dungeons:
@@ -383,19 +383,19 @@ featureShowcase:
           value: Lv.27
           label: 隊長等級
         xp:
-          value: 12.8M
+          value: 1280萬
           label: 今日 XP
     roster:
       title: 目前隊長編組
       heroes:
         strategist:
-          name: Spec Strategist
+          name: 規格策略師
           role: 提案隊長
         runner:
-          name: Patch Runner
+          name: 補丁跑者
           role: 執行隊長
         artist:
-          name: Prompt Artist
+          name: 提示詞畫師
           role: 視覺支援
     gallery:
       dungeons:

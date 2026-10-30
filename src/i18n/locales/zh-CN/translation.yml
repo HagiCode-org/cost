@@ -70,7 +70,7 @@ assessment:
     admin: 行政
     other: 其他
   titles:
-    eyebrow: SPECIAL TITLES
+    eyebrow: 特殊称号
     title: 特殊称号面板
     subtitle: 输入侧与结果侧规则会一起评估，告诉你这套 Agent 用法更像哪一种玩家画像。
     zeroTokenHint: 你没有消耗任何 Token，本次不执行常规测算，但我们还是会根据当前输入判断你触发了哪些称号。
@@ -144,7 +144,7 @@ results:
     mixDetail: 总计（输入:输出 {{ratio}}:1）
     mixInput: 其中输入 Token
     mixOutput: 其中输出 Token
-    tokens: tokens
+    tokens: Token
     officialSource: 官方来源
     pricingContext: 计价口径
     unitInputPrice: 输入价 / 百万 Token
@@ -242,7 +242,7 @@ results:
 footer:
   disclaimerTitle: 免责声明
   disclaimer: 本页用于帮助你理解 Agent 对个人产能的放大效应。真正危险的不是 AI 本身，而是别人已经开始把 AI 变成稳定工作流。
-  copyright: HAGICODE AI APPLICATION SITE · 2026
+  copyright: HAGICODE AI 应用站点 · 2026
   extensionNote: 本页展示的模型价格、公式和结论仅用于帮助理解 Agent 工作流的成本与杠杆，不构成任何投资、用工或职业决策建议。
   registrationLabel: 备案信息
   registrationAria:
@@ -257,10 +257,10 @@ footer:
     pricing: 定价参考来源
 featureShowcase:
   section:
-    eyebrow: HAGICODE FEATURE SHOWCASE
+    eyebrow: HAGICODE 功能展示
     title: HagiCode 三大核心能力
   smart:
-    badge: SMART
+    badge: 智能
     title: 智能
     subtitle: OpenSpec 工作流，让想法更快进入执行
     description: 从想法、提案、评审到代码、测试与归档，HagiCode 用完整的 9 阶段 OpenSpec 流程帮你减少返工，把 AI 编程从一次性聊天变成可追踪、可交付、可复盘的持续协作。
@@ -273,34 +273,34 @@ featureShowcase:
     workflowHint: 从 Idea 到 Archive，步骤顺序与官网特性区保持一致
     workflow:
       idea:
-        label: Idea
+        label: 想法
         description: 从想法开始，先定义目标与范围
       proposal:
-        label: Proposal
+        label: 提案
         description: AI 生成提案与影响分析
       review:
-        label: Review
+        label: 审查
         description: 在实现前完成评审校对
       tasks:
-        label: Tasks
+        label: 任务
         description: 把需求切成可执行任务
       code:
-        label: Code
+        label: 代码
         description: 进入实现并保持上下文连续
       test:
-        label: Test
+        label: 测试
         description: 补齐验证与回归检查
       refactor:
-        label: Refactor
+        label: 重构
         description: 在通过验证后继续整理结构
       docs:
-        label: Docs
+        label: 文档
         description: 同步输出说明与知识沉淀
       archive:
-        label: Archive
+        label: 归档
         description: 归档结果，形成团队可复用资产
   efficient:
-    badge: EFFICIENT
+    badge: 高效
     title: 高效
     subtitle: 多 Agent、多实例并行，真正把额度跑满
     description: Claude Code、Codex 以及其他 CLI Agent 可以同时驱动多个实例，把提案、实现、修复与评审从串行等待改成并行推进，让团队吞吐不再被单线程协作方式限制。
@@ -344,7 +344,7 @@ featureShowcase:
             - 文案优化
             - 知识提炼
   interesting:
-    badge: INTERESTING
+    badge: 有趣
     title: 有趣
     subtitle: Hero 场景让训练、协作与复盘更像一次可推进的冒险
     description: 把 Prompt 工作台、提案场景、队长编组和战报反馈放进同一个可视化流程里，让高校实验室、学生团队和产品协作场景不只是在“用 AI”，而是在经营一套能持续升级的工作流。
@@ -373,7 +373,7 @@ featureShowcase:
         status: 视觉预览已同步
     battleReport:
       title: 今日场景战报
-      badge: Hero Battle
+      badge: Hero 战斗
       note: 当多个场景并行推进时，战报会把经验、等级与执行结果聚合到一个统一读数里。
       metrics:
         dungeons:
@@ -383,19 +383,19 @@ featureShowcase:
           value: Lv.27
           label: 队长等级
         xp:
-          value: 12.8M
+          value: 1280万
           label: 今日 XP
     roster:
       title: 当前队长编组
       heroes:
         strategist:
-          name: Spec Strategist
+          name: 规格策略师
           role: 提案队长
         runner:
-          name: Patch Runner
+          name: 补丁跑者
           role: 执行队长
         artist:
-          name: Prompt Artist
+          name: 提示词画师
           role: 视觉支援
     gallery:
       dungeons:

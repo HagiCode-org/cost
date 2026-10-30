@@ -242,7 +242,7 @@ results:
 footer:
   disclaimerTitle: 免責事項
   disclaimer: このページは、Agent ワークフローが個々の出力をどのように増幅するかを説明するのに役立ちます。本当のリスクは AI だけではなく、すでに反復可能なシステムとしてそれを使用している同僚にあります。
-  copyright: HAGICODE AI APPLICATION SITE · 2026
+  copyright: HAGICODE AI アプリケーションサイト · 2026
   extensionNote: このページのモデルの価格、計算式、結論は、Agent ワークフローのコストと活用のみを理解するためのものであり、投資、採用、またはキャリアに関するアドバイスではありません。
   registrationLabel: 登録
   registrationAria:
@@ -397,7 +397,7 @@ featureShowcase:
           name: パッチランナー
           role: 実行キャプテン
         artist:
-          name: Prompt Artist
+          name: プロンプトアーティスト
           role: ビジュアル支援
     gallery:
       dungeons:

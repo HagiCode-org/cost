@@ -1,0 +1,20 @@
+# HagiCode Cost
+
+> An interactive calculator for the Agent era. Enter your annual salary, the models you use, your efficiency multiplier and daily token usage to see whether you plus AI add up to what used to take two or more people. The page is a single interactive app; the numbers come from your own inputs and are calculated in the browser.
+
+## Calculator
+
+- [Agent era cost calculator (Chinese, default)](https://cost.hagicode.com/): The main page of the calculator.
+- [English](https://cost.hagicode.com/?lang=en-US)
+- [日本語](https://cost.hagicode.com/?lang=ja-JP)
+- [한국어](https://cost.hagicode.com/?lang=ko-KR)
+
+## Optional
+
+- [Traditional Chinese](https://cost.hagicode.com/?lang=zh-Hant)
+- [Deutsch](https://cost.hagicode.com/?lang=de-DE)
+- [Français](https://cost.hagicode.com/?lang=fr-FR)
+- [Español](https://cost.hagicode.com/?lang=es-ES)
+- [Português (Brasil)](https://cost.hagicode.com/?lang=pt-BR)
+- [Русский](https://cost.hagicode.com/?lang=ru-RU)
+- [HagiCode, the agentic coding workspace behind this site](https://www.hagicode.com/)

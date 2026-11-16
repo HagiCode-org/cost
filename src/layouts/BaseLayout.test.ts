@@ -23,6 +23,9 @@ describe('Cost BaseLayout Hagilight integration', () => {
     expect(source).toContain('cost-calculator');
     expect(source).toContain('costSiteUrl');
     expect(source).toContain('extraLinks');
+    // The ICP and public-security filings come from the hagilight defaults; repeating them as overrides would lose the localized labels.
+    expect(source).not.toMatch(/overrides\s*:/u);
+    expect(source).not.toContain('beian.miit.gov.cn');
     expect(source).toContain('footer.links.github');
     expect(source).toContain('footer.links.steam');
     expect(source).toContain('footer.links.pricing');

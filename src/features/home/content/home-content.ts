@@ -28,10 +28,6 @@ export function getHomePageContent(t: TFunction) {
           href: "https://github.com/HagiCode-org/site",
         },
         {
-          label: t("footer.links.steam"),
-          href: "https://store.steampowered.com/app/4625540/Hagicode/",
-        },
-        {
           label: t("footer.links.pricing"),
           href: "https://openai.com/api/pricing/",
         },

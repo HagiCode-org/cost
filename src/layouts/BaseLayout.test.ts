@@ -27,7 +27,7 @@ describe('Cost BaseLayout Hagilight integration', () => {
     expect(source).not.toMatch(/overrides\s*:/u);
     expect(source).not.toContain('beian.miit.gov.cn');
     expect(source).toContain('footer.links.github');
-    expect(source).toContain('footer.links.steam');
+    expect(source).not.toContain('steampowered.com');
     expect(source).toContain('footer.links.pricing');
   });
 

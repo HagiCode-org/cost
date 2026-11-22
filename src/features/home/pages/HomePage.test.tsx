@@ -169,7 +169,7 @@ describe("HomePage", () => {
 
     // The navigational footer links are now owned by the shared Hagilight footer mounted
     // from the Astro layout, not the React tree. This test documents the sources that the
-    // shared footer resolves: Cost keeps GitHub, Steam, and pricing references alongside the
+    // shared footer resolves: Cost keeps GitHub and pricing references alongside the
     // canonical related-site directory.
     expect(screen.getByTestId("cost-site-notice")).toBeInTheDocument()
   })

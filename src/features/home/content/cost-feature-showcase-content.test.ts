@@ -16,7 +16,7 @@ describe("cost feature showcase content", () => {
     for (const [group, manifest] of Object.entries(costFeatureShowcaseGalleryManifest)) {
       for (const entry of manifest) {
         expect(`/img/home/interesting/${group}/${entry.fileName}`).toMatch(
-          /^\/img\/home\/interesting\/(dungeons|heroes)\/.+\.webp$/,
+          /^\/img\/home\/interesting\/(dungeons|heroes)\/.+\.(avif|webp)$/,
         )
       }
     }
